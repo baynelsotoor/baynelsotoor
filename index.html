@@ -21,6 +21,7 @@
     nav {
       background-color: #a1887f;
       display: flex;
+      flex-wrap: wrap;
       justify-content: center;
       gap: 2rem;
       padding: 1rem;
@@ -30,6 +31,19 @@
       color: white;
       text-decoration: none;
       font-weight: bold;
+    }
+
+    .search-container {
+      display: flex;
+      justify-content: center;
+      margin: 1rem;
+    }
+
+    .search-container input {
+      width: 300px;
+      padding: 0.5rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
     }
 
     .banner {
@@ -55,7 +69,7 @@
       margin-bottom: 1rem;
     }
 
-    .about, .contact {
+    .about, .contact, .institution {
       background-color: #fff;
       border-radius: 10px;
       padding: 1.5rem;
@@ -129,6 +143,10 @@
     <a href="offers.html">عروض الكتب</a>
   </nav>
 
+  <div class="search-container">
+    <input type="text" placeholder="ابحث عن كتاب...">
+  </div>
+
   <div class="banner">
     اقرأ ما بين السطور، تجد الحياة.
   </div>
@@ -137,37 +155,21 @@
     <h2>📚 أبرز الكتب</h2>
     <div class="books-highlight">
       <div class="book-card">
-        <img src="https://i.imgur.com/UOXLOvO.jpg" alt="أبابيل">
-        <h3>أبابيل</h3>
-        <p>تأليف: أحمد آل حمدان</p>
+        <img src="https://m.media-amazon.com/images/I/71aFt4+OTOL._AC_UF1000,1000_QL80_.jpg" alt="The Alchemist">
+        <h3>The Alchemist</h3>
+        <p>By: Paulo Coelho</p>
         <a href="order.html">اطلبه الآن</a>
       </div>
-
       <div class="book-card">
-        <img src="https://i.imgur.com/VYG1vYN.jpg" alt="مدينة الحب لا يسكنها العقلاء">
-        <h3>مدينة الحب لا يسكنها العقلاء</h3>
-        <p>تأليف: أحمد آل حمدان</p>
+        <img src="https://m.media-amazon.com/images/I/81p+xe8cbnL.jpg" alt="The Fault in Our Stars">
+        <h3>The Fault in Our Stars</h3>
+        <p>By: John Green</p>
         <a href="order.html">اطلبه الآن</a>
       </div>
-
       <div class="book-card">
-        <img src="https://i.imgur.com/xT97pdc.jpg" alt="أمانوس">
-        <h3>أمانوس</h3>
-        <p>تأليف: د. حنان لاشين</p>
-        <a href="order.html">اطلبه الآن</a>
-      </div>
-
-      <div class="book-card">
-        <img src="https://i.imgur.com/Fbi7BIR.jpg" alt="أرسس">
-        <h3>أرسس</h3>
-        <p>تأليف: أحمد آل حمدان</p>
-        <a href="order.html">اطلبه الآن</a>
-      </div>
-
-      <div class="book-card">
-        <img src="https://i.imgur.com/q2pFXCN.jpg" alt="براءة ظلمة">
-        <h3>براءة ظلمة</h3>
-        <p>تأليف: رحمة نبيل</p>
+        <img src="https://m.media-amazon.com/images/I/71kxa1-0zfL.jpg" alt="1984">
+        <h3>1984</h3>
+        <p>By: George Orwell</p>
         <a href="order.html">اطلبه الآن</a>
       </div>
     </div>
@@ -176,7 +178,12 @@
   <section class="section">
     <div class="about">
       <h2>من نحن؟</h2>
-      <p>نحن مكتبة "بين السطور"، نهتم بتوفير أفضل الروايات والكتب العربية بجودة عالية وأسعار مناسبة. هدفنا نشر الثقافة ومساعدة محبي القراءة في كل مكان على الوصول إلى محتواهم المفضل بسهولة واحترافية.</p>
+      <p>نحن مكتبة "بين السطور"، نوفر كتبًا وروايات عربية وأجنبية، ونهتم بالجودة والأسعار المناسبة. هدفنا نشر الثقافة ومساعدة محبي القراءة في كل مكان.</p>
+    </div>
+
+    <div class="institution">
+      <h2>عن المؤسسة</h2>
+      <p>منصة "بين السطور" تأسست على يد <strong>ريـتاج</strong> بهدف بناء مكتبة إلكترونية متكاملة توفر تجربة قراءة وتسوّق مريحة، ومحتوى ثقافي متنوّع يخدم القارئ العربي والعالمي.</p>
     </div>
 
     <div class="contact">
@@ -187,9 +194,8 @@
   </section>
 
   <footer>
-    &copy; 2025 بين السطور - جميع الحقوق محفوظة.
+    &copy; 2025 مكتبة بين السطور - تصميم وإشراف: ريـتاج
   </footer>
 
 </body>
 </html>
-
