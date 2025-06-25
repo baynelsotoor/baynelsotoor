@@ -2,96 +2,128 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>اطلب الآن - بين السطور</title>
+  <title>طلب كتاب | بين السطور</title>
   <style>
     body {
       font-family: 'Cairo', sans-serif;
-      background-color: #fdf7f0;
+      background-color: #fff8f0;
       color: #3e2f1c;
-      margin: 0;
-    }
-    header {
-      background-color: #8d6e63;
-      padding: 1.5rem;
-      text-align: center;
-      color: white;
-      font-size: 2rem;
-    }
-    nav {
-      background-color: #d7ccc8;
-      padding: 1rem;
-      text-align: center;
-    }
-    nav a {
-      margin: 0 1rem;
-      text-decoration: none;
-      color: #3e2f1c;
-      font-weight: bold;
-    }
-    section {
       padding: 2rem;
       max-width: 600px;
       margin: auto;
     }
-    form {
-      display: flex;
-      flex-direction: column;
+
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
     }
+
     label {
-      margin: 0.5rem 0 0.2rem;
+      display: block;
+      margin: 1rem 0 0.5rem;
+      font-weight: bold;
     }
-    input, textarea {
+
+    input, select {
+      width: 100%;
       padding: 0.5rem;
+      margin-bottom: 1rem;
       border-radius: 5px;
       border: 1px solid #ccc;
+      font-size: 1rem;
     }
-    button {
-      margin-top: 1rem;
-      padding: 0.7rem;
-      background-color: #8d6e63;
-      color: white;
-      border: none;
+
+    .hidden {
+      display: none;
+    }
+
+    .notice {
+      background-color: #ffe0b2;
+      padding: 1rem;
       border-radius: 5px;
+      color: #5d4037;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 1rem;
+      background-color: #6d4c41;
+      color: white;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 6px;
       cursor: pointer;
     }
-    footer {
-      background-color: #8d6e63;
-      color: white;
-      text-align: center;
-      padding: 1rem;
-      margin-top: 2rem;
+
+    button:hover {
+      background-color: #5d4037;
     }
   </style>
 </head>
 <body>
-  <header>📚 اطلب كتابك الآن</header>
-  <nav>
-    <a href="index.html">الرئيسية</a>
-    <a href="store.html">المتجر</a>
-    <a href="order.html">اطلب الآن</a>
-  </nav>
 
-  <section>
-    <h2>نموذج الطلب</h2>
-    <form action="https://formsubmit.co/01559373066@gmail.com" method="POST">
-      <label for="name">الاسم الكامل</label>
-      <input type="text" id="name" name="name" required>
+  <h1>طلب كتاب 📚</h1>
 
-      <label for="phone">رقم الهاتف</label>
-      <input type="text" id="phone" name="phone" required>
+  <form>
+    <label for="name">الاسم الكامل:</label>
+    <input type="text" id="name" name="name" required>
 
-      <label for="book">اسم الكتاب</label>
-      <input type="text" id="book" name="book" required>
+    <label for="address">العنوان بالتفصيل:</label>
+    <input type="text" id="address" name="address" required>
 
-      <label for="address">العنوان بالتفصيل</label>
-      <textarea id="address" name="address" rows="3" required></textarea>
+    <label for="phone">رقم الهاتف:</label>
+    <input type="tel" id="phone" name="phone" required>
 
-      <button type="submit">إرسال الطلب</button>
-    </form>
-  </section>
+    <label for="bookName">اسم الكتاب المطلوب:</label>
+    <input type="text" id="bookName" name="bookName" placeholder="مثال: أرض زيكولا" required>
 
-  <footer>
-    جميع الحقوق محفوظة © بين السطور 2025 | تواصل: 01559373066
-  </footer>
+    <label for="payment">طريقة الدفع:</label>
+    <select id="payment" name="payment" onchange="handlePaymentChange()" required>
+      <option value="">اختر طريقة الدفع</option>
+      <option value="visa">💳 فيزا</option>
+      <option value="wallet">💼 محفظة إلكترونية</option>
+      <option value="cod">📦 الدفع عند الاستلام (+5 جنيه)</option>
+    </select>
+
+    <div id="visaField" class="hidden">
+      <label for="visaNumber">رقم البطاقة:</label>
+      <input type="text" id="visaNumber" name="visaNumber" placeholder="1234 5678 9012 3456">
+    </div>
+
+    <div id="walletField" class="hidden">
+      <label for="walletNumber">رقم المحفظة:</label>
+      <input type="text" id="walletNumber" name="walletNumber" placeholder="015xxxxxxxx">
+    </div>
+
+    <div id="codNotice" class="hidden notice">
+      سيتم إضافة 5 جنيه إلى سعر الكتاب عند الدفع عند الاستلام.
+    </div>
+
+    <button type="submit">إرسال الطلب</button>
+  </form>
+
+  <script>
+    function handlePaymentChange() {
+      const visaField = document.getElementById("visaField");
+      const walletField = document.getElementById("walletField");
+      const codNotice = document.getElementById("codNotice");
+      const payment = document.getElementById("payment").value;
+
+      visaField.classList.add("hidden");
+      walletField.classList.add("hidden");
+      codNotice.classList.add("hidden");
+
+      if (payment === "visa") {
+        visaField.classList.remove("hidden");
+      } else if (payment === "wallet") {
+        walletField.classList.remove("hidden");
+      } else if (payment === "cod") {
+        codNotice.classList.remove("hidden");
+      }
+    }
+  </script>
+
 </body>
 </html>
+
