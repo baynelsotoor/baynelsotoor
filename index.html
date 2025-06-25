@@ -63,6 +63,49 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
+    .books-highlight {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .book-card {
+      background-color: #fff;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .book-card img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+    }
+
+    .book-card h3 {
+      font-size: 1.1rem;
+      color: #6d4c41;
+    }
+
+    .book-card p {
+      font-size: 0.9rem;
+      margin: 0.3rem 0;
+    }
+
+    .book-card a {
+      display: inline-block;
+      margin-top: 0.5rem;
+      padding: 0.4rem 0.8rem;
+      background-color: #6d4c41;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+    }
+
     footer {
       background-color: #6d4c41;
       color: white;
@@ -91,9 +134,49 @@
   </div>
 
   <section class="section">
+    <h2>📚 أبرز الكتب</h2>
+    <div class="books-highlight">
+      <div class="book-card">
+        <img src="https://i.imgur.com/UOXLOvO.jpg" alt="أبابيل">
+        <h3>أبابيل</h3>
+        <p>تأليف: أحمد آل حمدان</p>
+        <a href="order.html">اطلبه الآن</a>
+      </div>
+
+      <div class="book-card">
+        <img src="https://i.imgur.com/VYG1vYN.jpg" alt="مدينة الحب لا يسكنها العقلاء">
+        <h3>مدينة الحب لا يسكنها العقلاء</h3>
+        <p>تأليف: أحمد آل حمدان</p>
+        <a href="order.html">اطلبه الآن</a>
+      </div>
+
+      <div class="book-card">
+        <img src="https://i.imgur.com/xT97pdc.jpg" alt="أمانوس">
+        <h3>أمانوس</h3>
+        <p>تأليف: د. حنان لاشين</p>
+        <a href="order.html">اطلبه الآن</a>
+      </div>
+
+      <div class="book-card">
+        <img src="https://i.imgur.com/Fbi7BIR.jpg" alt="أرسس">
+        <h3>أرسس</h3>
+        <p>تأليف: أحمد آل حمدان</p>
+        <a href="order.html">اطلبه الآن</a>
+      </div>
+
+      <div class="book-card">
+        <img src="https://i.imgur.com/q2pFXCN.jpg" alt="براءة ظلمة">
+        <h3>براءة ظلمة</h3>
+        <p>تأليف: رحمة نبيل</p>
+        <a href="order.html">اطلبه الآن</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
     <div class="about">
       <h2>من نحن؟</h2>
-      <p>نحن مكتبة \"بين السطور\"، نهتم بتوفير أفضل الروايات والكتب العربية بجودة عالية وأسعار مناسبة. هدفنا نشر الثقافة ومساعدة محبي القراءة في كل مكان على الوصول إلى محتواهم المفضل بسهولة واحترافية.</p>
+      <p>نحن مكتبة "بين السطور"، نهتم بتوفير أفضل الروايات والكتب العربية بجودة عالية وأسعار مناسبة. هدفنا نشر الثقافة ومساعدة محبي القراءة في كل مكان على الوصول إلى محتواهم المفضل بسهولة واحترافية.</p>
     </div>
 
     <div class="contact">
@@ -109,3 +192,4 @@
 
 </body>
 </html>
+
