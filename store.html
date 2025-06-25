@@ -1,122 +1,117 @@
 
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <title>المتجر - بين السطور</title>
+  <meta charset="UTF-8">
+  <title>متجر بين السطور</title>
   <style>
-    body { font-family: 'Cairo', sans-serif; background-color: #fdf7f0; color: #3e2f1c; margin: 0; }
-    header { background-color: #8d6e63; padding: 1.5rem; text-align: center; color: white; font-size: 2rem; }
-    nav { background-color: #d7ccc8; padding: 1rem; text-align: center; }
-    nav a { margin: 0 1rem; text-decoration: none; color: #3e2f1c; font-weight: bold; }
-    .book { background-color: #fff; border: 1px solid #ccc; margin: 1rem; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); display: flex; align-items: center; }
-    .book img { width: 100px; margin-left: 1rem; }
-    .book-info { flex: 1; }
-    button { padding: 0.5rem 1rem; background-color: #8d6e63; color: white; border: none; border-radius: 4px; cursor: pointer; }
-    footer { background-color: #8d6e63; color: white; text-align: center; padding: 1rem; margin-top: 2rem; }
+    body { font-family: 'Cairo', sans-serif; background: #fefaf4; padding: 20px; }
+    h1 { text-align: center; color: #5e3c18; }
+    .search-box { text-align: center; margin: 20px 0; }
+    .search-box input {
+      padding: 10px;
+      width: 80%;
+      max-width: 400px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    .book-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+    .book-card {
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .book-card img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    .book-title { font-size: 18px; font-weight: bold; margin: 10px 0; }
+    .book-author { color: #666; font-size: 14px; }
+    .book-price { color: #a0522d; margin-top: 5px; }
+    .book-description { font-size: 13px; color: #555; height: 50px; overflow: hidden; }
   </style>
 </head>
 <body>
-  <header>📚 متجر بين السطور</header>
-  <nav>
-    <a href="index.html">الرئيسية</a>
-    <a href="store.html">المتجر</a>
-    <a href="order.html">اطلب الآن</a>
-  </nav>
 
-  <section>
-    <div class="book">
-      <img src="https://m.media-amazon.com/images/I/81-EFlpSbkL._AC_UF1000,1000_QL80_.jpg" alt="أرض زيكولا">
-      <div class="book-info">
-        <h3>أرض زيكولا</h3>
-        <p>عمرو عبد الحميد</p>
-        <p>السعر: 90 جنيه</p>
-        <a href="order.html"><button>اطلب الآن</button></a>
-      </div>
-    </div>
+<h1>📚 متجر بين السطور</h1>
 
-    <div class="book">
-      <img src="https://m.media-amazon.com/images/I/81NoXB92wBL._AC_UF1000,1000_QL80_.jpg" alt="أماريتا">
-      <div class="book-info">
-        <h3>أماريتا</h3>
-        <p>عمرو عبد الحميد</p>
-        <p>السعر: 90 جنيه</p>
-        <a href="order.html"><button>اطلب الآن</button></a>
-      </div>
-    </div>
+<div class="search-box">
+  <input type="text" id="searchInput" placeholder="ابحث باسم الكتاب أو المؤلف...">
+</div>
 
-    <div class="book">
-      <img src="https://m.media-amazon.com/images/I/71qv6ZzF5tL._AC_UF1000,1000_QL80_.jpg" alt="في قلبي أنثى عبرية">
-      <div class="book-info">
-        <h3>في قلبي أنثى عبرية</h3>
-        <p>خولة حمدي</p>
-        <p>السعر: 85 جنيه</p>
-        <a href="order.html"><button>اطلب الآن</button></a>
-      </div>
-    </div>
+<div class="book-grid" id="bookGrid"></div>
 
-    <div class="book">
-      <img src="https://m.media-amazon.com/images/I/81fAV5f5tOL._AC_UF1000,1000_QL80_.jpg" alt="أن تبقى">
-      <div class="book-info">
-        <h3>أن تبقى</h3>
-        <p>خولة حمدي</p>
-        <p>السعر: 85 جنيه</p>
-        <a href="order.html"><button>اطلب الآن</button></a>
-      </div>
-    </div>
+<script>
+  const books = [
+    {
+      title: "أرض زيكولا",
+      author: "عمرو عبد الحميد",
+      price: "75",
+      image: "https://upload.wikimedia.org/wikipedia/ar/2/29/%D8%A3%D8%B1%D8%B6_%D8%B2%D9%8A%D9%83%D9%88%D9%84%D8%A7.jpg",
+      description: "رواية تدور حول عالم خيالي حيث التعامل بالذكاء وليس المال."
+    },
+    {
+      title: "أن تبقى",
+      author: "خولة حمدي",
+      price: "80",
+      image: "https://img.kutub-best.com/uploads/Books/bookFiles-3441-26072.jpg",
+      description: "قصة شاب تونسي ومحنته بين بلده واللجوء السياسي."
+    },
+    {
+      title: "كوني صحابية",
+      author: "حنان لاشين",
+      price: "70",
+      image: "https://media.zid.store/thumbs/520f10c8-0677-42e8-8e5b-ee36e047b343/4b9b3dca-46b6-4ac9-a804-2770973174aa-thumbnail-1000x1000-70.jpg",
+      description: "نصائح روحانية مستلهمة من سير الصحابيات."
+    },
+    {
+      title: "ياسمين أبيض",
+      author: "خولة حمدي",
+      price: "85",
+      image: "https://i.ibb.co/jy7pP8y/yasmine.jpg",
+      description: "قصة فتاة تبحث عن معنى الانتماء والحب."
+    }
+  ];
 
-    <div class="book">
-      <img src="https://m.media-amazon.com/images/I/81UvWYwRwIL._AC_UF1000,1000_QL80_.jpg" alt="أمانوس">
-      <div class="book-info">
-        <h3>أمانوس</h3>
-        <p>حنان لاشين</p>
-        <p>السعر: 95 جنيه</p>
-        <a href="order.html"><button>اطلب الآن</button></a>
-      </div>
-    </div>
+  const bookGrid = document.getElementById('bookGrid');
+  const searchInput = document.getElementById('searchInput');
 
-    <div class="book">
-      <img src="https://m.media-amazon.com/images/I/71FhzXLxZbL._AC_UF1000,1000_QL80_.jpg" alt="غيوم تائهة">
-      <div class="book-info">
-        <h3>غيوم تائهة</h3>
-        <p>حنان لاشين</p>
-        <p>السعر: 95 جنيه</p>
-        <a href="order.html"><button>اطلب الآن</button></a>
-      </div>
-    </div>
+  function displayBooks(filteredBooks) {
+    bookGrid.innerHTML = '';
+    filteredBooks.forEach(book => {
+      const card = document.createElement('div');
+      card.className = 'book-card';
+      card.innerHTML = `
+        <img src="${book.image}" alt="${book.title}">
+        <div class="book-title">${book.title}</div>
+        <div class="book-author">${book.author}</div>
+        <div class="book-price">السعر: ${book.price} جنيه</div>
+        <div class="book-description">${book.description}</div>
+      `;
+      bookGrid.appendChild(card);
+    });
+  }
 
-    <div class="book">
-      <img src="https://m.media-amazon.com/images/I/71I9r8GKsEL._AC_UF1000,1000_QL80_.jpg" alt="أطياف كاميليا">
-      <div class="book-info">
-        <h3>أطياف كاميليا</h3>
-        <p>شمس محمد</p>
-        <p>السعر: 88 جنيه</p>
-        <a href="order.html"><button>اطلب الآن</button></a>
-      </div>
-    </div>
+  searchInput.addEventListener('input', () => {
+    const query = searchInput.value.toLowerCase();
+    const filtered = books.filter(book =>
+      book.title.toLowerCase().includes(query) ||
+      book.author.toLowerCase().includes(query)
+    );
+    displayBooks(filtered);
+  });
 
-    <div class="book">
-      <img src="https://m.media-amazon.com/images/I/81MNauGzUvL._AC_UF1000,1000_QL80_.jpg" alt="في ديسمبر تنتهي كل الأحلام">
-      <div class="book-info">
-        <h3>في ديسمبر تنتهي كل الأحلام</h3>
-        <p>رحمة نبيل</p>
-        <p>السعر: 80 جنيه</p>
-        <a href="order.html"><button>اطلب الآن</button></a>
-      </div>
-    </div>
+  displayBooks(books);
+</script>
 
-    <div class="book">
-      <img src="https://m.media-amazon.com/images/I/71FWkMQhnJL._AC_UF1000,1000_QL80_.jpg" alt="كونسيرتو غرناطة">
-      <div class="book-info">
-        <h3>كونسيرتو غرناطة</h3>
-        <p>رحمة نبيل</p>
-        <p>السعر: 85 جنيه</p>
-        <a href="order.html"><button>اطلب الآن</button></a>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    جميع الحقوق محفوظة © بين السطور 2025 | تواصل: 01559373066
-  </footer>
 </body>
 </html>
