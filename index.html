@@ -1,204 +1,101 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>مكتبة بين السطور</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
-      font-family: 'Cairo', sans-serif;
-      margin: 0;
-      background-color: #f9f5f0;
-      color: #3e2f1c;
-    }
-
-    header {
-      background-color: #6d4c41;
-      color: white;
-      padding: 1.5rem;
-      text-align: center;
-    }
-
-    nav {
-      background-color: #a1887f;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 2rem;
-      padding: 1rem;
-    }
-
-    nav a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .search-container {
-      display: flex;
-      justify-content: center;
-      margin: 1rem;
-    }
-
-    .search-container input {
-      width: 300px;
-      padding: 0.5rem;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-
-    .banner {
-      background-image: url("https://i.ibb.co/tPLBHTmw/prev-1533425404.png");
-      background-size: cover;
-      background-position: center;
-      height: 250px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 2rem;
-      font-weight: bold;
-      text-shadow: 1px 1px 5px #000;
-    }
-
-    .section {
-      padding: 2rem;
-    }
-
-    .section h2 {
-      color: #5d4037;
-      margin-bottom: 1rem;
-    }
-
-    .about, .contact, .institution {
-      background-color: #fff;
-      border-radius: 10px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
-    .books-highlight {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
-    }
-
-    .book-card {
-      background-color: #fff;
-      padding: 1rem;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-
-    .book-card img {
-      width: 100%;
-      height: 280px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-bottom: 0.5rem;
-    }
-
-    .book-card h3 {
-      font-size: 1.1rem;
-      color: #6d4c41;
-    }
-
-    .book-card p {
-      font-size: 0.9rem;
-      margin: 0.3rem 0;
-    }
-
-    .book-card a {
-      display: inline-block;
-      margin-top: 0.5rem;
-      padding: 0.4rem 0.8rem;
-      background-color: #6d4c41;
-      color: white;
-      text-decoration: none;
-      border-radius: 6px;
-    }
-
-    footer {
-      background-color: #6d4c41;
-      color: white;
-      text-align: center;
-      padding: 1rem;
-      margin-top: 2rem;
-    }
+    body { font-family: 'Cairo', sans-serif; }
   </style>
 </head>
-<body>
-
-  <header>
-    <h1>مرحبًا بك في مكتبة بين السطور 📚</h1>
+<body class="bg-[#fdf6ef] text-[#4b2e2e]">
+  <!-- الهيدر -->
+  <header class="bg-[#8b5e3c] p-4 text-white text-center text-2xl font-bold">
+    <span class="text-white">📚</span> مرحبًا بك في مكتبة بين السطور
   </header>
 
-  <nav>
-    <a href="index.html">الرئيسية</a>
-    <a href="store.html">المتجر</a>
-    <a href="order.html">الطلب</a>
-    <a href="reviews.html">التقييمات</a>
-    <a href="offers.html">عروض الكتب</a>
+  <!-- ناف بار -->
+  <nav class="bg-[#d2b48c] p-3 flex justify-center space-x-4 space-x-reverse">
+    <a href="#" class="hover:underline">الرئيسية</a>
+    <a href="#" class="hover:underline">المتجر</a>
+    <a href="#" class="hover:underline">الطلب</a>
+    <a href="#" class="hover:underline">التقييمات</a>
+    <a href="#" class="hover:underline">عروض الكتب</a>
   </nav>
 
-  <div class="search-container">
-    <input type="text" placeholder="ابحث عن كتاب...">
-  </div>
+  <!-- بانر -->
+  <section class="relative h-96">
+    <img src="https://i.ibb.co/vmW9mdD/banner-books.jpg" alt="صورة بانر الكتب" class="w-full h-full object-cover rounded-lg shadow-lg">
+    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+      <h1 class="text-white text-4xl md:text-5xl font-bold">مرحبًا بك في مكتبة بين السطور</h1>
+    </div>
+  </section>
 
-  <div class="banner">
+  <!-- جملة ترحيبية -->
+  <div class="text-center text-xl mt-6 mb-4 font-semibold">
     اقرأ ما بين السطور، تجد الحياة.
   </div>
 
-  <section class="section">
-    <h2>📚 أبرز الكتب</h2>
-    <div class="books-highlight">
-      <div class="book-card">
-        <img src="https://m.media-amazon.com/images/I/71aFt4+OTOL._AC_UF1000,1000_QL80_.jpg" alt="The Alchemist">
-        <h3>The Alchemist</h3>
-        <p>By: Paulo Coelho</p>
-        <a href="order.html">اطلبه الآن</a>
+  <!-- البحث -->
+  <div class="flex justify-center mb-8">
+    <input type="text" placeholder="ابحث عن كتاب..." class="p-2 rounded-lg border border-gray-300 w-1/2">
+  </div>
+
+  <!-- أبرز الكتب -->
+  <section class="px-6">
+    <h2 class="text-2xl font-bold mb-4">📚 أبرز الكتب</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+
+      <!-- مثال كتاب 1 -->
+      <div class="bg-white rounded-lg shadow-md p-4">
+        <img src="https://i.ibb.co/nNwpnswG/818-Th-Z6-AGL.jpg" alt="غربة الياسمين" class="w-full h-60 object-cover rounded-md mb-4">
+        <h3 class="text-lg font-bold">غربة الياسمين</h3>
+        <p class="text-sm text-gray-600 mb-2">د. خولة حمدي</p>
+        <button class="bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg">أضف إلى السلة</button>
       </div>
-      <div class="book-card">
-        <img src="https://m.media-amazon.com/images/I/81p+xe8cbnL.jpg" alt="The Fault in Our Stars">
-        <h3>The Fault in Our Stars</h3>
-        <p>By: John Green</p>
-        <a href="order.html">اطلبه الآن</a>
+
+      <!-- مثال كتاب 2 -->
+      <div class="bg-white rounded-lg shadow-md p-4">
+        <img src="https://i.ibb.co/20fNPPst/87557592.jpg" alt="ياسمين أبيض" class="w-full h-60 object-cover rounded-md mb-4">
+        <h3 class="text-lg font-bold">ياسمين أبيض</h3>
+        <p class="text-sm text-gray-600 mb-2">د. خولة حمدي</p>
+        <button class="bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg">أضف إلى السلة</button>
       </div>
-      <div class="book-card">
-        <img src="https://m.media-amazon.com/images/I/71kxa1-0zfL._SL1500_.jpg" alt="1984">
-        <h3>1984</h3>
-        <p>By: George Orwell</p>
-        <a href="order.html">اطلبه الآن</a>
+
+      <!-- مثال كتاب 3 -->
+      <div class="bg-white rounded-lg shadow-md p-4">
+        <img src="https://i.ibb.co/1t2cQm7X/30738859.jpg" alt="أن تبقى" class="w-full h-60 object-cover rounded-md mb-4">
+        <h3 class="text-lg font-bold">أن تبقى</h3>
+        <p class="text-sm text-gray-600 mb-2">د. خولة حمدي</p>
+        <button class="bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg">أضف إلى السلة</button>
       </div>
+
     </div>
   </section>
 
-  <section class="section">
-    <div class="about">
-      <h2>من نحن؟</h2>
-      <p>نحن مكتبة "بين السطور"، نوفر كتبًا وروايات عربية وأجنبية، ونهتم بالجودة والأسعار المناسبة. هدفنا نشر الثقافة ومساعدة محبي القراءة في كل مكان.</p>
-    </div>
-
-    <div class="institution">
-      <h2>عن المؤسسة</h2>
-      <p>منصة "بين السطور" تأسست على يد <strong>ريـتاج أيمن عبدالناصر</strong> بهدف بناء مكتبة إلكترونية متكاملة توفر تجربة قراءة وتسوّق مريحة، ومحتوى ثقافي متنوّع يخدم القارئ العربي والعالمي.</p>
-    </div>
-
-    <div class="contact">
-      <h2>تواصل معنا</h2>
-      <p>عبر واتساب: <strong>01559373066</strong></p>
-      <p>أو من خلال صفحاتنا على مواقع التواصل الاجتماعي.</p>
-    </div>
+  <!-- من نحن -->
+  <section class="mt-12 px-6">
+    <h2 class="text-xl font-bold mb-2">من نحن؟</h2>
+    <p class="bg-white p-4 rounded-lg shadow">نحن مكتبة "بين السطور"، نوفر كتبًا وروايات عربية وأجنبية، ونهتم بالجودة والأسعار المناسبة. هدفنا نشر الثقافة ومساعدة محبي القراءة في كل مكان.</p>
   </section>
 
-  <footer>
-    &copy; 2025 مكتبة بين السطور - تصميم وإشراف: ريـتاج
+  <!-- عن المؤسسة -->
+  <section class="mt-8 px-6">
+    <h2 class="text-xl font-bold mb-2">عن المؤسسة</h2>
+    <p class="bg-white p-4 rounded-lg shadow">منصة "بين السطور" تأسست على يد ريتاج أيمن عبد الناصر بهدف بناء مكتبة إلكترونية متكاملة توفر تجربة قراءة وتسوق مريحة، ومحتوى ثقافي متنوع يخدم القارئ العربي والعالمي.</p>
+  </section>
+
+  <!-- تواصل معنا -->
+  <section class="mt-8 px-6 mb-20">
+    <h2 class="text-xl font-bold mb-2">تواصل معنا</h2>
+    <p class="bg-white p-4 rounded-lg shadow">عبر واتساب: <strong>01559373066</strong><br>أو من خلال صفحاتنا على مواقع التواصل الاجتماعي.</p>
+  </section>
+
+  <!-- الفوتر -->
+  <footer class="bg-[#8b5e3c] text-white text-center p-4">
+    © 2025 مكتبة بين السطور - تصميم وإشراف: ريتاج
   </footer>
-
 </body>
 </html>
-
-
-
