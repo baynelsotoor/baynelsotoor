@@ -1,130 +1,163 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>متجر بين السطور</title>
+  <title>المتجر - مكتبة بين السطور</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body { font-family: 'Cairo', sans-serif; direction: rtl; margin: 0; padding: 0; background-color: #f9f9f9; }
-    .container { padding: 20px; max-width: 1200px; margin: auto; }
-    h1 { text-align: center; color: #3e3e3e; margin-bottom: 40px; }
-    .book-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-    .book-card { background-color: #fff; border-radius: 10px; padding: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: 0.3s; }
-    .book-card:hover { transform: scale(1.02); }
-    .book-card img { width: 100%; height: 280px; object-fit: cover; border-radius: 8px; }
-    .book-title { font-size: 18px; font-weight: bold; margin-top: 10px; color: #333; }
-    .book-author { font-size: 15px; color: #666; margin-bottom: 10px; }
-    .book-price { color: #e67e22; font-weight: bold; margin-bottom: 10px; }
-    .book-actions { display: flex; justify-content: space-between; align-items: center; }
-    .book-actions a, .book-actions button { background-color: #8e44ad; color: white; border: none; border-radius: 5px; padding: 6px 10px; text-decoration: none; font-size: 14px; cursor: pointer; transition: 0.2s; }
-    .book-actions button:hover, .book-actions a:hover { background-color: #732d91; }
+    body { font-family: 'Cairo', sans-serif; }
   </style>
 </head>
-<body>
-  <div class="container">
-    <h1>📚 متجر بين السطور - اختر كتابك المفضل</h1>
-    <div class="book-grid">
-      <div class="book-card">
-        <img src="https://i.ibb.co/nNwpnswG/818-Th-Z6-AGL.jpg" alt="غربة الياسمين">
-        <div class="book-title">غربة الياسمين</div>
-        <div class="book-author">د. خولة حمدي</div>
-        <div class="book-price">70 ج.م</div>
-        <div class="book-actions">
-          <a href="#">تفاصيل</a>
-          <button>أضف إلى السلة</button>
-        </div>
-      </div>
-      <div class="book-card">
-        <img src="https://i.ibb.co/20fNPPst/87557592.jpg" alt="ياسمين أبيض">
-        <div class="book-title">ياسمين أبيض</div>
-        <div class="book-author">د. خولة حمدي</div>
-        <div class="book-price">65 ج.م</div>
-        <div class="book-actions">
-          <a href="#">تفاصيل</a>
-          <button>أضف إلى السلة</button>
-        </div>
-      </div>
-      <div class="book-card">
-        <img src="https://i.ibb.co/1t2cQm7X/30738859.jpg" alt="أن تبقى">
-        <div class="book-title">أن تبقى</div>
-        <div class="book-author">د. خولة حمدي</div>
-        <div class="book-price">75 ج.م</div>
-        <div class="book-actions">
-          <a href="#">تفاصيل</a>
-          <button>أضف إلى السلة</button>
-        </div>
-      </div>
-      <div class="book-card">
-        <img src="https://i.ibb.co/Vcrh8B1M/9789776541252.jpg" alt="إيكادولي">
-        <div class="book-title">إيكادولي</div>
-        <div class="book-author">حنان لاشين</div>
-        <div class="book-price">60 ج.م</div>
-        <div class="book-actions">
-          <a href="#">تفاصيل</a>
-          <button>أضف إلى السلة</button>
-        </div>
-      </div>
-      <div class="book-card">
-        <img src="https://i.ibb.co/C56XTVH4/9753375.jpg" alt="أرض زيكولا">
-        <div class="book-title">أرض زيكولا</div>
-        <div class="book-author">عمرو عبد الحميد</div>
-        <div class="book-price">55 ج.م</div>
-        <div class="book-actions">
-          <a href="#">تفاصيل</a>
-          <button>أضف إلى السلة</button>
-        </div>
-      </div>
-      <div class="book-card">
-        <img src="https://i.ibb.co/R4CkW88f/IMG-20230913-123359.jpg" alt="أماريتا">
-        <div class="book-title">أماريتا</div>
-        <div class="book-author">عمرو عبد الحميد</div>
-        <div class="book-price">58 ج.م</div>
-        <div class="book-actions">
-          <a href="#">تفاصيل</a>
-          <button>أضف إلى السلة</button>
-        </div>
-      </div>
-      <div class="book-card">
-        <img src="https://i.ibb.co/yFdnMQMm/51710064.jpg" alt="كريسماس في مكة">
-        <div class="book-title">كريسماس في مكة</div>
-        <div class="book-author">أحمد خيري العمري</div>
-        <div class="book-price">60 ج.م</div>
-        <div class="book-actions">
-          <a href="#">تفاصيل</a>
-          <button>أضف إلى السلة</button>
-        </div>
-      </div>
-      <div class="book-card">
-        <img src="https://i.ibb.co/HZcNjH0/291182.jpg" alt="غربة مرغوب بها">
-        <div class="book-title">غربة مرغوب بها</div>
-        <div class="book-author">شمس محمد</div>
-        <div class="book-price">52 ج.م</div>
-        <div class="book-actions">
-          <a href="#">تفاصيل</a>
-          <button>أضف إلى السلة</button>
-        </div>
-      </div>
-      <div class="book-card">
-        <img src="https://i.ibb.co/qY5cTXqD/71-A2-KHw-QQUL-UF1000-1000-QL80.jpg" alt="شيفرة بلال">
-        <div class="book-title">شيفرة بلال</div>
-        <div class="book-author">أحمد خيري العمري</div>
-        <div class="book-price">66 ج.م</div>
-        <div class="book-actions">
-          <a href="#">تفاصيل</a>
-          <button>أضف إلى السلة</button>
-        </div>
-      </div>
-      <div class="book-card">
-        <img src="https://i.ibb.co/05W0nrw/18541f47-89c4-4b51-8c7c-73f0821af3b2.jpg" alt="مدرسة ميلر">
-        <div class="book-title">مدرسة ميلر</div>
-        <div class="book-author">رحمة نبيل</div>
-        <div class="book-price">49 ج.م</div>
-        <div class="book-actions">
-          <a href="#">تفاصيل</a>
-          <button>أضف إلى السلة</button>
-        </div>
-      </div>
-    </div>
+<body class="bg-[#fdf6ef] text-[#4b2e2e]">
+  <!-- الهيدر -->
+  <header class="bg-[#8b5e3c] p-4 text-white text-center text-2xl font-bold">
+    📚 متجر مكتبة بين السطور
+  </header>
+
+  <!-- زر السلة و البحث -->
+  <div class="flex justify-between items-center p-4">
+    <a href="#" class="bg-[#8b5e3c] text-white px-4 py-2 rounded hover:bg-[#a46d47]">🛒 انتقل إلى السلة</a>
+    <input type="text" placeholder="ابحث عن كتاب..." class="p-2 rounded-lg border border-gray-300 w-1/2">
   </div>
+
+  <!-- تنبيه عند عدم وجود كتاب -->
+  <div class="text-center text-red-600 font-semibold mb-2 hidden" id="noResults">
+    الكتاب غير متوفر حاليًا! <a href="طلب.html" class="text-blue-600 underline">اطلبه من هنا</a>
+  </div>
+
+  <!-- شبكة الكتب -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4" id="booksGrid">
+    <!-- الكتب هتتحط هنا -->
+  </div>
+
+  <!-- القالب الخفي لكتاب -->
+  <template id="book-template">
+    <div class="bg-white rounded-lg shadow-md p-4">
+      <img class="w-full h-60 object-cover rounded-md mb-4" src="" alt="">
+      <h3 class="text-lg font-bold">اسم الكتاب</h3>
+      <p class="text-sm text-gray-600 mb-2">المؤلف</p>
+      <p class="text-sm text-gray-800 mb-2 font-semibold">السعر: <span class="price">0</span> ج.م</p>
+      <a href="#" class="text-blue-600 text-sm underline block mb-2">تفاصيل الكتاب</a>
+      <button class="bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg w-full">أضف إلى السلة</button>
+    </div>
+  </template>
+
+  <script>
+    const books = [
+      {
+        title: "غربة الياسمين",
+        author: "د. خولة حمدي",
+        img: "https://i.ibb.co/nNwpnswG/818-Th-Z6-AGL.jpg",
+        price: 75
+      },
+      {
+        title: "ياسمين أبيض",
+        author: "د. خولة حمدي",
+        img: "https://i.ibb.co/20fNPPst/87557592.jpg",
+        price: 80
+      },
+      {
+        title: "أن تبقى",
+        author: "د. خولة حمدي",
+        img: "https://i.ibb.co/1t2cQm7X/30738859.jpg",
+        price: 70
+      },
+      {
+        title: "إيكادولي",
+        author: "حنان لاشين",
+        img: "https://i.ibb.co/Vcrh8B1M/9789776541252.jpg",
+        price: 85
+      },
+      {
+        title: "أرض زيكولا",
+        author: "عمرو عبد الحميد",
+        img: "https://i.ibb.co/C56XTVH4/9753375.jpg",
+        price: 90
+      },
+      {
+        title: "أماريتا",
+        author: "عمرو عبد الحميد",
+        img: "https://i.ibb.co/R4CkW88f/IMG-20230913-123359.jpg",
+        price: 95
+      },
+      {
+        title: "حديث الصباح",
+        author: "أدهم الشرقاوي",
+        img: "https://i.ibb.co/0RbnhKf7/images.jpg",
+        price: 60
+      },
+      {
+        title: "ابادول",
+        author: "حنان لاشين",
+        img: "https://i.ibb.co/dwNJfctV/images-69.jpg",
+        price: 88
+      },
+      {
+        title: "واحة اليعقوب",
+        author: "عمرو عبد الحميد",
+        img: "https://i.ibb.co/Y4PwvL4s/images-1.jpg",
+        price: 80
+      },
+      {
+        title: "الهلكوت",
+        author: "أحمد خالد مصطفى",
+        img: "https://i.ibb.co/6RXNTQrF/images-75.jpg",
+        price: 100
+      },
+      {
+        title: "غربة مرغوب بها",
+        author: "شمس محمد",
+        img: "https://i.ibb.co/hFM7K49V/images-2025-06-26-T065532-074.jpg",
+        price: 72
+      },
+      {
+        title: "نوح المذبوح",
+        author: "حسن الجندي",
+        img: "https://i.ibb.co/tTHNQ6XX/images-50.jpg",
+        price: 89
+      },
+      {
+        title: "انترخستيوس",
+        author: "أحمد خالد مصطفى",
+        img: "https://i.ibb.co/93bCYQ70/images-51.jpg",
+        price: 98
+      }
+      // ضيفي الباقي بنفس الشكل
+    ];
+
+    const grid = document.getElementById('booksGrid');
+    const template = document.getElementById('book-template');
+    const search = document.querySelector('input[type="text"]');
+    const noResults = document.getElementById('noResults');
+
+    function displayBooks(filtered = books) {
+      grid.innerHTML = "";
+      if (filtered.length === 0) {
+        noResults.classList.remove('hidden');
+        return;
+      } else {
+        noResults.classList.add('hidden');
+      }
+      filtered.forEach(book => {
+        const clone = template.content.cloneNode(true);
+        clone.querySelector('img').src = book.img;
+        clone.querySelector('img').alt = book.title;
+        clone.querySelector('h3').textContent = book.title;
+        clone.querySelector('p').textContent = book.author;
+        clone.querySelector('.price').textContent = book.price;
+        grid.appendChild(clone);
+      });
+    }
+
+    displayBooks();
+
+    search.addEventListener('input', () => {
+      const value = search.value.trim();
+      const results = books.filter(book => book.title.includes(value));
+      displayBooks(results);
+    });
+  </script>
 </body>
 </html>
