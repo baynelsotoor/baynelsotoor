@@ -54,16 +54,22 @@
 
     <div class="mb-4">
       <label class="block font-bold mb-2">اختر وسيلة الدفع</label>
-      <select name="وسيلة الدفع" id="paymentMethod" class="w-full border rounded p-2">
+      <select required name="وسيلة الدفع" id="paymentMethod" class="w-full border rounded p-2">
+        <option disabled selected value="">اختر وسيلة الدفع</option>
         <option value="محفظة إلكترونية">محفظة إلكترونية</option>
         <option value="بطاقة فيزا">بطاقة فيزا</option>
-        <option value="الدفع عند الاستلام">الدفع عند الاستلام (يُضاف 5 جنيه)</option>
+        <option value="الدفع عند الاستلام">الدفع عند الاستلام (يُضاف 10 جنيه)</option>
       </select>
     </div>
 
-    <div id="paymentNumber" class="mb-4 hidden">
+    <div id="walletNumberField" class="mb-4 hidden">
       <label class="block font-bold mb-1">رقم المحفظة</label>
       <input type="text" name="رقم المحفظة" class="w-full border rounded p-2" />
+    </div>
+
+    <div id="visaNumberField" class="mb-4 hidden">
+      <label class="block font-bold mb-1">رقم البطاقة</label>
+      <input type="text" name="رقم البطاقة" class="w-full border rounded p-2" />
     </div>
 
     <div class="text-lg font-bold mb-4">
@@ -90,33 +96,41 @@
     const totalPriceInput = document.getElementById("totalPriceInput");
     const itemsInput = document.getElementById("itemsInput");
     const paymentSelect = document.getElementById("paymentMethod");
-    const paymentNumber = document.getElementById("paymentNumber");
+    const walletNumberField = document.getElementById("walletNumberField");
+    const visaNumberField = document.getElementById("visaNumberField");
     const deliveryNote = document.getElementById("deliveryNote");
     const form = document.getElementById("orderForm");
     const submitBtn = document.getElementById("submitBtn");
     const thankYouMessage = document.getElementById("thankYouMessage");
 
-    // عرض الكتب
     cart.forEach(book => {
       const row = document.createElement("tr");
       row.innerHTML = `<td class="p-2 border">${book.title}</td><td class="p-2 border">${book.price}</td>`;
       tableBody.appendChild(row);
     });
 
-    // إجمالي السعر
     let baseTotal = cart.reduce((sum, b) => sum + b.price, 0);
     let freeDelivery = cart.length > 5;
     if (freeDelivery) deliveryNote.textContent = "📦 تم تفعيل التوصيل المجاني!";
 
     function updateTotal() {
       let total = baseTotal;
-      if (paymentSelect.value === "الدفع عند الاستلام" && !freeDelivery) total += 5;
+      if (paymentSelect.value === "الدفع عند الاستلام" && !freeDelivery) total += 10;
       totalElement.textContent = total;
       totalPriceInput.value = total;
     }
 
     paymentSelect.addEventListener("change", () => {
-      paymentNumber.classList.toggle("hidden", paymentSelect.value !== "محفظة إلكترونية");
+      const value = paymentSelect.value;
+      walletNumberField.classList.add("hidden");
+      visaNumberField.classList.add("hidden");
+
+      if (value === "محفظة إلكترونية") {
+        walletNumberField.classList.remove("hidden");
+      } else if (value === "بطاقة فيزا") {
+        visaNumberField.classList.remove("hidden");
+      }
+
       updateTotal();
     });
 
