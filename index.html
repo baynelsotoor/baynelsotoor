@@ -50,7 +50,7 @@
       <img src="https://i.ibb.co/Y4PwvL4s/images-1.jpg" alt="واحة آل يعقوب" class="w-full h-60 object-cover rounded-md mb-4">
       <h3 class="text-lg font-bold">واحة آل يعقوب</h3>
       <p class="text-sm text-gray-600 mb-2">عمرو عبد الحميد</p>
-      <button class="bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg">أضف إلى السلة</button>
+      <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="واحة آل يعقوب" data-price="85">🛒 أضف إلى السلة</button>
     </div>
 
     <!-- أبادول -->
@@ -58,7 +58,7 @@
       <img src="https://i.ibb.co/dwNJfctV/images-69.jpg" alt="أبادول" class="w-full h-60 object-cover rounded-md mb-4">
       <h3 class="text-lg font-bold">أبادول</h3>
       <p class="text-sm text-gray-600 mb-2">حنان لاشين</p>
-      <button class="bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg">أضف إلى السلة</button>
+      <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="أبادول" data-price="75">🛒 أضف إلى السلة</button>
     </div>
 
     <!-- الهلكوت -->
@@ -66,7 +66,7 @@
       <img src="https://i.ibb.co/6RXNTQrF/images-75.jpg" alt="الهلكوت" class="w-full h-60 object-cover rounded-md mb-4">
       <h3 class="text-lg font-bold">الهلكوت</h3>
       <p class="text-sm text-gray-600 mb-2">أحمد خالد مصطفى</p>
-      <button class="bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg">أضف إلى السلة</button>
+      <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="الهلكوت" data-price="90">🛒 أضف إلى السلة</button>
     </div>
 
     <!-- غربة مرغوب بها -->
@@ -74,7 +74,7 @@
       <img src="https://i.ibb.co/vxS4YS6t/291182.jpg" alt="غربة مرغوب بها" class="w-full h-60 object-cover rounded-md mb-4">
       <h3 class="text-lg font-bold">غربة مرغوب بها</h3>
       <p class="text-sm text-gray-600 mb-2">شمس محمد</p>
-      <button class="bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg">أضف إلى السلة</button>
+      <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="غربة مرغوب بها" data-price="65">🛒 أضف إلى السلة</button>
     </div>
 
     <!-- نوح المذبوح -->
@@ -82,7 +82,7 @@
       <img src="https://i.ibb.co/zhv8SG5v/images-50.jpg" alt="نوح المذبوح" class="w-full h-60 object-cover rounded-md mb-4">
       <h3 class="text-lg font-bold">نوح المذبوح</h3>
       <p class="text-sm text-gray-600 mb-2">حسن الجندي</p>
-      <button class="bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg">أضف إلى السلة</button>
+      <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="نوح المذبوح" data-price="60">🛒 أضف إلى السلة</button>
     </div>
 
     <!-- انتيخريستوس -->
@@ -90,13 +90,12 @@
       <img src="https://i.ibb.co/7xSk0qVr/images-41.jpg" alt="انتيخريستوس" class="w-full h-60 object-cover rounded-md mb-4">
       <h3 class="text-lg font-bold">انتيخريستوس</h3>
       <p class="text-sm text-gray-600 mb-2">أحمد خالد مصطفى</p>
-      <button class="bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg">أضف إلى السلة</button>
+      <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="انتيخريستوس" data-price="70">🛒 أضف إلى السلة</button>
     </div>
 
   </div>
 </section>
 
-  
   <!-- من نحن -->
   <section class="mt-12 px-6">
     <h2 class="text-xl font-bold mb-2">من نحن؟</h2>
@@ -119,5 +118,23 @@
   <footer class="bg-[#8b5e3c] text-white text-center p-4">
     © 2025 مكتبة بين السطور - تصميم وإشراف: ريتاج
   </footer>
+
+  <!-- إضافة إلى السلة -->
+  <script>
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+      button.addEventListener('click', function () {
+        const title = this.getAttribute('data-title');
+        const price = parseInt(this.getAttribute('data-price'));
+
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        cart.push({ title, price });
+
+        localStorage.setItem("cart", JSON.stringify(cart));
+
+        alert("✅ تم إضافة الكتاب إلى السلة!");
+      });
+    });
+  </script>
 </body>
 </html>
