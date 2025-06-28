@@ -2,128 +2,150 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>طلب كتاب | بين السطور</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الدفع - مكتبة بين السطور</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
-      font-family: 'Cairo', sans-serif;
-      background-color: #fff8f0;
-      color: #3e2f1c;
-      padding: 2rem;
-      max-width: 600px;
-      margin: auto;
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
-    label {
-      display: block;
-      margin: 1rem 0 0.5rem;
-      font-weight: bold;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 0.5rem;
-      margin-bottom: 1rem;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .notice {
-      background-color: #ffe0b2;
-      padding: 1rem;
-      border-radius: 5px;
-      color: #5d4037;
-      margin-bottom: 1rem;
-    }
-
-    button {
-      width: 100%;
-      padding: 1rem;
-      background-color: #6d4c41;
-      color: white;
-      font-size: 1.2rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #5d4037;
-    }
+    body { font-family: 'Cairo', sans-serif; }
+    .hidden { display: none; }
   </style>
 </head>
-<body>
+<body class="bg-[#fdf6ef] text-[#4b2e2e] p-6">
 
-  <h1>طلب كتاب 📚</h1>
+  <header class="bg-[#8b5e3c] text-white text-center text-2xl font-bold p-4 mb-6">
+    💳 صفحة الدفع
+  </header>
 
-  <form>
-    <label for="name">الاسم الكامل:</label>
-    <input type="text" id="name" name="name" required>
+  <!-- زر الرجوع للمتجر -->
+  <div class="text-center mb-6">
+    <a href="store.html" class="inline-block bg-[#d2b48c] hover:bg-[#c2a87c] text-[#4b2e2e] px-4 py-2 rounded font-semibold">🔙 الرجوع إلى المتجر</a>
+  </div>
 
-    <label for="address">العنوان بالتفصيل:</label>
-    <input type="text" id="address" name="address" required>
+  <!-- جدول الكتب -->
+  <div class="max-w-2xl mx-auto bg-white p-4 rounded shadow mb-6">
+    <h2 class="text-xl font-bold mb-4">📚 الكتب التي قمت بإضافتها:</h2>
+    <table class="w-full text-center border">
+      <thead class="bg-[#f7e7d9]">
+        <tr>
+          <th class="p-2 border">اسم الكتاب</th>
+          <th class="p-2 border">السعر (ج.م)</th>
+        </tr>
+      </thead>
+      <tbody id="cartTableBody"></tbody>
+    </table>
+  </div>
 
-    <label for="phone">رقم الهاتف:</label>
-    <input type="tel" id="phone" name="phone" required>
-
-    <label for="bookName">اسم الكتاب المطلوب:</label>
-    <input type="text" id="bookName" name="bookName" placeholder="مثال: أرض زيكولا" required>
-
-    <label for="payment">طريقة الدفع:</label>
-    <select id="payment" name="payment" onchange="handlePaymentChange()" required>
-      <option value="">اختر طريقة الدفع</option>
-      <option value="visa">💳 فيزا</option>
-      <option value="wallet">💼 محفظة إلكترونية</option>
-      <option value="cod">📦 الدفع عند الاستلام (+5 جنيه)</option>
-    </select>
-
-    <div id="visaField" class="hidden">
-      <label for="visaNumber">رقم البطاقة:</label>
-      <input type="text" id="visaNumber" name="visaNumber" placeholder="1234 5678 9012 3456">
+  <!-- نموذج الطلب -->
+  <form id="checkoutForm" class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    <div class="mb-4">
+      <label class="block font-bold mb-1">الاسم الكامل</label>
+      <input required type="text" id="name" class="w-full border rounded p-2" />
     </div>
 
-    <div id="walletField" class="hidden">
-      <label for="walletNumber">رقم المحفظة:</label>
-      <input type="text" id="walletNumber" name="walletNumber" placeholder="015xxxxxxxx">
+    <div class="mb-4">
+      <label class="block font-bold mb-1">رقم الهاتف</label>
+      <input required type="tel" id="phone" class="w-full border rounded p-2" />
     </div>
 
-    <div id="codNotice" class="hidden notice">
-      سيتم إضافة 5 جنيه إلى سعر الكتاب عند الدفع عند الاستلام.
+    <div class="mb-4">
+      <label class="block font-bold mb-1">العنوان</label>
+      <textarea required id="address" class="w-full border rounded p-2"></textarea>
     </div>
 
-    <button type="submit">إرسال الطلب</button>
+    <div class="mb-4">
+      <label class="block font-bold mb-2">اختر وسيلة الدفع</label>
+      <select id="paymentMethod" class="w-full border rounded p-2">
+        <option value="wallet">محفظة إلكترونية</option>
+        <option value="visa">بطاقة فيزا</option>
+        <option value="cod">الدفع عند الاستلام (يُضاف 5 جنيه)</option>
+      </select>
+    </div>
+
+    <div id="paymentNumber" class="mb-4 hidden">
+      <label class="block font-bold mb-1">رقم المحفظة / البطاقة</label>
+      <input type="text" class="w-full border rounded p-2" />
+    </div>
+
+    <div class="text-lg font-bold mb-4">
+      إجمالي السعر: <span id="totalPrice">0</span> ج.م
+      <div id="deliveryNote" class="text-sm text-green-600"></div>
+    </div>
+
+    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded w-full">
+      تأكيد الطلب
+    </button>
+
+    <a id="whatsappLink" target="_blank"
+       class="hidden mt-4 text-center block bg-[#25D366] text-white px-4 py-2 rounded hover:bg-green-700">
+      📲 إرسال تفاصيل الطلب على واتساب
+    </a>
+
+    <p id="successMessage" class="text-green-700 font-bold text-center mt-4 hidden">
+      ✅ تم إرسال طلبك بنجاح! سيتم التواصل معك قريبًا.
+    </p>
   </form>
 
   <script>
-    function handlePaymentChange() {
-      const visaField = document.getElementById("visaField");
-      const walletField = document.getElementById("walletField");
-      const codNotice = document.getElementById("codNotice");
-      const payment = document.getElementById("payment").value;
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const tableBody = document.getElementById("cartTableBody");
+    const totalElement = document.getElementById("totalPrice");
+    const paymentSelect = document.getElementById("paymentMethod");
+    const paymentNumber = document.getElementById("paymentNumber");
+    const form = document.getElementById("checkoutForm");
+    const deliveryNote = document.getElementById("deliveryNote");
+    const whatsappLink = document.getElementById("whatsappLink");
+    const successMessage = document.getElementById("successMessage");
 
-      visaField.classList.add("hidden");
-      walletField.classList.add("hidden");
-      codNotice.classList.add("hidden");
+    // عرض الكتب في الجدول
+    cart.forEach(book => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td class="p-2 border">${book.title}</td>
+        <td class="p-2 border">${book.price}</td>
+      `;
+      tableBody.appendChild(row);
+    });
 
-      if (payment === "visa") {
-        visaField.classList.remove("hidden");
-      } else if (payment === "wallet") {
-        walletField.classList.remove("hidden");
-      } else if (payment === "cod") {
-        codNotice.classList.remove("hidden");
+    // حساب السعر
+    let baseTotal = cart.reduce((sum, b) => sum + b.price, 0);
+    let freeDelivery = cart.length > 5;
+    if (freeDelivery) deliveryNote.textContent = "📦 تم تفعيل التوصيل المجاني!";
+
+    function updateTotal() {
+      let total = baseTotal;
+      if (paymentSelect.value === "cod" && !freeDelivery) {
+        total += 5;
       }
+      totalElement.textContent = total;
     }
-  </script>
 
+    paymentSelect.addEventListener("change", () => {
+      paymentNumber.classList.toggle("hidden", paymentSelect.value === "cod");
+      updateTotal();
+    });
+
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const address = document.getElementById("address").value.trim();
+      const pay = paymentSelect.value;
+      const total = totalElement.textContent;
+
+      let items = cart.map(b => b.title).join(", ");
+      let msg = `📚 طلب جديد من موقع مكتبة بين السطور:\n\n👤 الاسم: ${name}\n📞 الهاتف: ${phone}\n🏠 العنوان: ${address}\n💵 وسيلة الدفع: ${pay === "cod" ? "عند الاستلام" : pay === "visa" ? "فيزا" : "محفظة"}\n📦 الكتب: ${items}\n💰 الإجمالي: ${total} ج.م`;
+
+      whatsappLink.href = `https://wa.me/201559373066?text=${encodeURIComponent(msg)}`;
+      whatsappLink.classList.remove("hidden");
+
+      localStorage.removeItem("cart");
+      successMessage.classList.remove("hidden");
+      form.reset();
+      totalElement.textContent = "0";
+    });
+
+    updateTotal();
+  </script>
 </body>
 </html>
-
