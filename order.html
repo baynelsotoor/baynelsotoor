@@ -34,10 +34,9 @@
     </table>
   </div>
 
-  <form action="https://formsubmit.co/ritajayman77@gmail.com" method="POST" class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md">
-    <input type="hidden" name="_next" value="https://baynelsotoor.github.io/thanks.html">
+  <form id="orderForm" action="https://formsubmit.co/ritajayman77@gmail.com" method="POST" class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md">
     <input type="hidden" name="_captcha" value="false">
-
+    
     <div class="mb-4">
       <label class="block font-bold mb-1">الاسم الكامل</label>
       <input required type="text" name="الاسم" id="name" class="w-full border rounded p-2" />
@@ -63,8 +62,8 @@
     </div>
 
     <div id="paymentNumber" class="mb-4 hidden">
-      <label class="block font-bold mb-1">رقم المحفظة / البطاقة</label>
-      <input type="text" name="رقم المحفظة أو البطاقة" class="w-full border rounded p-2" />
+      <label class="block font-bold mb-1">رقم المحفظة</label>
+      <input type="text" name="رقم المحفظة" class="w-full border rounded p-2" />
     </div>
 
     <div class="text-lg font-bold mb-4">
@@ -75,20 +74,27 @@
     <input type="hidden" name="إجمالي السعر" id="totalPriceInput">
     <input type="hidden" name="قائمة الكتب" id="itemsInput">
 
-    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded w-full">
+    <button id="submitBtn" type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded w-full">
       تأكيد الطلب
     </button>
+
+    <p id="thankYouMessage" class="hidden text-center text-green-700 font-bold mt-6 text-lg">
+      ✅ تم إرسال طلبك بنجاح! <br> يسعدنا خدمتك دائمًا 💌
+    </p>
   </form>
 
   <script>
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
     const tableBody = document.getElementById("cartTableBody");
     const totalElement = document.getElementById("totalPrice");
+    const totalPriceInput = document.getElementById("totalPriceInput");
+    const itemsInput = document.getElementById("itemsInput");
     const paymentSelect = document.getElementById("paymentMethod");
     const paymentNumber = document.getElementById("paymentNumber");
     const deliveryNote = document.getElementById("deliveryNote");
-    const totalPriceInput = document.getElementById("totalPriceInput");
-    const itemsInput = document.getElementById("itemsInput");
+    const form = document.getElementById("orderForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const thankYouMessage = document.getElementById("thankYouMessage");
 
     // عرض الكتب
     cart.forEach(book => {
@@ -97,7 +103,7 @@
       tableBody.appendChild(row);
     });
 
-    // الحساب
+    // إجمالي السعر
     let baseTotal = cart.reduce((sum, b) => sum + b.price, 0);
     let freeDelivery = cart.length > 5;
     if (freeDelivery) deliveryNote.textContent = "📦 تم تفعيل التوصيل المجاني!";
@@ -110,13 +116,23 @@
     }
 
     paymentSelect.addEventListener("change", () => {
-      paymentNumber.classList.toggle("hidden", paymentSelect.value === "الدفع عند الاستلام");
+      paymentNumber.classList.toggle("hidden", paymentSelect.value !== "محفظة إلكترونية");
       updateTotal();
+    });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      itemsInput.value = cart.map(b => b.title).join(", ");
+      localStorage.removeItem("cart");
+      submitBtn.classList.add("hidden");
+      thankYouMessage.classList.remove("hidden");
+      setTimeout(() => {
+        form.submit();
+      }, 1500);
     });
 
     updateTotal();
     itemsInput.value = cart.map(b => b.title).join(", ");
-    localStorage.removeItem("cart");
   </script>
 </body>
 </html>
