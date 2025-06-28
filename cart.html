@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>سلة المشتريات - بين السطور</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Cairo', sans-serif; }
+  </style>
+</head>
+<body class="bg-[#fdf6ef] text-[#4b2e2e]">
+
+  <header class="bg-[#8b5e3c] text-white p-4 text-center text-2xl font-bold">
+    🛒 سلة المشتريات
+  </header>
+
+  <div class="p-6">
+    <div id="cartItems" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      <!-- الكتب هتظهر هنا -->
+    </div>
+
+    <!-- الإجمالي -->
+    <div class="text-center text-xl font-bold mb-6">
+      الإجمالي: <span id="total">0</span> ج.م
+    </div>
+
+    <!-- أزرار التحكم -->
+    <div class="flex justify-center gap-6">
+      <a href="store.html" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">⬅️ رجوع للمتجر</a>
+      <a href="طلب.html" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">✅ انتقل للدفع</a>
+    </div>
+  </div>
+
+  <script>
+    const cartContainer = document.getElementById("cartItems");
+    const totalElement = document.getElementById("total");
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    function updateTotal() {
+      const total = cart.reduce((sum, item) => sum + item.price, 0);
+      totalElement.textContent = total;
+    }
+
+    function displayCart() {
+      cartContainer.innerHTML = "";
+
+      if (cart.length === 0) {
+        cartContainer.innerHTML = "<p class='text-center col-span-full text-xl'>السلة فارغة 😢</p>";
+        totalElement.textContent = "0";
+        return;
+      }
+
+      cart.forEach((item, index) => {
+        const div = document.createElement("div");
+        div.className = "bg-white p-4 rounded shadow";
+
+        div.innerHTML = `
+          <img src="${item.img}" alt="${item.title}" class="w-full h-48 object-cover rounded mb-4">
+          <h3 class="text-lg font-bold">${item.title}</h3>
+          <p class="text-sm text-gray-600">${item.author}</p>
+          <p class="text-sm font-semibold mb-2">السعر: ${item.price} ج.م</p>
+          <button class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 remove-btn">🗑️ إزالة</button>
+        `;
+
+        div.querySelector(".remove-btn").addEventListener("click", () => {
+          cart.splice(index, 1);
+          localStorage.setItem("cart", JSON.stringify(cart));
+          displayCart();
+        });
+
+        cartContainer.appendChild(div);
+      });
+
+      updateTotal();
+    }
+
+    displayCart();
+  </script>
+</body>
+</html>
