@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://baynelsotoor.github.io/baynelsotoor/sitemap.xml
