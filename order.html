@@ -1,152 +1,108 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>الدفع - مكتبة بين السطور</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body { font-family: 'Cairo', sans-serif; }
-    .hidden { display: none; }
-  </style>
-</head>
-<body class="bg-[#fdf6ef] text-[#4b2e2e] p-6">
+<div class="mb-4">
+  <label class="block font-bold mb-2">اختر طريقة التوصيل</label>
+  <select required name="طريقة التوصيل" id="deliveryMethod" class="w-full border rounded p-2" onchange="updateDeliveryOptions()">
+    <option disabled selected value="">اختر طريقة التوصيل</option>
+    <option value="metro">من أقرب محطة مترو (25 جنيه)</option>
+    <option value="post">من مكتب بريد مصري</option>
+    <option value="home">توصيل حتى باب البيت</option>
+  </select>
+</div>
 
-  <header class="bg-[#8b5e3c] text-white text-center text-2xl font-bold p-4 mb-6">
-    💳 صفحة الدفع
-  </header>
+<!-- ✅ أقرب محطة مترو -->
+<div id="metro-section" class="mb-4 hidden">
+  <label class="block font-bold mb-1">اختاري محطة المترو:</label>
+  <select name="محطة المترو" class="w-full border rounded p-2">
+    <option>المعادي</option>
+    <option>شبرا</option>
+    <option>المرج</option>
+    <option>الجيزة</option>
+  </select>
+  <p class="text-sm mt-1 text-gray-600">يُضاف 25 جنيه على السعر الإجمالي</p>
+</div>
 
-  <div class="text-center mb-6">
-    <a href="store.html" class="inline-block bg-[#d2b48c] hover:bg-[#c2a87c] text-[#4b2e2e] px-4 py-2 rounded font-semibold">🔙 الرجوع إلى المتجر</a>
+<!-- ✅ البريد المصري -->
+<div id="post-section" class="mb-4 hidden">
+  <label class="block font-bold mb-1">نوع الشحن:</label>
+  <div class="flex gap-4">
+    <label><input type="radio" name="نوع الشحن" value="20" onclick="updatePostPrice(20)"> شحن عادي (20 جنيه)</label>
+    <label><input type="radio" name="نوع الشحن" value="35" onclick="updatePostPrice(35)"> شحن سريع (35 جنيه)</label>
   </div>
+  <label class="block font-bold mt-2">اسم مكتب البريد:</label>
+  <input type="text" name="مكتب البريد" class="w-full border rounded p-2" placeholder="مثلاً: مكتب بريد المعادي">
+  <p id="post-price" class="text-sm mt-1 text-gray-600">--</p>
+</div>
 
-  <div class="max-w-2xl mx-auto bg-white p-4 rounded shadow mb-6">
-    <h2 class="text-xl font-bold mb-4">📚 الكتب التي قمت بإضافتها:</h2>
-    <table class="w-full text-center border">
-      <thead class="bg-[#f7e7d9]">
-        <tr>
-          <th class="p-2 border">اسم الكتاب</th>
-          <th class="p-2 border">السعر (ج.م)</th>
-        </tr>
-      </thead>
-      <tbody id="cartTableBody"></tbody>
-    </table>
-  </div>
+<!-- ✅ باب البيت -->
+<div id="home-section" class="mb-4 hidden">
+  <label class="block font-bold mb-1">المحافظة:</label>
+  <select id="governorate" name="المحافظة" class="w-full border rounded p-2" onchange="updateHomeDeliveryPrice()">
+    <option value="">-- اختاري المحافظة --</option>
+    <option value="cairo">القاهرة</option>
+    <option value="giza">الجيزة</option>
+    <option value="delta">الدلتا</option>
+    <option value="upper_egypt">الصعيد</option>
+  </select>
+  <p id="home-price" class="text-sm mt-1 text-gray-600">--</p>
+</div>
 
-  <form id="orderForm" action="https://formsubmit.co/ritajayman77@gmail.com" method="POST" class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md">
-    <input type="hidden" name="_captcha" value="false">
-    
-    <div class="mb-4">
-      <label class="block font-bold mb-1">الاسم الكامل</label>
-      <input required type="text" name="الاسم" id="name" class="w-full border rounded p-2" />
-    </div>
+<!-- ✅ سكريبت توصيل -->
+<script>
+  const deliverySelect = document.getElementById("deliveryMethod");
+  const metroSection = document.getElementById("metro-section");
+  const postSection = document.getElementById("post-section");
+  const homeSection = document.getElementById("home-section");
+  const homePrice = document.getElementById("home-price");
+  const postPrice = document.getElementById("post-price");
 
-    <div class="mb-4">
-      <label class="block font-bold mb-1">رقم الهاتف</label>
-      <input required type="tel" name="رقم الهاتف" id="phone" class="w-full border rounded p-2" />
-    </div>
+  let deliveryCost = 0;
 
-    <div class="mb-4">
-      <label class="block font-bold mb-1">العنوان</label>
-      <textarea required name="العنوان" id="address" class="w-full border rounded p-2"></textarea>
-    </div>
+  function updateDeliveryOptions() {
+    metroSection.classList.add("hidden");
+    postSection.classList.add("hidden");
+    homeSection.classList.add("hidden");
+    deliveryCost = 0;
 
-    <div class="mb-4">
-      <label class="block font-bold mb-2">اختر وسيلة الدفع</label>
-      <select required name="وسيلة الدفع" id="paymentMethod" class="w-full border rounded p-2">
-        <option disabled selected value="">اختر وسيلة الدفع</option>
-        <option value="محفظة إلكترونية">محفظة إلكترونية</option>
-        <option value="بطاقة فيزا">بطاقة فيزا</option>
-        <option value="الدفع عند الاستلام">الدفع عند الاستلام (يُضاف 10 جنيه)</option>
-      </select>
-    </div>
-
-    <div id="walletNumberField" class="mb-4 hidden">
-      <label class="block font-bold mb-1">رقم المحفظة</label>
-      <input type="text" name="رقم المحفظة" class="w-full border rounded p-2" />
-    </div>
-
-    <div id="visaNumberField" class="mb-4 hidden">
-      <label class="block font-bold mb-1">رقم البطاقة</label>
-      <input type="text" name="رقم البطاقة" class="w-full border rounded p-2" />
-    </div>
-
-    <div class="text-lg font-bold mb-4">
-      إجمالي السعر: <span id="totalPrice">0</span> ج.م
-      <div id="deliveryNote" class="text-sm text-green-600"></div>
-    </div>
-
-    <input type="hidden" name="إجمالي السعر" id="totalPriceInput">
-    <input type="hidden" name="قائمة الكتب" id="itemsInput">
-
-    <button id="submitBtn" type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded w-full">
-      تأكيد الطلب
-    </button>
-
-    <p id="thankYouMessage" class="hidden text-center text-green-700 font-bold mt-6 text-lg">
-      ✅ تم إرسال طلبك بنجاح! <br> يسعدنا خدمتك دائمًا 💌
-    </p>
-  </form>
-
-  <script>
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const tableBody = document.getElementById("cartTableBody");
-    const totalElement = document.getElementById("totalPrice");
-    const totalPriceInput = document.getElementById("totalPriceInput");
-    const itemsInput = document.getElementById("itemsInput");
-    const paymentSelect = document.getElementById("paymentMethod");
-    const walletNumberField = document.getElementById("walletNumberField");
-    const visaNumberField = document.getElementById("visaNumberField");
-    const deliveryNote = document.getElementById("deliveryNote");
-    const form = document.getElementById("orderForm");
-    const submitBtn = document.getElementById("submitBtn");
-    const thankYouMessage = document.getElementById("thankYouMessage");
-
-    cart.forEach(book => {
-      const row = document.createElement("tr");
-      row.innerHTML = `<td class="p-2 border">${book.title}</td><td class="p-2 border">${book.price}</td>`;
-      tableBody.appendChild(row);
-    });
-
-    let baseTotal = cart.reduce((sum, b) => sum + b.price, 0);
-    let freeDelivery = cart.length > 5;
-    if (freeDelivery) deliveryNote.textContent = "📦 تم تفعيل التوصيل المجاني!";
-
-    function updateTotal() {
-      let total = baseTotal;
-      if (paymentSelect.value === "الدفع عند الاستلام" && !freeDelivery) total += 10;
-      totalElement.textContent = total;
-      totalPriceInput.value = total;
+    switch (deliverySelect.value) {
+      case "metro":
+        metroSection.classList.remove("hidden");
+        deliveryCost = 25;
+        break;
+      case "post":
+        postSection.classList.remove("hidden");
+        break;
+      case "home":
+        homeSection.classList.remove("hidden");
+        break;
     }
-
-    paymentSelect.addEventListener("change", () => {
-      const value = paymentSelect.value;
-      walletNumberField.classList.add("hidden");
-      visaNumberField.classList.add("hidden");
-
-      if (value === "محفظة إلكترونية") {
-        walletNumberField.classList.remove("hidden");
-      } else if (value === "بطاقة فيزا") {
-        visaNumberField.classList.remove("hidden");
-      }
-
-      updateTotal();
-    });
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      itemsInput.value = cart.map(b => b.title).join(", ");
-      localStorage.removeItem("cart");
-      submitBtn.classList.add("hidden");
-      thankYouMessage.classList.remove("hidden");
-      setTimeout(() => {
-        form.submit();
-      }, 1500);
-    });
-
     updateTotal();
-    itemsInput.value = cart.map(b => b.title).join(", ");
-  </script>
-</body>
-</html>
+  }
+
+  function updatePostPrice(cost) {
+    deliveryCost = cost;
+    postPrice.textContent = `السعر المضاف: ${cost} جنيه`;
+    updateTotal();
+  }
+
+  function updateHomeDeliveryPrice() {
+    const gov = document.getElementById("governorate").value;
+    if (gov === "cairo" || gov === "giza") {
+      deliveryCost = 50;
+    } else if (gov === "delta") {
+      deliveryCost = 65;
+    } else if (gov === "upper_egypt") {
+      deliveryCost = 75;
+    } else {
+      deliveryCost = 0;
+    }
+    homePrice.textContent = `السعر المضاف: ${deliveryCost} جنيه`;
+    updateTotal();
+  }
+
+  function updateTotal() {
+    let total = baseTotal;
+    if (paymentSelect.value === "الدفع عند الاستلام" && !freeDelivery) total += 10;
+    if (!freeDelivery) total += deliveryCost;
+    totalElement.textContent = total;
+    totalPriceInput.value = total;
+  }
+</script>
