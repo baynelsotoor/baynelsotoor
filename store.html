@@ -1,406 +1,87 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>المتجر - مكتبة بين السطور</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body { font-family: 'Cairo', sans-serif; }
-  </style>
-</head>
-<body class="bg-[#fdf6ef] text-[#4b2e2e]">
-  <!-- الهيدر -->
-  <header class="bg-[#8b5e3c] p-4 text-white text-center text-2xl font-bold">
-    📚 متجر مكتبة بين السطور
-  </header>
+<div id="booksGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+  <!-- سيتم توليد الكروت هنا ديناميكيًا باستخدام JavaScript -->
+</div>
 
-  <div class="flex flex-col md:flex-row justify-between items-center gap-2 p-4">
-    <div class="flex gap-2 w-full md:w-auto">
-      <a href="cart.html" class="bg-[#8b5e3c] text-white px-4 py-2 rounded hover:bg-[#a46d47]">🛒 انتقل إلى السلة</a>
-      <a href="https://forms.gle/Ur4XvSu3VtLKVSDW8" target="_blank" class="bg-[#d2b48c] text-[#4b2e2e] px-4 py-2 rounded hover:bg-[#e3c9a3]">❓ مش لاقي الكتاب اللى بتدور عليه؟ اطلبه من هنا</a>
-    </div>
-    <input type="text" id="searchInput" placeholder="ابحث عن كتاب..." class="p-2 rounded-lg border border-gray-300 w-full md:w-1/2">
+<template id="book-template">
+  <div class="bg-white rounded-lg shadow-md p-4">
+    <img class="w-full h-60 object-cover rounded-md mb-4" src="" alt="">
+    <h3 class="text-lg font-bold"></h3>
+    <p class="text-sm text-gray-600 mb-2 author"></p>
+    <p class="text-sm text-gray-800 font-semibold mb-2 price"></p>
+    <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg">🛒 أضف إلى السلة</button>
   </div>
+</template>
 
-  <!-- تنبيه عند عدم وجود كتاب -->
-  <div class="text-center text-red-600 font-semibold mb-2 hidden" id="noResults">
-    الكتاب غير متوفر حاليًا! <a href="https://forms.gle/Ur4XvSu3VtLKVSDW8" target="_blank" class="text-blue-600 underline">اطلبه من هنا</a>
-  </div>
+<p id="noResults" class="hidden text-center text-red-600 font-bold mt-4">لم يتم العثور على نتائج.</p>
 
-  <!-- شبكة الكتب -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4" id="booksGrid"></div>
+<!-- ✅ الجزء الثاني: السكربت الخاص بعرض الكتب والبحث -->
+<script>
+  const books = [
+    {
+      title: "أحببت وغداً",
+      author: "د. عماد رشاد عثمان",
+      img: "https://i.ibb.co/Q3SkRKvG/53810-250x375-webp-1.webp",
+      price: "75 جنيه"
+    },
+    {
+      title: "قوانين الصراع النفسي",
+      author: "د. يوسف الحسيني",
+      img: "https://i.ibb.co/60DrdGXD/images-10.jpg",
+      price: "80 جنيه"
+    },
+    {
+      title: "البسي واسع",
+      author: "د. إبتسام القاضي",
+      img: "https://i.ibb.co/7J0Np7Qw/images-2025-06-26-T065634-624.jpg",
+      price: "65 جنيه"
+    },
+    {
+      title: "آن",
+      author: "محمد صادق",
+      img: "https://i.ibb.co/FkX7FQpV/200x200.jpg",
+      price: "75 جنيه"
+    },
+    // ← كمل بقية الكتب بنفس التنسيق اللي فوق...
+  ];
 
-  <!-- القالب الخفي لكتاب -->
-  <template id="book-template">
-    <div class="bg-white rounded-lg shadow-md p-4">
-      <img class="w-full h-60 object-cover rounded-md mb-4" src="" alt="">
-      <h3 class="text-lg font-bold"></h3>
-      <p class="text-sm text-gray-600 mb-2 author"></p>
-      <p class="text-sm text-gray-800 mb-2 font-semibold">السعر: <span class="price">0</span> ج.م</p>
-      <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg w-full">أضف إلى السلة</button>
-    </div>
-  </template>
+  const grid = document.getElementById('booksGrid');
+  const template = document.getElementById('book-template');
+  const search = document.getElementById('searchInput');
+  const noResults = document.getElementById('noResults');
 
-  <script>
-    const books = [
-      { title: "غربة الياسمين", author: "د. خولة حمدي", img: "https://i.ibb.co/nNwpnswG/818-Th-Z6-AGL.jpg", price: 75 },
-      { title: "ياسمين أبيض", author: "د. خولة حمدي", img: "https://i.ibb.co/20fNPPst/87557592.jpg", price: 80 },
-      { title: "أن تبقى", author: "د. خولة حمدي", img: "https://i.ibb.co/1t2cQm7X/30738859.jpg", price: 70 },
-      { title: "إيكادولي", author: "حنان لاشين", img: "https://i.ibb.co/Vcrh8B1M/9789776541252.jpg", price: 85 },
-      { title: "أرض زيكولا", author: "عمرو عبد الحميد", img: "https://i.ibb.co/C56XTVH4/9753375.jpg", price: 90 },
-      { title: "أماريتا", author: "عمرو عبد الحميد", img: "https://i.ibb.co/R4CkW88f/IMG-20230913-123359.jpg", price: 95 },
-      { title: "حديث الصباح", author: "أدهم الشرقاوي", img: "https://i.ibb.co/0RbnhKf7/images.jpg", price: 60 },
-      { title: "ابادول", author: "حنان لاشين", img: "https://i.ibb.co/dwNJfctV/images-69.jpg", price: 88 },
-      { title: "واحة اليعقوب", author: "عمرو عبد الحميد", img: "https://i.ibb.co/Y4PwvL4s/images-1.jpg", price: 80 },
-      { title: "الهلكوت", author: "أحمد خالد مصطفى", img: "https://i.ibb.co/6RXNTQrF/images-75.jpg", price: 100 },
-      { title: "قبل ان تبرد القهوه الجزء الرابع", author: "توشيكازو كاواغوتشي", img: "https://i.ibb.co/hFM7K49V/images-2025-06-26-T065532-074.jpg", price: 72 },
-      { title: "نوح المذبوح", author: "حسن الجندي", img: "https://i.ibb.co/tTHNQ6XX/images-50.jpg", price: 89 },
-      { title: "نصف ميت", author: "حسن الجندى", img: "https://i.ibb.co/93bCYQ70/images-51.jpg", price: 98 },
-      { title: "جلسات نفسية", author: "د. محمد إبراهيم", img: "https://i.ibb.co/1YKYnKCR/58566586.jpg", price: 85 },
-      { title: "الهشاشة النفسية", author: "د. إسماعيل عرفة", img: "https://i.ibb.co/LXkd4tJc/172884507.jpg", price: 75 },
-      { title: "هارى بوتر - حجر الفيلسوف", author: "J.K. Rowling", img: "https://i.ibb.co/n87BdTNG/5ffa0ba27a6d9b4647df06a9c3facd3f-png", price: 95 },
-      { title: "هارى بوتر - حجرة الأسرار", author: "J.K. Rowling", img: "https://i.ibb.co/hRGM15fF/image.jpg", price: 95 },
-      { title: "هارى بوتر - كأس النار", author: "J.K. Rowling", img: "https://i.ibb.co/Gvp6n0zL/d5dca214e3d82e487edc1982dd4da7c6-jpg", price: 95 },
-      { title: "ممتلئ بالفراغ", author: "د. عماد رشاد عثمان", img: "https://i.ibb.co/xt83dFKb/78671406.jpg", price: 75 },
-      { title: "أبي الذي أكره", author: "د. عماد رشاد عثمان", img: "https://i.ibb.co/ccKkzV5Y/artworks-nymv-Ob4m-V6ze-HOf-G-n-OGl6g-t1080x1080.jpg", price: 70 },
-      { title: "كريسماس في مكة", author: "أحمد خيري العمري", img: "https://i.ibb.co/bjfw8F0q/51710064.jpg", price: 85 }
-            { title: "عقدك النفسية سجنك الأبدى", author: "د.يوسف الحسينى", img: "https://i.ibb.co/60DrdGXD/images-10.jpg", price: 85 }
-    <div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/GQ4FxhVx/9f2c45ff22eb6c827113e74bba35b0e3-png-1.webp" alt="ابتسم فأنت ميت" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">ابتسم فأنت ميت</h3>
-  <p class="text-sm text-gray-600 mb-2">حسن الجندي</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="ابتسم فأنت ميت" data-price="55">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 52. القربان -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/NBzjhrD/images-74.jpg" alt="القربان" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">القربان</h3>
-  <p class="text-sm text-gray-600 mb-2">مروى جوهر</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="القربان" data-price="70">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 53. قواعد جارتين الجزء الأول -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/GQBR84gv/images-73.jpg" alt="قواعد جارتين" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">قواعد جارتين - الجزء الأول</h3>
-  <p class="text-sm text-gray-600 mb-2">عمرو عبد الحميد</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="قواعد جارتين 1" data-price="80">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 54. قنبلة للاستخدام الشخصي -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/M5KsKRDN/images-72.jpg" alt="قنبلة للاستخدام الشخصي" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">قنبلة للاستخدام الشخصي</h3>
-  <p class="text-sm text-gray-600 mb-2">ميرنا المهدي</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="قنبلة للاستخدام الشخصي" data-price="60">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 55. صديقي السيكوباتي -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/cXt0KyKw/images-71.jpg" alt="صديقي السيكوباتي" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">صديقي السيكوباتي</h3>
-  <p class="text-sm text-gray-600 mb-2">ميرنا المهدي</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="صديقي السيكوباتي" data-price="55">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 56. قضية لوز مر -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/pBmcMHqw/images-70.jpg" alt="قضية لوز مر" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">قضية لوز مر - الجزء الثاني (تحقيقات نوح الألفي)</h3>
-  <p class="text-sm text-gray-600 mb-2">ميرنا المهدي</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="قضية لوز مر" data-price="60">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 57. قضية عنب الثعلب -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/Z0TxTCR/images-66.jpg" alt="قضية عنب الثعلب" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">قضية عنب الثعلب - الجزء الثالث (تحقيقات نوح الألفي)</h3>
-  <p class="text-sm text-gray-600 mb-2">ميرنا المهدي</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="قضية عنب الثعلب" data-price="60">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 58. فتاة الياقة الزرقاء -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/DD4MNYnm/images-67.jpg" alt="فتاة الياقة الزرقاء" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">فتاة الياقة الزرقاء</h3>
-  <p class="text-sm text-gray-600 mb-2">عمرو عبد الحميد</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="فتاة الياقة الزرقاء" data-price="70">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 59. مدرسة ميلر -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/SD5fzFPm/images-68.jpg" alt="مدرسة ميلر" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">مدرسة ميلر</h3>
-  <p class="text-sm text-gray-600 mb-2">رحمة نبيل</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="مدرسة ميلر" data-price="60">🛒 أضف إلى السلة</button>
-</div>
-<!-- 11. أحببت وغداً - د. عماد رشاد عثمان -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/Q3SkRKvG/53810-250x375-webp-1.webp" alt="أحببت وغداً" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">أحببت وغداً</h3>
-  <p class="text-sm text-gray-600 mb-2">د. عماد رشاد عثمان</p>
-  <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="أحببت وغداً" data-price="75">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 12. قوانين الصراع النفسي - د. يوسف الحسيني -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/60DrdGXD/images-10.jpg" alt="قوانين الصراع النفسي" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">قوانين الصراع النفسي</h3>
-  <p class="text-sm text-gray-600 mb-2">د. يوسف الحسيني</p>
-  <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="قوانين الصراع النفسي" data-price="80">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 13. البسي واسع - د. إبتسام القاضي -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/7J0Np7Qw/images-2025-06-26-T065634-624.jpg" alt="البسي واسع" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">البسي واسع</h3>
-  <p class="text-sm text-gray-600 mb-2">د. إبتسام القاضي</p>
-  <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="البسي واسع" data-price="65">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 14. آن - محمد صادق -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/FkX7FQpV/200x200.jpg" alt="آن" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">آن</h3>
-  <p class="text-sm text-gray-600 mb-2">محمد صادق</p>
-  <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="آن" data-price="75">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 15. كورس ذا أمريكان إنجلش 1 - إبراهيم عادل -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/Xfb3mX9W/images-79.jpg" alt="ذا أمريكان إنجلش 1" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">كورس ذا أمريكان إنجلش - المستوى الأول</h3>
-  <p class="text-sm text-gray-600 mb-2">إبراهيم عادل</p>
-  <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="ذا أمريكان إنجلش 1" data-price="100">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 16. غصون البندق (الجزء الأول) - منى سلامة -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/21QQgCPK/images-83.jpg" alt="غصون البندق" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">غصون البندق - الجزء الأول</h3>
-  <p class="text-sm text-gray-600 mb-2">منى سلامة</p>
-  <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="غصون البندق 1" data-price="70">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 17. قبل أن تبرد القهوة 3 - توشيكازو كاواغوتشي -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/JRwnvQ2M/images-43.jpg" alt="قبل أن تبرد القهوة 3" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">قبل أن تبرد القهوة - الجزء الثالث</h3>
-  <p class="text-sm text-gray-600 mb-2">توشيكازو كاواغوتشي</p>
-  <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="قبل أن تبرد القهوة 3" data-price="85">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 18. قبل أن تبرد القهوة 2 -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/DDnZqd9b/images-36.jpg" alt="قبل أن تبرد القهوة 2" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">قبل أن تبرد القهوة - الجزء الثاني</h3>
-  <p class="text-sm text-gray-600 mb-2">توشيكازو كاواغوتشي</p>
-  <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="قبل أن تبرد القهوة 2" data-price="85">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 19. قبل أن تبرد القهوة 1 -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/jkHqkc8t/images-13.jpg" alt="قبل أن تبرد القهوة 1" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">قبل أن تبرد القهوة - الجزء الأول</h3>
-  <p class="text-sm text-gray-600 mb-2">توشيكازو كاواغوتشي</p>
-  <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="قبل أن تبرد القهوة 1" data-price="85">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 20. قرية الشيخ - رحمه نبيل -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/b0rynRz/images-12.jpg" alt="قرية الشيخ" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">قرية الشيخ</h3>
-  <p class="text-sm text-gray-600 mb-2">رحمه نبيل</p>
-  <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="قرية الشيخ" data-price="70">🛒 أضف إلى السلة</button>
-</div>
-<!-- 31. ليطمئن قلبي -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/rR8QH8gb/images-2025-06-26-T065736-156.jpg" alt="ليطمئن قلبي" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">ليطمئن قلبي</h3>
-  <p class="text-sm text-gray-600 mb-2">أدهم الشرقاوي</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="ليطمئن قلبي" data-price="75">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 32. رسائل من الصحابة -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/Jw1xd4gW/images-2025-06-26-T065611-681.jpg" alt="رسائل من الصحابة" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">رسائل من الصحابة</h3>
-  <p class="text-sm text-gray-600 mb-2">أدهم الشرقاوي</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="رسائل من الصحابة" data-price="70">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 33. إن ربي لطيف -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/Vc8dRydF/images-2025-06-26-T065532-074.jpg" alt="إن ربي لطيف" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">إن ربي لطيف</h3>
-  <p class="text-sm text-gray-600 mb-2">عبد الرحمن مسعد</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="إن ربي لطيف" data-price="65">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 34. رسائل من النبي -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/Wpnpv3tL/images-2025-06-26-T065524-055.jpg" alt="رسائل من النبي" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">رسائل من النبي</h3>
-  <p class="text-sm text-gray-600 mb-2">أدهم الشرقاوي</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="رسائل من النبي" data-price="70">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 35. صاحب الظل الطويل -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/3mv8t6HD/images-2025-06-26-T065513-373.jpg" alt="صاحب الظل الطويل" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">صاحب الظل الطويل</h3>
-  <p class="text-sm text-gray-600 mb-2">جين ويبستر</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="صاحب الظل الطويل" data-price="55">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 36. نظرية الفستق 1 -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/fVHNWwdS/images-2025-06-26-T065458-443.jpg" alt="نظرية الفستق 1" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">نظرية الفستق - الجزء الأول</h3>
-  <p class="text-sm text-gray-600 mb-2">فهد عامر الأحمدي</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="نظرية الفستق" data-price="80">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 38. دقات الشامو -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/Q3WHBSb2/images-2025-06-26-T063609-884.jpg" alt="دقات الشامو" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">قواعد جارتين 2 - دقات الشامو</h3>
-  <p class="text-sm text-gray-600 mb-2">عمرو عبد الحميد</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="دقات الشامو" data-price="70">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 39. أمواج أكما -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/XxmyMY4h/images-2025-06-26-T063559-876.jpg" alt="أمواج أكما" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">قواعد جارتين 3 - أمواج أكما</h3>
-  <p class="text-sm text-gray-600 mb-2">عمرو عبد الحميد</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="أمواج أكما" data-price="70">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 40. واي - الذئاب المنسية -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/Mk604Mmb/images-2025-06-26-T063700-060.jpg" alt="واي الذئاب المنسية" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">واي - الذئاب المنسية</h3>
-  <p class="text-sm text-gray-600 mb-2">عمرو عبد الحميد</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="واي الذئاب المنسية" data-price="75">🛒 أضف إلى السلة</button>
-</div>
-!-- 41. كويكول -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/fV6HSYBj/images-91.jpg" alt="كويكول" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">كويكول (الجزء الرابع - مملكة البلاغة)</h3>
-  <p class="text-sm text-gray-600 mb-2">د. حنان لاشين</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="كويكول" data-price="80">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 42. سقطرى -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/7J4SFGJf/images-88.jpg" alt="سقطرى" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">سقطرى (الجزء الخامس - مملكة البلاغة)</h3>
-  <p class="text-sm text-gray-600 mb-2">د. حنان لاشين</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="سقطرى" data-price="85">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 43. سيروش -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/N6cHLsQB/images-84.jpg" alt="سيروش" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">سيروش (الجزء السادس - مملكة البلاغة)</h3>
-  <p class="text-sm text-gray-600 mb-2">د. حنان لاشين</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="سيروش" data-price="85">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 45. السجيل -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/bjdsPjGj/images-86.jpg" alt="السجيل" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">السجيل (الجزء الرابع - سلسلة أبابيل)</h3>
-  <p class="text-sm text-gray-600 mb-2">أحمد آل حمدان</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="السجيل" data-price="85">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 46. أرسس الجزء الثاني -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/bjqM1bqK/images-87.jpg" alt="أرسس 2" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">أرسس - الجزء الثاني</h3>
-  <p class="text-sm text-gray-600 mb-2">أحمد آل حمدان</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="أرسس 2" data-price="80">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 47. أرسس الجزء الأول -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/tTwtHvHY/images-82.jpg" alt="أرسس 1" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">أرسس - الجزء الأول</h3>
-  <p class="text-sm text-gray-600 mb-2">أحمد آل حمدان</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="أرسس 1" data-price="75">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 48. جومانا -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/d4xn3d8f/images-81.jpg" alt="جومانا" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">جومانا (الجزء الثالث - سلسلة أبابيل)</h3>
-  <p class="text-sm text-gray-600 mb-2">أحمد آل حمدان</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="جومانا" data-price="85">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 49. الهول -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/vvjz3hH4/images-80.jpg" alt="الهول" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">الهول</h3>
-  <p class="text-sm text-gray-600 mb-2">أحمد خالد توفيق</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="الهول" data-price="65">🛒 أضف إلى السلة</button>
-</div>
-
-<!-- 50. سفاح الأزقة -->
-<div class="bg-white rounded-lg shadow-md p-4">
-  <img src="https://i.ibb.co/zHbsPDft/images-78.jpg" alt="سفاح الأزقة" class="w-full h-60 object-cover rounded-md mb-4">
-  <h3 class="text-lg font-bold">سفاح الأزقة</h3>
-  <p class="text-sm text-gray-600 mb-2">عثمان عابد</p>
-  <button class="add-to-cart bg-[#8b5e3c] text-white py-1 px-3 rounded-lg" data-title="سفاح الأزقة" data-price="60">🛒 أضف إلى السلة</button>
-</div>
-
-    ];
-
-    const grid = document.getElementById('booksGrid');
-    const template = document.getElementById('book-template');
-    const search = document.getElementById('searchInput');
-    const noResults = document.getElementById('noResults');
-
-    function displayBooks(filtered = books) {
-      grid.innerHTML = "";
-      if (filtered.length === 0) {
-        noResults.classList.remove('hidden');
-        return;
-      } else {
-        noResults.classList.add('hidden');
-      }
-
-      filtered.forEach(book => {
-        const clone = template.content.cloneNode(true);
-        clone.querySelector('img').src = book.img;
-        clone.querySelector('img').alt = book.title;
-        clone.querySelector('h3').textContent = book.title;
-        clone.querySelector('.author').textContent = book.author;
-        clone.querySelector('.price').textContent = book.price;
-
-        clone.querySelector('.add-to-cart').addEventListener('click', () => {
-          const cart = JSON.parse(localStorage.getItem('cart')) || [];
-          cart.push(book);
-          localStorage.setItem('cart', JSON.stringify(cart));
-          alert('تمت إضافة الكتاب إلى السلة ✅');
-        });
-
-        grid.appendChild(clone);
-      });
+  function displayBooks(filtered = books) {
+    grid.innerHTML = "";
+    if (filtered.length === 0) {
+      noResults.classList.remove('hidden');
+      return;
+    } else {
+      noResults.classList.add('hidden');
     }
 
-    displayBooks();
+    filtered.forEach(book => {
+      const clone = template.content.cloneNode(true);
+      clone.querySelector('img').src = book.img;
+      clone.querySelector('img').alt = book.title;
+      clone.querySelector('h3').textContent = book.title;
+      clone.querySelector('.author').textContent = book.author;
+      clone.querySelector('.price').textContent = book.price;
 
-    search.addEventListener('input', () => {
-      const value = search.value.trim();
-      const results = books.filter(book => book.title.includes(value));
-      displayBooks(results);
+      clone.querySelector('.add-to-cart').addEventListener('click', () => {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cart.push(book);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        alert('تمت إضافة الكتاب إلى السلة ✅');
+      });
+
+      grid.appendChild(clone);
     });
-  </script>
-</body>
-</html>
+  }
+
+  displayBooks();
+
+  search.addEventListener('input', () => {
+    const value = search.value.trim();
+    const results = books.filter(book => book.title.includes(value));
+    displayBooks(results);
+  });
+</script>
