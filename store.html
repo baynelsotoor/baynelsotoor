@@ -1,47 +1,115 @@
-<div id="booksGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-  <!-- سيتم توليد الكروت هنا ديناميكيًا باستخدام JavaScript -->
-</div>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مكتبة بين السطور</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+  <div class="container mx-auto p-4">
+    <input id="searchInput" type="text" placeholder="ابحث عن كتاب..." class="w-full mb-4 p-2 border border-gray-300 rounded">
+
+    <div id="noResults" class="hidden text-red-500 font-bold">لم يتم العثور على كتب.</div>
+
+    <div id="booksGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+
+    <template id="book-template">
+      <div class="bg-white rounded-lg shadow-md p-4">
+        <img src="" alt="" class="w-full h-60 object-cover rounded-md mb-4">
+        <h3 class="text-lg font-bold"></h3>
+        <p class="text-sm text-gray-600 mb-2 author"></p>
+        <p class="text-sm text-gray-800 mb-2 price"></p>
+        <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg">🛒 أضف إلى السلة</button>
+      </div>
+    </template>
+
+    <div class="mt-8 text-center">
+      <p class="text-sm text-gray-600 mb-2">لم تجد الكتاب الذي تبحث عنه؟</p>
+      <a href="form.html" class="inline-block bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-2 px-4 rounded-lg">أخبرنا باسم الكتاب</a>
+    </div>
+  </div>
+
+  <script>
+    const books = [
+      {
+        img: "https://i.ibb.co/Q3SkRKvG/53810-250x375-webp-1.webp",
+        title: "أحببت وغداً",
+        author: "د. عماد رشاد عثمان",
+        price: "75 جنيه"
+      },
+      {
+        img: "https://i.ibb.co/60DrdGXD/images-10.jpg",
+        title: "قوانين الصراع النفسي",
+        author: "د. يوسف الحسيني",
+        price: "80 جنيه"
+      },
+      {
+        img: "https://i.ibb.co/7J0Np7Qw/images-2025-06-26-T065634-624.jpg",
+        title: "البسي واسع",
+        author: "د. إبتسام القاضي",
+        price: "65 جنيه"
+      }
+      // <section class="p-4">
+  <div id="booksGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+    <!-- سيتم توليد البطاقات من خلال JavaScript بناءً على الكود أدناه -->
+
+  </div>
+  
+  <!-- لا توجد نتائج -->
+  <div id="noResults" class="hidden text-center text-gray-500 mt-6">
+    لا توجد كتب بهذا الاسم.
+  </div>
+</section>
 
 <template id="book-template">
   <div class="bg-white rounded-lg shadow-md p-4">
-    <img class="w-full h-60 object-cover rounded-md mb-4" src="" alt="">
+    <img src="" alt="" class="w-full h-60 object-cover rounded-md mb-4">
     <h3 class="text-lg font-bold"></h3>
     <p class="text-sm text-gray-600 mb-2 author"></p>
-    <p class="text-sm text-gray-800 font-semibold mb-2 price"></p>
-    <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg">🛒 أضف إلى السلة</button>
+    <p class="text-sm text-gray-800 font-semibold mb-2"><span class="price"></span> جنيه</p>
+    <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg w-full">🛒 أضف إلى السلة</button>
   </div>
 </template>
 
-<p id="noResults" class="hidden text-center text-red-600 font-bold mt-4">لم يتم العثور على نتائج.</p>
+<!-- نموذج إضافة كتاب غير موجود -->
+<section class="mt-8 px-4">
+  <h2 class="text-center text-lg font-bold mb-2">لم تجد الكتاب الذي تبحث عنه؟</h2>
+  <form action="https://formspree.io/f/xeqynqek" method="POST" class="max-w-md mx-auto bg-white shadow p-4 rounded-md">
+    <label for="bookName" class="block mb-2 font-semibold">أخبرنا باسم الكتاب:</label>
+    <input type="text" name="book" id="bookName" required class="w-full p-2 border border-gray-300 rounded mb-4">
+    <button type="submit" class="bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-2 px-4 rounded w-full">📩 إرسال</button>
+  </form>
+</section>
 
-<!-- ✅ الجزء الثاني: السكربت الخاص بعرض الكتب والبحث -->
 <script>
   const books = [
     {
       title: "أحببت وغداً",
       author: "د. عماد رشاد عثمان",
       img: "https://i.ibb.co/Q3SkRKvG/53810-250x375-webp-1.webp",
-      price: "75 جنيه"
+      price: 75
     },
     {
       title: "قوانين الصراع النفسي",
       author: "د. يوسف الحسيني",
       img: "https://i.ibb.co/60DrdGXD/images-10.jpg",
-      price: "80 جنيه"
+      price: 80
     },
     {
       title: "البسي واسع",
       author: "د. إبتسام القاضي",
       img: "https://i.ibb.co/7J0Np7Qw/images-2025-06-26-T065634-624.jpg",
-      price: "65 جنيه"
+      price: 65
     },
     {
       title: "آن",
       author: "محمد صادق",
       img: "https://i.ibb.co/FkX7FQpV/200x200.jpg",
-      price: "75 جنيه"
+      price: 75
     },
-    // ← كمل بقية الكتب بنفس التنسيق اللي فوق...
+    // يمكنك مواصلة إضافة باقي الكتب هنا حسب النموذج أعلاه
   ];
 
   const grid = document.getElementById('booksGrid');
@@ -84,4 +152,48 @@
     const results = books.filter(book => book.title.includes(value));
     displayBooks(results);
   });
-</script>
+    ];
+
+    const grid = document.getElementById('booksGrid');
+    const template = document.getElementById('book-template');
+    const search = document.getElementById('searchInput');
+    const noResults = document.getElementById('noResults');
+
+    function displayBooks(filtered = books) {
+      grid.innerHTML = "";
+      if (filtered.length === 0) {
+        noResults.classList.remove('hidden');
+        return;
+      } else {
+        noResults.classList.add('hidden');
+      }
+
+      filtered.forEach(book => {
+        const clone = template.content.cloneNode(true);
+        clone.querySelector('img').src = book.img;
+        clone.querySelector('img').alt = book.title;
+        clone.querySelector('h3').textContent = book.title;
+        clone.querySelector('.author').textContent = book.author;
+        clone.querySelector('.price').textContent = book.price;
+
+        clone.querySelector('.add-to-cart').addEventListener('click', () => {
+          const cart = JSON.parse(localStorage.getItem('cart')) || [];
+          cart.push(book);
+          localStorage.setItem('cart', JSON.stringify(cart));
+          alert('تمت إضافة الكتاب إلى السلة ✅');
+        });
+
+        grid.appendChild(clone);
+      });
+    }
+
+    displayBooks();
+
+    search.addEventListener('input', () => {
+      const value = search.value.trim();
+      const results = books.filter(book => book.title.includes(value));
+      displayBooks(results);
+    });
+  </script>
+</body>
+</html>
