@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>لوحة تحكم الشحن - بين السطور</title>
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      padding: 20px;
+      background: #fff3e6;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    select, input {
+      padding: 5px;
+    }
+    button {
+      padding: 10px 15px;
+      background: #ff8c42;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>لوحة التحكم - تتبع الشحنات 📦</h2>
+
+  <div>
+    <input type="text" id="orderId" placeholder="رقم الطلب">
+    <input type="text" id="customerName" placeholder="اسم العميل">
+    <select id="orderStatus">
+      <option>تم استلام الطلب</option>
+      <option>جاري التجهيز</option>
+      <option>خرج من المخزن</option>
+      <option>جاري التوصيل</option>
+      <option>تم التسليم</option>
+    </select>
+    <button onclick="addOrder()">➕ إضافة طلب</button>
+  </div>
+
+  <table id="ordersTable">
+    <thead>
+      <tr>
+        <th>رقم الطلب</th>
+        <th>اسم العميل</th>
+        <th>الحالة</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <button onclick="saveOrders()">💾 حفظ التحديثات</button>
+
+  <script>
+    const statuses = [
+      "تم استلام الطلب",
+      "جاري التجهيز",
+      "خرج من المخزن",
+      "جاري التوصيل",
+      "تم التسليم"
+    ];
+
+    let orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+    function renderTable() {
+      const tbody = document.querySelector("#ordersTable tbody");
+      tbody.innerHTML = "";
+      orders.forEach((order, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${order.id}</td>
+          <td>${order.name}</td>
+          <td>
+            <select onchange="updateStatus(${index}, this.value)">
+              ${statuses.map(
+                status => `<option value="${status}" ${status === order.status ? "selected" : ""}>${status}</option>`
+              ).join("")}
+            </select>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function updateStatus(index, newStatus) {
+      orders[index].status = newStatus;
+    }
+
+    function saveOrders() {
+      localStorage.setItem("orders", JSON.stringify(orders));
+      alert("✅ تم حفظ الحالات بنجاح!");
+    }
+
+    function addOrder() {
+      const id = document.getElementById("orderId").value.trim();
+      const name = document.getElementById("customerName").value.trim();
+      const status = document.getElementById("orderStatus").value;
+
+      if (!id || !name) {
+        alert("❌ رجاءً املئي كل الحقول.");
+        return;
+      }
+
+      orders.push({ id, name, status });
+      renderTable();
+      document.getElementById("orderId").value = "";
+      document.getElementById("customerName").value = "";
+    }
+
+    renderTable();
+  </script>
+
+</body>
+</html>

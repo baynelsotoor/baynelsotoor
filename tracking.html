@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تتبع شحنتك - بين السطور</title>
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: #f8f4f0;
+      padding: 30px;
+      text-align: center;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px;
+    }
+    .tracker {
+      margin-top: 30px;
+      font-size: 1.3em;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🚚 تتبع شحنتك</h2>
+  <p>من فضلك أدخل رقم الطلب</p>
+  <input type="text" id="orderId" placeholder="مثلاً: 1001">
+  <button onclick="trackOrder()">تتبع</button>
+
+  <div id="result" class="tracker"></div>
+
+  <script>
+    function trackOrder() {
+      const orderId = document.getElementById("orderId").value;
+      const orders = JSON.parse(localStorage.getItem("orders")) || [];
+      const order = orders.find(order => order.id === orderId);
+      const result = document.getElementById("result");
+
+      if (order) {
+        result.innerHTML = `🔎 حالة الشحنة للطلب <strong>${orderId}</strong>: <br> <span style="color: #ff8c42;">${order.status}</span>`;
+      } else {
+        result.innerHTML = "❌ رقم الطلب غير موجود، يرجى التحقق.";
+      }
+    }
+  </script>
+
+</body>
+</html>
