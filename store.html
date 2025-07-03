@@ -43,12 +43,16 @@
       <h3 class="text-lg font-bold"></h3>
       <p class="text-sm text-gray-600 mb-2 author"></p>
       <p class="text-sm text-gray-800 mb-2 font-semibold">السعر: <span class="price">0</span> ج.م</p>
+      <div class="flex items-center mb-2">
+        <label for="quantity" class="text-sm text-gray-800 mr-2">الكمية:</label>
+        <input type="number" id="quantity" min="1" value="1" class="quantity w-16 p-1 border rounded">
+      </div>
       <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg w-full">أضف إلى السلة</button>
     </div>
   </template>
   <script>
     const books = [
-      { title: "غربة الياسمين", author: "د. خولة حمدي", img: "https://i.ibb.co/d48rJwRX/818-Th-Z6-AGL.jpg, price: 75 },
+      { title: "غربة الياسمين", author: "د. خولة حمدي", img: "https://i.ibb.co/d48rJwRX/818-Th-Z6-AGL.jpg", price: 75 },
       { title: "ياسمين أبيض", author: "د. خولة حمدي", img: "https://i.ibb.co/20fNPPst/87557592.jpg", price: 70 },
       { title: "أن تبقى", author: "د. خولة حمدي", img: "https://i.ibb.co/xq13g5MF/30738859.jpg", price: 70 },
       { title: "إيكادولي", author: "حنان لاشين", img: "https://i.ibb.co/vxZWPn4q/9789776541252.jpg", price: 65 },
@@ -80,7 +84,7 @@
       { title: "فتاة الياقة الزرقاء", author: "عمرو عبد الحميد", img: "https://i.ibb.co/qMBp82Rm/images-37.jpg", price: 70 },
       { title: "مدرسة ميلر", author: "رحمة نبيل", img: "https://i.ibb.co/LzbMtS2t/18541f47-89c4-4b51-8c7c-73f0821af3b2.jpg", price: 65 },
       { title: "أحببت وغداً", author: "د. عماد رشاد عثمان", img: "https://i.ibb.co/3PnYX1F/images-7.jpg", price: 75 },
-      { title: "قوانين الصراع النفسي", author: "د. يوسف الحسني", img: "https://i.ibb.co/tpcKLRt9/images-8.jpg" , price: 80 },
+      { title: "قوانين الصراع النفسي", author: "د. يوسف الحسني", img: "https://i.ibb.co/tpcKLRt9/images-8.jpg", price: 80 },
       { title: "البسي واسع", author: "د. إبتسام القاضي", img: "https://i.ibb.co/gZvsmgZ1/images-9.jpg", price: 65 },
       { title: "آن", author: "محمد صادق", img: "https://i.ibb.co/qMVXS6Bh/images-4.jpg", price: 75 },
       { title: "كورس ذا أمريكان إنجلش - المستوى الأول", author: "إبراهيم عادل", img: "https://i.ibb.co/NnLzJw7f/images-2025-06-26-T065736-156.jpg", price: 100 },
@@ -117,7 +121,6 @@
       { title: "ترويض النمرة", author: "وليام شكسبير", img: "https://i.ibb.co/JFphs5Jd/images-2025-06-26-T063325-276.jpg", price: 85 },
       { title: "كورس مستر إبراهيم عادل The American English (المستوى الثالث)", author: "إبراهيم عادل", img: "https://i.ibb.co/Dh30GyK/images-2025-06-26-T063720-565.jpg", price: 130 },
       { title: "عصابة ذو الشعر الأحمر مترجمة", author: "آرثر كونان دويل", img: "https://i.ibb.co/vCQvtcCc/images-2025-06-26-T064307-738.jpg", price: 85 },
-      // الكتب الجديدة
       { title: "غصون البندق الجزء الثانى", author: "منى سلامة", img: "https://i.ibb.co/qFR4yV9R/images-2025-06-26-T065634-624.jpg", price: 70 },
       { title: "طرقات مرتدة", author: "شمس محمد", img: "https://i.ibb.co/LzvzvbsY/images-79.jpg", price: 85 },
       { title: "سأرحل", author: "ساندرا سراج", img: "https://i.ibb.co/bMbs576j/images-91.jpg", price: 70 },
@@ -125,8 +128,8 @@
       { title: "مدينة الحب لا يسكنها العقلاء", author: "أحمد آل حمدان", img: "https://i.ibb.co/Pz3js044/images-86.jpg", price: 85 },
       { title: "The Old Man And The Sea", author: "إرنست همنغواي", img: "https://via.placeholder.com/200x300?text=The+Old+Man+And+The+Sea", price: 60 },
       { title: "أهم 5000 جملة في الإنجليزي", author: "غير معروف", img: "https://i.ibb.co/GGwB3xR/images-2025-06-26-T063559-876.jpg", price: 90 },
-      { title: "الجساسه", author: "أحمد آل حمدان", img: "https://i.ibb.co/ccG1hvd1/200x200.jpg", price: 90 }
-      { title: "ابابيل", author: "أحمد آل حمدان", img: "https://i.ibb.co/JjFJnG41/images-15.jpg", price: 80 }
+      { title: "الجساسه(الجزء الثانى-سلسة ابابيل)", author: "أحمد آل حمدان", img: "https://i.ibb.co/ccG1hvd1/200x200.jpg", price: 90 },
+      { title: "ابابيل(الجزء الأول سلسة ابابيل)", author: "أحمد آل حمدان", img: "https://i.ibb.co/JjFJnG41/images-15.jpg", price: 80 }
     ];
 
     const booksGrid = document.getElementById('booksGrid');
@@ -161,13 +164,19 @@
         clone.querySelector('.author').textContent = book.author;
         clone.querySelector('.price').textContent = book.price;
         const addToCartButton = clone.querySelector('.add-to-cart');
+        const quantityInput = clone.querySelector('.quantity');
         addToCartButton.dataset.title = book.title;
         addToCartButton.dataset.price = book.price;
         addToCartButton.addEventListener('click', () => {
+          const quantity = parseInt(quantityInput.value);
+          if (quantity < 1) {
+            alert('الرجاء إدخال كمية صحيحة!');
+            return;
+          }
           const cart = JSON.parse(localStorage.getItem('cart')) || [];
-          cart.push(book);
+          cart.push({ ...book, quantity });
           localStorage.setItem('cart', JSON.stringify(cart));
-          alert('تمت إضافة الكتاب إلى السلة ✅');
+          alert(`تمت إضافة ${quantity} من كتاب "${book.title}" إلى السلة ✅`);
         });
         booksGrid.appendChild(clone);
       });
