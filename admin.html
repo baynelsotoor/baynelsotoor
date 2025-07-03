@@ -1,126 +1,209 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <title>لوحة تحكم الشحن - بين السطور</title>
-  <style>
-    body {
-      font-family: 'Cairo', sans-serif;
-      padding: 20px;
-      background: #fff3e6;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    th, td {
-      padding: 10px;
-      border: 1px solid #ccc;
-      text-align: center;
-    }
-    select, input {
-      padding: 5px;
-    }
-    button {
-      padding: 10px 15px;
-      background: #ff8c42;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-  </style>
-</head>
-<body>
 
-  <h2>لوحة التحكم - تتبع الشحنات 📦</h2>
-
-  <div>
-    <input type="text" id="orderId" placeholder="رقم الطلب">
-    <input type="text" id="customerName" placeholder="اسم العميل">
-    <select id="orderStatus">
-      <option>تم استلام الطلب</option>
-      <option>جاري التجهيز</option>
-      <option>خرج من المخزن</option>
-      <option>جاري التوصيل</option>
-      <option>تم التسليم</option>
-    </select>
-    <button onclick="addOrder()">➕ إضافة طلب</button>
-  </div>
-
-  <table id="ordersTable">
-    <thead>
-      <tr>
-        <th>رقم الطلب</th>
-        <th>اسم العميل</th>
-        <th>الحالة</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
-  <button onclick="saveOrders()">💾 حفظ التحديثات</button>
-
+  <!-- 🔐 حماية بكلمة سر -->
   <script>
-    const statuses = [
-      "تم استلام الطلب",
-      "جاري التجهيز",
-      "خرج من المخزن",
-      "جاري التوصيل",
-      "تم التسليم"
-    ];
+    const correctPassword = "retaj2025";
+    const entered = sessionStorage.getItem("admin-auth");
 
-    let orders = JSON.parse(localStorage.getItem("orders")) || [];
+    if (entered !== "yes") {
+      const userPassword = prompt("🔐 أدخل كلمة السر للدخول:");
+      if (userPassword === correctPassword) {
+        sessionStorage.setItem("admin-auth", "yes");
+      } else {
+        alert("❌ كلمة السر غير صحيحة.");
+        window.location.href = "index.html";
+      }
+    }
+  </script>
 
-    function renderTable() {
-      const tbody = document.querySelector("#ordersTable tbody");
+  <!-- 🔗 Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCgwSsXr3iuFofbbjojAVbz8wKfisntOlc",
+      authDomain: "baynelsotoor.firebaseapp.com",
+      projectId: "baynelsotoor",
+      storageBucket: "baynelsotoor.appspot.com",
+      messagingSenderId: "1039807635070",
+      appId: "1:1039807635070:web:5b02088c19edb30a68822f"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const ordersRef = collection(db, "shipments");
+
+    async function loadOrders() {
+      const snapshot = await getDocs(ordersRef);
+      const tbody = document.querySelector("#ordersBody");
       tbody.innerHTML = "";
-      orders.forEach((order, index) => {
+
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const isLocked = ["خرج من المخزن", "جاري التوصيل", "تم التسليم"].includes(data.status);
+
         const row = document.createElement("tr");
         row.innerHTML = `
-          <td>${order.id}</td>
-          <td>${order.name}</td>
+          <td>${data.email}</td>
+          <td>${data.trackingNumber}</td>
           <td>
-            <select onchange="updateStatus(${index}, this.value)">
-              ${statuses.map(
-                status => `<option value="${status}" ${status === order.status ? "selected" : ""}>${status}</option>`
-              ).join("")}
-            </select>
+            ${isLocked
+              ? `<span>${data.status}</span>` 
+              : `<select onchange="updateStatus('${docSnap.id}', this.value)">
+                  ${["تم استلام الطلب", "جاري التجهيز", "خرج من المخزن", "جاري التوصيل", "تم التسليم"]
+                    .map(s => `<option value="${s}" ${s === data.status ? "selected" : ""}>${s}</option>`).join("")}
+                </select>`
+            }
+          </td>
+          <td>
+            ${isLocked 
+              ? `<span style="color: #888;">🔒 لا يمكن الحذف</span>` 
+              : `<button onclick="deleteOrder('${docSnap.id}')">🗑 حذف</button>`
+            }
           </td>
         `;
         tbody.appendChild(row);
       });
     }
 
-    function updateStatus(index, newStatus) {
-      orders[index].status = newStatus;
-    }
-
-    function saveOrders() {
-      localStorage.setItem("orders", JSON.stringify(orders));
-      alert("✅ تم حفظ الحالات بنجاح!");
-    }
-
-    function addOrder() {
-      const id = document.getElementById("orderId").value.trim();
-      const name = document.getElementById("customerName").value.trim();
+    async function addOrder() {
+      const email = document.getElementById("email").value.trim();
+      const trackingNumber = document.getElementById("trackingNumber").value.trim();
       const status = document.getElementById("orderStatus").value;
 
-      if (!id || !name) {
-        alert("❌ رجاءً املئي كل الحقول.");
+      if (!email || !trackingNumber) {
+        alert("❌ من فضلك املأ كل الحقول");
         return;
       }
 
-      orders.push({ id, name, status });
-      renderTable();
-      document.getElementById("orderId").value = "";
-      document.getElementById("customerName").value = "";
+      await addDoc(ordersRef, {
+        email,
+        trackingNumber,
+        status,
+        lastUpdate: serverTimestamp()
+      });
+
+      alert("✅ تم الإضافة!");
+      document.getElementById("email").value = "";
+      document.getElementById("trackingNumber").value = "";
+      loadOrders();
     }
 
-    renderTable();
+    async function deleteOrder(id) {
+      if (confirm("❗ هل أنت متأكد من حذف هذا الطلب؟")) {
+        await deleteDoc(doc(db, "shipments", id));
+        loadOrders();
+      }
+    }
+
+    async function updateStatus(id, newStatus) {
+      await updateDoc(doc(db, "shipments", id), {
+        status: newStatus,
+        lastUpdate: serverTimestamp()
+      });
+    }
+
+    window.addOrder = addOrder;
+    window.deleteOrder = deleteOrder;
+    window.updateStatus = updateStatus;
+    window.onload = loadOrders;
+  </script>
+
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      padding: 20px;
+      background: #fff3e6;
+      text-align: center;
+    }
+
+    input, select {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      width: 250px;
+    }
+
+    button {
+      padding: 8px 12px;
+      background: #ff8c42;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #e67300;
+    }
+
+    table {
+      margin-top: 20px;
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+
+    th {
+      background: #f7d9c4;
+    }
+
+    .invoice {
+      margin-top: 30px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📦 لوحة تحكم الشحن - بين السطور</h2>
+
+  <input type="email" id="email" placeholder="البريد الإلكتروني للعميل" />
+  <input type="text" id="trackingNumber" placeholder="رقم التتبع" />
+  <select id="orderStatus">
+    <option>تم استلام الطلب</option>
+    <option>جاري التجهيز</option>
+    <option>خرج من المخزن</option>
+    <option>جاري التوصيل</option>
+    <option>تم التسليم</option>
+  </select>
+  <br />
+  <button onclick="addOrder()">➕ إضافة الطلب</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>البريد الإلكتروني</th>
+        <th>رقم التتبع</th>
+        <th>الحالة</th>
+        <th>إجراء</th>
+      </tr>
+    </thead>
+    <tbody id="ordersBody"></tbody>
+  </table>
+
+  <div class="invoice">
+    💰 <button onclick="showInvoice()">إظهار الفاتورة الكاملة</button>
+    <p id="invoiceOutput"></p>
+  </div>
+
+  <script>
+    function showInvoice() {
+      const tbody = document.querySelector("#ordersBody");
+      const rows = tbody.querySelectorAll("tr");
+      const total = rows.length * 50; // افترضي إن كل شحنة بـ 50 جنيه
+      document.getElementById("invoiceOutput").textContent = `إجمالي الفاتورة: ${total} جنيه مصري`;
+    }
   </script>
 
 </body>
