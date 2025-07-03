@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>جارٍ التحميل...</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCgwSsXr3iuFofbbjojAVbz8wKfisntOlc",
+      authDomain: "baynelsotoor.firebaseapp.com",
+      projectId: "baynelsotoor",
+      storageBucket: "baynelsotoor.appspot.com",
+      messagingSenderId: "1039807635070",
+      appId: "1:1039807635070:web:5b02088c19edb30a68822f"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // ✅ مسجل دخول → يدخله على الموقع الرئيسي
+        window.location.href = "home.html";
+      } else {
+        // ⛔ مش مسجل → يوديه على صفحة تسجيل الدخول
+        window.location.href = "login.html";
+      }
+    });
+  </script>
+</head>
+<body>
+  <p style="text-align:center; font-family:Cairo;">جاري التحقق من بيانات الدخول...</p>
+</body>
+</html>
