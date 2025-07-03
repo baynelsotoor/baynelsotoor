@@ -44,12 +44,18 @@
       <p class="text-sm text-gray-600 mb-2 author"></p>
       <p class="text-sm text-gray-800 mb-2 font-semibold">السعر: <span class="price">0</span> ج.م</p>
       <div class="flex items-center mb-2">
-        <label for="quantity" class="text-sm text-gray-800 mr-2">الكمية:</label>
-        <input type="number" id="quantity" min="1" value="1" class="quantity w-16 p-1 border rounded">
+        <select id="quantity" class="quantity p-1 border rounded mr-2">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+        <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg flex-grow">أضف إلى السلة</button>
       </div>
-      <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg w-full">أضف إلى السلة</button>
     </div>
   </template>
+.entry-title="إضافة إلى السلة مع تحديد الكمية" dir="rtl">
   <script>
     const books = [
       { title: "غربة الياسمين", author: "د. خولة حمدي", img: "https://i.ibb.co/d48rJwRX/818-Th-Z6-AGL.jpg", price: 75 },
@@ -164,15 +170,11 @@
         clone.querySelector('.author').textContent = book.author;
         clone.querySelector('.price').textContent = book.price;
         const addToCartButton = clone.querySelector('.add-to-cart');
-        const quantityInput = clone.querySelector('.quantity');
+        const quantitySelect = clone.querySelector('.quantity');
         addToCartButton.dataset.title = book.title;
         addToCartButton.dataset.price = book.price;
         addToCartButton.addEventListener('click', () => {
-          const quantity = parseInt(quantityInput.value);
-          if (quantity < 1) {
-            alert('الرجاء إدخال كمية صحيحة!');
-            return;
-          }
+          const quantity = parseInt(quantitySelect.value);
           const cart = JSON.parse(localStorage.getItem('cart')) || [];
           cart.push({ ...book, quantity });
           localStorage.setItem('cart', JSON.stringify(cart));
@@ -201,6 +203,7 @@
       if (currentPage > 1) {
         currentPage--;
         displayBooks(books);
+        window.scrollTo(0, 0); // التمرير لأعلى الصفحة
       }
     });
 
@@ -209,6 +212,7 @@
       if (currentPage < totalPages) {
         currentPage++;
         displayBooks(books);
+        window.scrollTo(0, 0); // التمرير لأعلى الصفحة
       }
     });
 
