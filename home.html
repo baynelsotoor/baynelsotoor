@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -13,115 +12,107 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body { font-family: 'Cairo', sans-serif; }
+    body {
+      font-family: 'Cairo', sans-serif;
+    }
   </style>
 </head>
-<body class="bg-[#fdf6ef] text-[#4b2e2e]">
+<body class="bg-[#fdf6ef] text-[#4b2e2e] flex">
 
-  <!-- الهيدر -->
-  <header class="bg-[#8b5e3c] p-4 text-white text-center text-2xl font-bold flex justify-center items-center space-x-4 space-x-reverse">
-    <img src="https://i.ibb.co/5XkvmgWj/2.png" alt="لوجو بين السطور" class="w-12 h-12 rounded-full shadow-lg bg-white p-1" />
-    <span class="text-white">📚 مرحبًا بك في مكتبة بين السطور</span>
-  </header>
+  <!-- ✅ الشريط الجانبي -->
+  <aside class="bg-[#d2b48c] w-48 min-h-screen p-4 hidden md:block shadow-lg">
+    <h2 class="text-lg font-bold mb-4">🔸 التنقل</h2>
+    <ul class="space-y-2 text-[#4b2e2e] font-semibold">
+      <li><a href="index.html" class="hover:underline">🏠 الرئيسية</a></li>
+      <li><a href="store.html" class="hover:underline">🛍️ المتجر</a></li>
+      <li><a href="order.html" class="hover:underline">📦 الطلب</a></li>
+      <li><a href="reviews.html" class="hover:underline">⭐ التقييمات</a></li>
+      <li><a href="offers.html" class="hover:underline">🔥 عروض الكتب</a></li>
+      <li><a href="track.html" class="hover:underline">🚚 تتبع الشحن</a></li>
+    </ul>
+  </aside>
 
-  <!-- شريط التنقل -->
-  <nav class="bg-[#d2b48c] p-3 flex justify-center space-x-4 space-x-reverse">
-    <a href="index.html" class="hover:underline">الرئيسية</a>
-    <a href="store.html" class="hover:underline">المتجر</a>
-    <a href="order.html" class="hover:underline">الطلب</a>
-    <a href="reviews.html" class="hover:underline">التقييمات</a>
-    <a href="offers.html" class="hover:underline">عروض الكتب</a>
-  </nav>
+  <!-- ✅ محتوى الصفحة -->
+  <main class="flex-1">
 
-  <!-- بانر -->
-  <section class="relative h-96">
-    <img src="https://i.ibb.co/tPLBHTmw/prev-1533425404.png" alt="بانر مكتبة بين السطور" class="w-full h-full object-cover rounded-lg shadow-lg">
-    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-      <h1 class="text-white text-4xl md:text-5xl font-bold">مرحبًا بك في مكتبة بين السطور</h1>
-    </div>
-  </section>
+    <!-- الهيدر -->
+    <header class="bg-[#8b5e3c] p-4 text-white text-center text-2xl font-bold flex justify-center items-center space-x-4 space-x-reverse">
+      <img src="https://i.ibb.co/5XkvmgWj/2.png" alt="لوجو بين السطور" class="w-12 h-12 rounded-full shadow-lg bg-white p-1" />
+      <span class="text-white">📚 مرحبًا بك في مكتبة بين السطور</span>
+    </header>
 
-  <!-- جملة ترحيبية -->
-  <div class="text-center text-xl mt-6 mb-4 font-semibold">
-    اقرأ ما بين السطور، تجد الحياة.
-  </div>
+    <!-- بانر -->
+    <section class="relative h-96">
+      <img src="https://i.ibb.co/tPLBHTmw/prev-1533425404.png" alt="بانر مكتبة بين السطور" class="w-full h-full object-cover rounded-lg shadow-lg">
+      <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+        <h1 class="text-white text-4xl md:text-5xl font-bold">مرحبًا بك في مكتبة بين السطور</h1>
+      </div>
+    </section>
 
-  <!-- البحث -->
-  <div class="flex justify-center mb-8">
-    <input type="text" placeholder="ابحث عن كتاب..." class="p-2 rounded-lg border border-gray-300 w-1/2">
-  </div>
-
-  <h2 class="text-2xl font-bold mb-4 text-center">📚 أبرز الكتب</h2>
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-6">
-
-    <div class="bg-white rounded-lg shadow-md p-4">
-      <img src="https://i.ibb.co/Y4PwvL4s/images-1.jpg" alt="واحة آل يعقوب" class="w-full h-60 object-cover rounded-md mb-4">
-      <h3 class="text-lg font-bold">واحة آل يعقوب</h3>
-      <p class="text-sm text-gray-600 mb-2">عمرو عبد الحميد</p>
-      <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="واحة آل يعقوب" data-price="85">🛒 أضف إلى السلة</button>
+    <!-- جملة ترحيبية -->
+    <div class="text-center text-xl mt-6 mb-4 font-semibold">
+      اقرأ ما بين السطور، تجد الحياة.
     </div>
 
-    <div class="bg-white rounded-lg shadow-md p-4">
-      <img src="https://i.ibb.co/dwNJfctV/images-69.jpg" alt="أبادول" class="w-full h-60 object-cover rounded-md mb-4">
-      <h3 class="text-lg font-bold">أبادول</h3>
-      <p class="text-sm text-gray-600 mb-2">حنان لاشين</p>
-      <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="أبادول" data-price="75">🛒 أضف إلى السلة</button>
+    <!-- البحث -->
+    <div class="flex justify-center mb-8 px-4">
+      <input type="text" id="searchInput" placeholder="ابحث عن كتاب..." class="p-2 rounded-lg border border-gray-300 w-full md:w-1/2">
     </div>
 
-    <div class="bg-white rounded-lg shadow-md p-4">
-      <img src="https://i.ibb.co/6RXNTQrF/images-75.jpg" alt="الهلكوت" class="w-full h-60 object-cover rounded-md mb-4">
-      <h3 class="text-lg font-bold">الهلكوت</h3>
-      <p class="text-sm text-gray-600 mb-2">أحمد خالد مصطفى</p>
-      <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="الهلكوت" data-price="90">🛒 أضف إلى السلة</button>
+    <h2 class="text-2xl font-bold mb-4 text-center">📚 أبرز الكتب</h2>
+    <div id="bookGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-6">
+
+      <div class="bg-white rounded-lg shadow-md p-4">
+        <img src="https://i.ibb.co/Y4PwvL4s/images-1.jpg" alt="واحة آل يعقوب" class="w-full h-60 object-cover rounded-md mb-4">
+        <h3 class="text-lg font-bold">واحة آل يعقوب</h3>
+        <p class="text-sm text-gray-600 mb-2">عمرو عبد الحميد</p>
+        <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="واحة آل يعقوب" data-price="85">🛒 أضف إلى السلة</button>
+      </div>
+
+      <div class="bg-white rounded-lg shadow-md p-4">
+        <img src="https://i.ibb.co/dwNJfctV/images-69.jpg" alt="أبادول" class="w-full h-60 object-cover rounded-md mb-4">
+        <h3 class="text-lg font-bold">أبادول</h3>
+        <p class="text-sm text-gray-600 mb-2">حنان لاشين</p>
+        <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="أبادول" data-price="75">🛒 أضف إلى السلة</button>
+      </div>
+
+      <div class="bg-white rounded-lg shadow-md p-4">
+        <img src="https://i.ibb.co/6RXNTQrF/images-75.jpg" alt="الهلكوت" class="w-full h-60 object-cover rounded-md mb-4">
+        <h3 class="text-lg font-bold">الهلكوت</h3>
+        <p class="text-sm text-gray-600 mb-2">أحمد خالد مصطفى</p>
+        <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="الهلكوت" data-price="90">🛒 أضف إلى السلة</button>
+      </div>
+
+      <!-- كملّي بقيت الكتب بنفس الشكل -->
+
     </div>
 
-    <div class="bg-white rounded-lg shadow-md p-4">
-      <img src="https://i.ibb.co/vxS4YS6t/291182.jpg" alt="غربة مرغوب بها" class="w-full h-60 object-cover rounded-md mb-4">
-      <h3 class="text-lg font-bold">غربة مرغوب بها</h3>
-      <p class="text-sm text-gray-600 mb-2">شمس محمد</p>
-      <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="غربة مرغوب بها" data-price="65">🛒 أضف إلى السلة</button>
-    </div>
+    <!-- من نحن -->
+    <section class="mt-12 px-6">
+      <h2 class="text-xl font-bold mb-2">من نحن؟</h2>
+      <div class="bg-white p-4 rounded-lg shadow text-center">
+        <p class="mb-4">نحن مكتبة "بين السطور"، نوفر كتبًا وروايات عربية وأجنبية، ونهتم بالجودة والأسعار المناسبة. هدفنا نشر الثقافة ومساعدة محبي القراءة في كل مكان.</p>
+        <img src="https://i.ibb.co/mCXvfT5K/2.png" alt="لوجو بين السطور بالخلفية" class="mx-auto w-40 rounded-lg shadow-md border" />
+      </div>
+    </section>
 
-    <div class="bg-white rounded-lg shadow-md p-4">
-      <img src="https://i.ibb.co/zhv8SG5v/images-50.jpg" alt="نوح المذبوح" class="w-full h-60 object-cover rounded-md mb-4">
-      <h3 class="text-lg font-bold">نوح المذبوح</h3>
-      <p class="text-sm text-gray-600 mb-2">حسن الجندي</p>
-      <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="نوح المذبوح" data-price="60">🛒 أضف إلى السلة</button>
-    </div>
+    <!-- عن المؤسسة -->
+    <section class="mt-8 px-6">
+      <h2 class="text-xl font-bold mb-2">عن المؤسسة</h2>
+      <p class="bg-white p-4 rounded-lg shadow">منصة "بين السطور" تأسست على يد ريتاج أيمن عبد الناصر بهدف بناء مكتبة إلكترونية متكاملة توفر تجربة قراءة وتسوق مريحة، ومحتوى ثقافي متنوع يخدم القارئ العربي والعالمي.</p>
+    </section>
 
-    <div class="bg-white rounded-lg shadow-md p-4">
-      <img src="https://i.ibb.co/7xSk0qVr/images-41.jpg" alt="انتيخريستوس" class="w-full h-60 object-cover rounded-md mb-4">
-      <h3 class="text-lg font-bold">انتيخريستوس</h3>
-      <p class="text-sm text-gray-600 mb-2">أحمد خالد مصطفى</p>
-      <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="انتيخريستوس" data-price="70">🛒 أضف إلى السلة</button>
-    </div>
-  </div>
+    <!-- تواصل معنا -->
+    <section class="mt-8 px-6 mb-20">
+      <h2 class="text-xl font-bold mb-2">تواصل معنا</h2>
+      <p class="bg-white p-4 rounded-lg shadow">عبر واتساب: <strong>01559373066</strong><br>أو من خلال صفحاتنا على مواقع التواصل الاجتماعي.</p>
+    </section>
 
-  <!-- من نحن -->
-  <section class="mt-12 px-6">
-    <h2 class="text-xl font-bold mb-2">من نحن؟</h2>
-    <div class="bg-white p-4 rounded-lg shadow text-center">
-      <p class="mb-4">نحن مكتبة "بين السطور"، نوفر كتبًا وروايات عربية وأجنبية، ونهتم بالجودة والأسعار المناسبة. هدفنا نشر الثقافة ومساعدة محبي القراءة في كل مكان.</p>
-      <img src="https://i.ibb.co/Kc3hTMbZ/1.png" alt="لوجو بين السطور بالخلفية" class="mx-auto w-40 rounded-lg shadow-md border" />
-    </div>
-  </section>
-
-  <!-- عن المؤسسة -->
-  <section class="mt-8 px-6">
-    <h2 class="text-xl font-bold mb-2">عن المؤسسة</h2>
-    <p class="bg-white p-4 rounded-lg shadow">منصة "بين السطور" تأسست على يد ريتاج أيمن عبد الناصر بهدف بناء مكتبة إلكترونية متكاملة توفر تجربة قراءة وتسوق مريحة، ومحتوى ثقافي متنوع يخدم القارئ العربي والعالمي.</p>
-  </section>
-
-  <!-- تواصل معنا -->
-  <section class="mt-8 px-6 mb-20">
-    <h2 class="text-xl font-bold mb-2">تواصل معنا</h2>
-    <p class="bg-white p-4 rounded-lg shadow">عبر واتساب: <strong>01559373066</strong><br>أو من خلال صفحاتنا على مواقع التواصل الاجتماعي.</p>
-  </section>
-
-  <!-- الفوتر -->
-  <footer class="bg-[#8b5e3c] text-white text-center p-4">
-    © 2025 مكتبة بين السطور - تصميم وإشراف: ريتاج
-  </footer>
+    <!-- الفوتر -->
+    <footer class="bg-[#8b5e3c] text-white text-center p-4">
+      © 2025 مكتبة بين السطور - تصميم وإشراف: ريتاج
+    </footer>
+  </main>
 
   <!-- سلة المشتريات -->
   <script>
@@ -135,6 +126,17 @@
         alert("✅ تم إضافة الكتاب إلى السلة!");
       });
     });
+
+    // 🔎 تفعيل البحث
+    document.getElementById('searchInput').addEventListener('input', function () {
+      const keyword = this.value.toLowerCase();
+      const books = document.querySelectorAll('#bookGrid > div');
+      books.forEach(book => {
+        const title = book.querySelector('h3').textContent.toLowerCase();
+        book.style.display = title.includes(keyword) ? "block" : "none";
+      });
+    });
   </script>
+
 </body>
 </html>
