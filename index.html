@@ -18,25 +18,14 @@
     }
   </style>
 </head>
-<body class="bg-[#fdf6ef] text-[#4b2e2e]">
-  <header class="bg-[#8b5e3c] p-4 text-white shadow-lg">
+<body class="bg-[#fdf6ef] text-[#4b2e2e] flex">
+  <header class="bg-[#8b5e3c] p-4 text-white shadow-lg w-full z-10">
     <div class="container flex items-center justify-between">
       <div class="flex items-center space-x-4 space-x-reverse">
         <img src="https://i.ibb.co/5XkvmgWj/2.png" alt="لوجو بين السطور" class="w-12 h-12 rounded-full shadow-lg bg-white p-1" />
         <span class="text-xl font-bold">📚 مكتبة بين السطور</span>
       </div>
-      <button class="hamburger md:hidden text-2xl" onclick="toggleMenu()">☰</button>
-      <nav class="nav-menu hidden md:block" id="navMenu">
-        <ul class="flex flex-col gap-2 text-lg">
-          <li><a href="index.html" class="hover:text-[#d2b48c] py-2 block">🏠 الرئيسية</a></li>
-          <li><a href="store.html" class="hover:text-[#d2b48c] py-2 block">🛍️ المتجر</a></li>
-          <li><a href="order.html" class="hover:text-[#d2b48c] py-2 block">📦 الطلب</a></li>
-          <li><a href="reviews.html" class="hover:text-[#d2b48c] py-2 block">⭐ التقييمات</a></li>
-          <li><a href="offers.html" class="hover:text-[#d2b48c] py-2 block">🔥 عروض الكتب</a></li>
-          <li><a href="track.html" class="hover:text-[#d2b48c] py-2 block">🚚 تتبع الشحن</a></li>
-          <li id="authMenuItem"><a id="authMenuLink" href="login.html" class="hover:text-[#d2b48c] py-2 block">تسجيل الدخول</a></li>
-        </ul>
-      </nav>
+      <button class="hamburger text-2xl" onclick="toggleMenu()">☰</button>
       <div class="auth flex items-center gap-2">
         <span id="userStatus" class="text-sm md:text-base font-semibold"></span>
         <button id="authButton" class="bg-[#d2b48c] text-[#8b5e3c] py-1 px-4 rounded-lg hover:bg-[#a46d47] transition duration-200" onclick="handleAuth()">تسجيل الدخول</button>
@@ -44,7 +33,21 @@
     </div>
   </header>
 
-  <main class="flex-1">
+  <aside class="sidebar bg-[#8b5e3c] text-white p-4 shadow-lg" id="sidebar">
+    <nav class="nav-menu">
+      <ul class="flex flex-col gap-2 text-lg">
+        <li><a href="index.html" class="hover:text-[#d2b48c] py-2 block">🏠 الرئيسية</a></li>
+        <li><a href="store.html" class="hover:text-[#d2b48c] py-2 block">🛍️ المتجر</a></li>
+        <li><a href="order.html" class="hover:text-[#d2b48c] py-2 block">📦 الطلب</a></li>
+        <li><a href="reviews.html" class="hover:text-[#d2b48c] py-2 block">⭐ التقييمات</a></li>
+        <li><a href="offers.html" class="hover:text-[#d2b48c] py-2 block">🔥 عروض الكتب</a></li>
+        <li><a href="track.html" class="hover:text-[#d2b48c] py-2 block">🚚 تتبع الشحن</a></li>
+        <li id="authMenuItem"><a id="authMenuLink" href="login.html" class="hover:text-[#d2b48c] py-2 block">تسجيل الدخول</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main class="flex-1 ml-0 transition-all duration-300" id="mainContent">
     <section class="relative h-96">
       <img src="https://i.ibb.co/tPLBHTmw/prev-1533425404.png" alt="بانر مكتبة بين السطور" class="w-full h-full object-cover rounded-lg shadow-lg">
       <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
