@@ -67,4 +67,6 @@ function protectPage() {
 document.addEventListener('DOMContentLoaded', () => {
   updateAuthButton();
   protectPage();
+  // إضافة تحقق إذا الكود بيشتغل
+  console.log('Script loaded successfully');
 });
