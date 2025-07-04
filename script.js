@@ -48,6 +48,7 @@ function confirmLogout() {
 function toggleMenu() {
   const navMenu = document.getElementById('navMenu');
   navMenu.classList.toggle('active');
+  console.log('Menu toggled'); // للتحقق إذا الكود بيشتغل
 }
 
 // Protect sensitive pages
