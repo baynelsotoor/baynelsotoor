@@ -50,7 +50,7 @@ function toggleMenu() {
   const mainContent = document.getElementById('mainContent');
   sidebar.classList.toggle('active');
   mainContent.classList.toggle('active');
-  console.log('Sidebar toggled'); // للتحقق إذا الكود بيشتغل
+  console.log('Sidebar toggled');
 }
 
 // Protect sensitive pages
@@ -67,6 +67,5 @@ function protectPage() {
 document.addEventListener('DOMContentLoaded', () => {
   updateAuthButton();
   protectPage();
-  // إضافة تحقق إذا الكود بيشتغل
   console.log('Script loaded successfully');
 });
