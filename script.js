@@ -53,7 +53,7 @@ function toggleMenu() {
   sidebar.classList.toggle('active');
   mainContent.classList.toggle('active');
 
-  console.log('Sidebar toggled, active:', !isActive); // للتحقق من الحالة
+  console.log('Sidebar toggled, active:', !isActive);
 }
 
 // Protect sensitive pages
