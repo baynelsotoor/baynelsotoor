@@ -1,4 +1,4 @@
-s/* تنسيقات إضافية للهيدر والمنيو */
+/* تنسيقات إضافية للهيدر والمنيو */
 .nav-menu ul {
   list-style: none;
 }
@@ -8,10 +8,12 @@ s/* تنسيقات إضافية للهيدر والمنيو */
   text-decoration: none;
   font-size: 16px;
   font-weight: 600;
+  padding: 0.5rem 1rem;
+  display: block; /* عشان كل رابط ياخد سطر كامل */
 }
 
 .nav-menu a:hover {
-  color: #d2b48c;
+  color: #d2b48c; /* بني فاتح */
 }
 
 .hamburger {
@@ -20,6 +22,7 @@ s/* تنسيقات إضافية للهيدر والمنيو */
   color: white;
   font-size: 24px;
   cursor: pointer;
+  padding: 0.5rem;
 }
 
 /* Responsive Design */
@@ -27,20 +30,35 @@ s/* تنسيقات إضافية للهيدر والمنيو */
   .nav-menu {
     display: none;
     position: absolute;
-    top: 80px;
+    top: 60px;
     right: 0;
-    background-color: #8b5e3c;
+    background-color: #8b5e3c; /* بني غامق */
     width: 100%;
-    padding: 20px;
+    padding: 1rem;
     z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   }
 
   .nav-menu.active {
-    display: block;
+    display: flex;
+    flex-direction: column;
   }
 
   .nav-menu ul {
     flex-direction: column;
-    gap: 10px;
+    gap: 0.5rem;
   }
-}tyles.css
+
+  .hamburger {
+    display: block;
+  }
+}
+
+/* تحسينات إضافية */
+.auth button {
+  transition: background-color 0.3s ease;
+}
+
+.auth span {
+  white-space: nowrap;
+}
