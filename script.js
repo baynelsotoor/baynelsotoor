@@ -48,9 +48,12 @@ function confirmLogout() {
 function toggleMenu() {
   const sidebar = document.getElementById('sidebar');
   const mainContent = document.getElementById('mainContent');
+  const isActive = sidebar.classList.contains('active');
+
   sidebar.classList.toggle('active');
   mainContent.classList.toggle('active');
-  console.log('Sidebar toggled');
+
+  console.log('Sidebar toggled, active:', !isActive); // للتحقق من الحالة
 }
 
 // Protect sensitive pages
