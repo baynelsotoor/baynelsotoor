@@ -10,7 +10,7 @@ header {
   width: 250px;
   position: fixed;
   top: 64px;
-  left: -250px;
+  left: -250px; /* مخفي افتراضيًا */
   height: calc(100vh - 64px);
   transition: left 0.3s ease;
   z-index: 10;
@@ -18,7 +18,7 @@ header {
 }
 
 .sidebar.active {
-  left: 0;
+  left: 0; /* يظهر لما يبقى active */
 }
 
 .nav-menu ul {
