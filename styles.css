@@ -10,21 +10,23 @@ header {
   width: 250px;
   position: fixed;
   top: 64px;
-  left: -250px; /* مخفي افتراضيًا */
+  left: 0;
   height: calc(100vh - 64px);
-  transition: left 0.3s ease;
+  background-color: #8b5e3c;
+  padding: 1rem;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
   z-index: 10;
-  overflow-y: auto;
-  background-color: #8b5e3c; /* تأكيد اللون عشان ما يصطدمش */
+  transition: transform 0.3s ease;
+  transform: translateX(-100%); /* مخفي افتراضيًا */
 }
 
 .sidebar.active {
-  left: 0; /* يظهر لما يبقى active */
+  transform: translateX(0); /* يظهر لما يبقى active */
 }
 
 .nav-menu ul {
   list-style: none;
-  padding: 0; /* إزالة أي padding غير مرغوب */
+  padding: 0;
 }
 
 .nav-menu a {
@@ -68,7 +70,7 @@ header {
 #mainContent {
   margin-left: 0;
   transition: margin-left 0.3s ease;
-  padding-top: 64px; /* عشان يتجنب التصادم مع الهيدر الثابت */
+  padding-top: 64px;
 }
 
 .sidebar.active + #mainContent {
@@ -79,4 +81,4 @@ header {
   .sidebar.active + #mainContent {
     margin-left: 200px;
   }
-}
+  }
