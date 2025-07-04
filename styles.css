@@ -1,4 +1,19 @@
-/* تنسيقات إضافية للهيدر والمنيو */
+/* تنسيقات إضافية للسidebar والمنيو */
+.sidebar {
+  width: 250px;
+  min-height: 100vh;
+  position: fixed;
+  top: 0;
+  left: -250px; /* مخفي في البداية */
+  transition: left 0.3s ease;
+  z-index: 1000;
+  overflow-y: auto; /* عشان لو الروابط كتير تكون قابلة للتمرير */
+}
+
+.sidebar.active {
+  left: 0; /* يظهر لما يبقى active */
+}
+
 .nav-menu ul {
   list-style: none;
 }
@@ -9,7 +24,7 @@
   font-size: 16px;
   font-weight: 600;
   padding: 0.5rem 1rem;
-  display: block; /* عشان كل رابط ياخد سطر كامل */
+  display: block;
 }
 
 .nav-menu a:hover {
@@ -27,30 +42,8 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .nav-menu {
-    display: none;
-    position: absolute;
-    top: 60px;
-    right: 0;
-    background-color: #8b5e3c; /* بني غامق */
-    width: 100%;
-    padding: 1rem;
-    z-index: 1000;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  }
-
-  .nav-menu.active {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .nav-menu ul {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .hamburger {
-    display: block;
+  .sidebar {
+    width: 200px; /* عرض أصغر على الموبايل */
   }
 }
 
@@ -61,4 +54,19 @@
 
 .auth span {
   white-space: nowrap;
+}
+
+#mainContent {
+  margin-left: 0;
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar.active + #mainContent {
+  margin-left: 250px; /* يتحرك المحتوى ليمين عشان يعطي مكان للسidebar */
+}
+
+@media (max-width: 768px) {
+  .sidebar.active + #mainContent {
+    margin-left: 200px; /* تحرك أقل على الموبايل */
+  }
 }
