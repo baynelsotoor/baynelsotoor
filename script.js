@@ -44,11 +44,13 @@ function confirmLogout() {
   }
 }
 
-// Toggle mobile menu
+// Toggle sidebar menu
 function toggleMenu() {
-  const navMenu = document.getElementById('navMenu');
-  navMenu.classList.toggle('active');
-  console.log('Menu toggled'); // للتحقق إذا الكود بيشتغل
+  const sidebar = document.getElementById('sidebar');
+  const mainContent = document.getElementById('mainContent');
+  sidebar.classList.toggle('active');
+  mainContent.classList.toggle('active');
+  console.log('Sidebar toggled'); // للتحقق إذا الكود بيشتغل
 }
 
 // Protect sensitive pages
