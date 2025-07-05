@@ -6,136 +6,169 @@
   <title>المتجر - مكتبة بين السطور</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css"> <!-- ربط ملف الـ CSS اللي فيه التنسيقات -->
   <style>
     body { font-family: 'Cairo', sans-serif; }
   </style>
 </head>
 <body class="bg-[#fdf6ef] text-[#4b2e2e]">
-  <!-- أزرار في الأعلى -->
-  <div class="flex flex-col md:flex-row justify-center items-center gap-2 p-4">
-    <a href="cart.html" class="bg-[#8b5e3c] text-white px-4 py-2 rounded hover:bg-[#a46d47]">🛒 انتقل إلى السلة</a>
-    <a href="https://forms.gle/Ur4XvSu3VtLKVSDW8" target="_blank" class="bg-[#d2b48c] text-[#4b2e2e] px-4 py-2 rounded hover:bg-[#e3c9a3]">❓ مش لاقي الكتاب اللي بتدور عليه؟ اطلبه من هنا</a>
-  </div>
-  <!-- الهيدر -->
-  <header class="bg-[#8b5e3c] p-4 text-white text-center text-2xl font-bold">
-    📚 متجر مكتبة بين السطور
-  </header>
-  <!-- شريط البحث -->
-  <div class="flex justify-center p-4">
-    <input type="text" id="searchInput" placeholder="ابحث عن كتاب..." class="p-2 rounded-lg border border-gray-300 w-full md:w-1/2">
-  </div>
-  <!-- تنبيه عند عدم وجود كتاب -->
-  <div class="text-center text-red-600 font-semibold mb-2 hidden" id="noResults">
-    الكتاب غير متوفر حاليًا! <a href="https://forms.gle/Ur4XvSu3VtLKVSDW8" target="_blank" class="text-blue-600 underline">اطلبه من هنا</a>
-  </div>
-  <!-- شبكة الكتب -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4" id="booksGrid"></div>
-  <!-- أزرار التنقل بين الصفحات -->
-  <div class="flex justify-center gap-2 p-4">
-    <button id="prevPage" class="bg-[#8b5e3c] text-white px-4 py-2 rounded hover:bg-[#a46d47] disabled:bg-gray-400">الصفحة السابقة</button>
-    <span id="pageInfo" class="text-lg font-semibold"></span>
-    <button id="nextPage" class="bg-[#8b5e3c] text-white px-4 py-2 rounded hover:bg-[#a46d47] disabled:bg-gray-400">الصفحة التالية</button>
-  </div>
-  <!-- القالب الخفي لكتاب -->
-  <template id="book-template">
-    <div class="bg-white rounded-lg shadow-md p-4">
-      <img class="w-full h-60 object-cover rounded-md mb-4" src="" alt="">
-      <h3 class="text-lg font-bold"></h3>
-      <p class="text-sm text-gray-600 mb-2 author"></p>
-      <p class="text-sm text-gray-800 mb-2 font-semibold">السعر: <span class="price">0</span> ج.م</p>
-      <div class="flex items-center mb-2">
-        <select id="quantity" class="quantity p-1 border rounded mr-2">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-        </select>
-        <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg flex-grow">أضف إلى السلة</button>
+  <!-- الهيدر مع الشريط الجانبي -->
+  <header class="bg-[#8b5e3c] text-white shadow-lg p-4 w-full fixed top-0 z-20">
+    <div class="container flex items-center justify-between">
+      <div class="flex items-center space-x-4 space-x-reverse">
+        <img src="https://i.ibb.co/5XkvmgWj/2.png" alt="لوجو بين السطور" class="w-12 h-12 rounded-full shadow-lg bg-white p-1" />
+        <span class="text-xl font-bold">📚 مكتبة بين السطور</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <button id="authButton" class="bg-[#d2b48c] text-[#8b5e3c] py-1 px-4 rounded-lg hover:bg-[#a46d47] transition duration-200" onclick="handleAuth()">تسجيل الدخول</button>
+        <button class="hamburger text-2xl" onclick="toggleMenu()">☰</button>
       </div>
     </div>
-  </template>
-.entry-title="إضافة إلى السلة مع تحديد الكمية" dir="rtl">
+  </header>
+
+  <nav class="sidebar bg-[#8b5e3c] text-white p-4 shadow-lg fixed top-16 left-0 h-[calc(100vh-64px)] transition-all duration-300" id="sidebar">
+    <ul class="flex flex-col gap-2 text-lg">
+      <li><a href="index.html" class="hover:text-[#d2b48c] py-2 block">🏠 الرئيسية</a></li>
+      <li><a href="store.html" class="hover:text-[#d2b48c] py-2 block">🛍️ المتجر</a></li>
+      <li><a href="order.html" class="hover:text-[#d2b48c] py-2 block">📦 الطلب</a></li>
+      <li><a href="reviews.html" class="hover:text-[#d2b48c] py-2 block">⭐ التقييمات</a></li>
+      <li><a href="offers.html" class="hover:text-[#d2b48c] py-2 block">🔥 عروض الكتب</a></li>
+      <li><a href="track.html" class="hover:text-[#d2b48c] py-2 block">🚚 تتبع الشحن</a></li>
+      <li id="authMenuItem"><a id="authMenuLink" href="login.html" class="hover:text-[#d2b48c] py-2 block">تسجيل الدخول</a></li>
+    </ul>
+  </nav>
+
+  <main class="pt-20 transition-all duration-300" id="mainContent">
+    <!-- أزرار في الأعلى -->
+    <div class="flex flex-col md:flex-row justify-center items-center gap-2 p-4">
+      <a href="cart.html" class="bg-[#8b5e3c] text-white px-4 py-2 rounded hover:bg-[#a46d47]">🛒 انتقل إلى السلة</a>
+      <a href="https://forms.gle/Ur4XvSu3VtLKVSDW8" target="_blank" class="bg-[#d2b48c] text-[#4b2e2e] px-4 py-2 rounded hover:bg-[#e3c9a3]">❓ مش لاقي الكتاب اللي بتدور عليه؟ اطلبه من هنا</a>
+    </div>
+    <!-- شريط البحث وفلتر التصنيفات -->
+    <div class="flex justify-center p-4 gap-4">
+      <input type="text" id="searchInput" placeholder="ابحث عن كتاب..." class="p-2 rounded-lg border border-gray-300 w-full md:w-1/2">
+      <select id="categoryFilter" class="p-2 rounded-lg border border-gray-300">
+        <option value="all">الكل</option>
+        <option value="تعليمي">تعليمي</option>
+        <option value="رعب">رعب</option>
+        <option value="رومانسي">رومانسي</option>
+        <option value="نفسي">نفسي</option>
+        <option value="أدبي">أدبي</option>
+      </select>
+    </div>
+    <!-- تنبيه عند عدم وجود كتاب -->
+    <div class="text-center text-red-600 font-semibold mb-2 hidden" id="noResults">
+      الكتاب غير متوفر حاليًا! <a href="https://forms.gle/Ur4XvSu3VtLKVSDW8" target="_blank" class="text-blue-600 underline">اطلبه من هنا</a>
+    </div>
+    <!-- شبكة الكتب -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4" id="booksGrid"></div>
+    <!-- أزرار التنقل بين الصفحات -->
+    <div class="flex justify-center gap-2 p-4">
+      <button id="prevPage" class="bg-[#8b5e3c] text-white px-4 py-2 rounded hover:bg-[#a46d47] disabled:bg-gray-400">الصفحة السابقة</button>
+      <span id="pageInfo" class="text-lg font-semibold"></span>
+      <button id="nextPage" class="bg-[#8b5e3c] text-white px-4 py-2 rounded hover:bg-[#a46d47] disabled:bg-gray-400">الصفحة التالية</button>
+    </div>
+    <!-- القالب الخفي لكتاب -->
+    <template id="book-template">
+      <div class="bg-white rounded-lg shadow-md p-4">
+        <img class="w-full h-60 object-cover rounded-md mb-4" src="" alt="">
+        <h3 class="text-lg font-bold"></h3>
+        <p class="text-sm text-gray-600 mb-2 author"></p>
+        <p class="text-sm text-gray-800 mb-2 font-semibold">السعر: <span class="price">0</span> ج.م</p>
+        <div class="flex items-center mb-2">
+          <select id="quantity" class="quantity p-1 border rounded mr-2">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+          <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg flex-grow">أضف إلى السلة</button>
+        </div>
+      </div>
+    </template>
+  </main>
+
   <script>
     const books = [
-      { title: "غربة الياسمين", author: "د. خولة حمدي", img: "https://i.ibb.co/d48rJwRX/818-Th-Z6-AGL.jpg", price: 75 },
-      { title: "ياسمين أبيض", author: "د. خولة حمدي", img: "https://i.ibb.co/20fNPPst/87557592.jpg", price: 70 },
-      { title: "أن تبقى", author: "د. خولة حمدي", img: "https://i.ibb.co/xq13g5MF/30738859.jpg", price: 70 },
-      { title: "إيكادولي", author: "حنان لاشين", img: "https://i.ibb.co/vxZWPn4q/9789776541252.jpg", price: 65 },
-      { title: "أرض زيكولا", author: "عمرو عبد الحميد", img: "https://i.ibb.co/pBXwBjc2/9753375.jpg", price: 60 },
-      { title: "أماريتا", author: "عمرو عبد الحميد", img: "https://i.ibb.co/wZ6WvNGK/IMG-20230913-123359.jpg", price: 65 },
-      { title: "حديث الصباح", author: "أدهم الشرقاوي", img: "https://i.ibb.co/39110Rtr/1bf0cbeee98f5b42f9e52b6aebc5a1e4-webp.webp", price: 60 },
-      { title: "ابادول (الجزء السابع -مملكة البلاغه)", author: "حنان لاشين", img: "https://i.ibb.co/7FNfB4N/images-69.jpg", price: 80 },
-      { title: "واحة اليعقوب", author: "عمرو عبد الحميد", img: "https://i.ibb.co/xK38PZHr/images-1.jpg", price: 80 },
-      { title: "الهلكوت", author: "أحمد خالد مصطفى", img: "https://i.ibb.co/2fd9bJd/images-75.jpg", price: 85 },
-      { title: "قبل أن تبرد القهوة الجزء الرابع", author: "توشيكازو كاواغوتشي", img: "https://i.ibb.co/6JRFHKQt/images-2025-06-26-T065532-074.jpg", price: 70 },
-      { title: "نوح المذبوح", author: "حسن الجندي", img: "https://i.ibb.co/q3RtkcL4/images-50.jpg", price: 80 },
-      { title: "نصف ميت", author: "حسن الجندي", img: "https://i.ibb.co/s9Vp0GM1/images-51.jpg", price: 90 },
-      { title: "جلسات نفسية", author: "د. محمد إبراهيم", img: "https://i.ibb.co/prrrZBsw/58566586.jpg", price: 85 },
-      { title: "الهشاشة النفسية", author: "د. إسماعيل عرفة", img: "https://i.ibb.co/fzWWcQKt/172884507.jpg", price: 75 },
-      { title: "هاري بوتر - حجر الفيلسوف", author: "J.K. Rowling", img: "https://i.ibb.co/Cp1qmbLV/5ffa0ba27a6d9b4647df06a9c3facd3f-png.webp", price: 95 },
-      { title: "هاري بوتر - حجرة الأسرار", author: "J.K. Rowling", img: "https://i.ibb.co/3ynkkNhZ/image.jpg", price: 95 },
-      { title: "هاري بوتر - كأس النار", author: "J.K. Rowling", img: "https://i.ibb.co/Txk8tXdK/d5dca214e3d82e487edc1982dd4da7c6-jpg.jpg", price: 95 },
-      { title: "ممتلئ بالفراغ", author: "د. عماد رشاد عثمان", img: "https://i.ibb.co/twjPcVJb/78671406.jpg", price: 75 },
-      { title: "أبي الذي أكره", author: "د. عماد رشاد عثمان", img: "https://i.ibb.co/d00V5prF/artworks-nymv-Ob4m-V6ze-HOf-G-n-OGl6g-t1080x1080.jpg", price: 70 },
-      { title: "كريسماس في مكة", author: "أحمد خيري العمري", img: "https://i.ibb.co/1YHGYNVG/51710064.jpg", price: 85 },
-      { title: "عقدك النفسية سجنك الأبدي", author: "د. يوسف الحسني", img: "https://i.ibb.co/hFKXhpnC/images-10.jpg", price: 75 },
-      { title: "ابتسم فأنت ميت", author: "حسن الجندي", img: "https://i.ibb.co/4wMsdJd1/images-49.jpg", price: 65 },
-      { title: "القربان", author: "مروى جوهر", img: "https://i.ibb.co/pv7Lc1Vq/images-45.jpg", price: 80 },
-      { title: "قواعد جارتين - الجزء الأول", author: "عمرو عبد الحميد", img: "https://i.ibb.co/Cp7V7KHw/images-38.jpg", price: 80 },
-      { title: "آزرُ", author: "أحمد آل حمدان", img: "https://i.ibb.co/PZgYRdrW/53810-250x375-webp-1.webp", price: 100 },
-      { title: "صديقي السيكوباتي", author: "ميرنا المهدي", img: "https://i.ibb.co/HTyHRHQS/images-40.jpg", price: 60 },
-      { title: "قضية لوز مر - الجزء الثاني (تحقيقات نوح الألفي)", author: "ميرنا المهدي", img: "https://i.ibb.co/1YZJ2KFS/images-6.jpg", price: 65 },
-      { title: "قضية عنب الثعلب - الجزء الثالث (تحقيقات نوح الألفي)", author: "ميرنا المهدي", img: "https://i.ibb.co/B5b7T130/9789778727326.jpg", price: 65 },
-      { title: "فتاة الياقة الزرقاء", author: "عمرو عبد الحميد", img: "https://i.ibb.co/qMBp82Rm/images-37.jpg", price: 70 },
-      { title: "مدرسة ميلر", author: "رحمة نبيل", img: "https://i.ibb.co/LzbMtS2t/18541f47-89c4-4b51-8c7c-73f0821af3b2.jpg", price: 65 },
-      { title: "أحببت وغداً", author: "د. عماد رشاد عثمان", img: "https://i.ibb.co/3PnYX1F/images-7.jpg", price: 75 },
-      { title: "قوانين الصراع النفسي", author: "د. يوسف الحسني", img: "https://i.ibb.co/tpcKLRt9/images-8.jpg", price: 80 },
-      { title: "البسي واسع", author: "د. إبتسام القاضي", img: "https://i.ibb.co/gZvsmgZ1/images-9.jpg", price: 65 },
-      { title: "آن", author: "محمد صادق", img: "https://i.ibb.co/qMVXS6Bh/images-4.jpg", price: 75 },
-      { title: "كورس ذا أمريكان إنجلش - المستوى الأول", author: "إبراهيم عادل", img: "https://i.ibb.co/NnLzJw7f/images-2025-06-26-T065736-156.jpg", price: 100 },
-      { title: "غصون البندق - الجزء الأول", author: "منى سلامة", img: "https://i.ibb.co/ymJKfXq8/images-2025-06-26-T065611-681.jpg", price: 55 },
-      { title: "قبل أن تبرد القهوة - الجزء الثالث", author: "توشيكازو كاواغوتشي", img: "https://i.ibb.co/HDZ8p5cN/images-2025-06-26-T065524-055.jpg", price: 85 },
-      { title: "قبل أن تبرد القهوة - الجزء الثاني", author: "توشيكازو كاواغوتشي", img: "https://i.ibb.co/kg13wsBt/images-2025-06-26-T065513-373.jpg", price: 85 },
-      { title: "قبل أن تبرد القهوة - الجزء الأول", author: "توشيكازو كاواغوتشي", img: "https://i.ibb.co/4wd8TQ9d/images-2025-06-26-T065458-443.jpg", price: 85 },
-      { title: "قرية الشيخ", author: "رحمة نبيل", img: "https://i.ibb.co/Z1SwKZdT/images-2.jpg", price: 80 },
-      { title: "ليطمئن قلبي", author: "أدهم الشرقاوي", img: "https://i.ibb.co/20NmDgnB/images-87.jpg", price: 75 },
-      { title: "رسائل من الصحابة", author: "أدهم الشرقاوي", img: "https://i.ibb.co/rf1RH8Yy/images-82.jpg", price: 65 },
-      { title: "إن ربي لطيف", author: "عبد الرحمن مسعد", img: "https://i.ibb.co/zYQk2sb/images-81.jpg", price: 65 },
-      { title: "رسائل من النبي", author: "أدهم الشرقاوي", img: "https://i.ibb.co/0ypQt2QW/images-80.jpg", price: 70 },
-      { title: "صاحب الظل الطويل", author: "جين ويبستر", img: "https://i.ibb.co/3mkGh3Nr/images-78.jpg", price: 65 },
-      { title: "نظرية الفستق - الجزء الأول", author: "فهد عامر الأحمدي", img: "https://i.ibb.co/dJgDRVj0/9f2c45ff22eb6c827113e74bba35b0e3-png-1.webp", price: 55 },
-      { title: "قواعد جارتين 2 - دقات الشامو", author: "عمرو عبد الحميد", img: "https://i.ibb.co/vxrPHjrH/images-73.jpg", price: 70 },
-      { title: "قواعد جارتين 3 - أمواج أكما", author: "عمرو عبد الحميد", img: "https://i.ibb.co/zVBmc27K/images-72.jpg", price: 70 },
-      { title: "ارض زيكولا 3 - وادى الذئاب المنسية", author: "عمرو عبد الحميد", img: "https://i.ibb.co/YFV63y4K/images-71.jpg", price: 75 },
-      { title: " كويكول (الجزء الرابع -مملكة البلاغة)", author: "د. حنان لاشين", img: "https://i.ibb.co/4gt75H8K/images-70.jpg", price: 70 },
-      { title: "سقطرى (الجزء الخامس - مملكة البلاغة)", author: "د. حنان لاشين", img: "https://i.ibb.co/5WF3pjNP/images-68.jpg", price: 75 },
-      { title: "سيروش (الجزء السادس - مملكة البلاغة)", author: "د. حنان لاشين", img: "https://i.ibb.co/d1X0QCQ/images-67.jpg", price: 75 },
-      { title: "السجيل (الجزء الرابع - سلسلة أبابيل)", author: "أحمد آل حمدان", img: "https://i.ibb.co/9976VJFN/images-63.jpg", price: 85 },
-      { title: "ارسس - الجزء الثاني", author: "أحمد آل حمدان", img: "https://i.ibb.co/0p9wS2xd/images-62.jpg", price: 65 },
-      { title: "ارسس - الجزء الأول", author: "أحمد آل حمدان", img: "https://i.ibb.co/Ps6PVVRf/images-61.jpg", price: 60 },
-      { title: "جومانا (الجزء الثالث - سلسلة أبابيل)", author: "أحمد آل حمدان", img: "https://i.ibb.co/S7sm09YK/images-60.jpg", price: 85 },
-      { title: "الهول", author: "أحمد خالد توفيق", img: "https://i.ibb.co/zVnJJ1rf/images-58.jpg", price: 75 },
-      { title: "سفاح الأزقة", author: "عثمان عابد", img: "https://i.ibb.co/5g1m5Lk3/images-52.jpg", price: 65 },
-      { title: "كورس مستر إبراهيم عادل The American English (المستوى الثانى)", author: "إبراهيم عادل", img: "https://i.ibb.co/q3mnVNPt/images-2025-06-26-T063700-060.jpg", price: 120 },
-      { title: "رواية لعنة الفراعنة ١", author: "رحمة نبيل", img: "https://i.ibb.co/jP6rBcFb/images-2025-06-26-T065854-299.jpg", price: 75 },
-      { title: "عندما يقول الجسد لا", author: "جابور ماتيه", img: "https://i.ibb.co/TqDSxmKp/images-13.jpg", price: 85 },
-      { title: "كن الشخص الذي يجعلك سعيدًا", author: "إيناس سمير", img: "https://i.ibb.co/rfGWVSZr/images-12.jpg", price: 65 },
-      { title: "أسرار عقل المليونير", author: "ت. هارف إيكر", img: "https://i.ibb.co/h1LjDDtj/images-36.jpg", price: 80 },
-      { title: "إنني اتعفن رعبًا", author: "مريم الحيسي", img: "https://i.ibb.co/DfZydSsH/images-43.jpg", price: 65 },
-      { title: "الجريمة والعقاب", author: "دوستويفسكي", img: "https://i.ibb.co/C5rQbHCv/images-2025-06-26-T063247-605.jpg", price: 95 },
-      { title: "قضية ست الحسن (الجزء الاول تحقيقات نوح الالفى)", author: "ميرنا المهدى", img: "https://i.ibb.co/YB5mX8zn/images-5.jpg", price: 65 },
-      { title: "كورس مستر إبراهيم عادل The American English (المستوى الثالث)", author: "إبراهيم عادل", img: "https://i.ibb.co/Dh30GyK/images-2025-06-26-T063720-565.jpg", price: 130 },
-      { title: "عصبة ذو الشعر الأحمر مترجمة", author: "آرثر كونان دويل", img: "https://i.ibb.co/vCQvtcCc/images-2025-06-26-T064307-738.jpg", price: 85 },
-      { title: "غصون البندق الجزء الثانى", author: "منى سلامة", img: "https://i.ibb.co/qFR4yV9R/images-2025-06-26-T065634-624.jpg", price: 70 },
-      { title: "طرقات مرتدة", author: "شمس محمد", img: "https://i.ibb.co/LzvzvbsY/images-79.jpg", price: 85 },
-      { title: "سأرحل", author: "ساندرا سراج", img: "https://i.ibb.co/bMbs576j/images-91.jpg", price: 70 },
-      { title: "مالا نبوح به", author: "ساندرا سراج", img: "https://i.ibb.co/4wRv5N7M/images-88.jpg", price: 65 },
-      { title: "مدينة الحب لا يسكنها العقلاء", author: "أحمد آل حمدان", img: "https://i.ibb.co/Pz3js044/images-86.jpg", price: 85 },
-      { title: "The Old Man And The Sea", author: "إرنست همنغواي", img: "https://i.ibb.co/Z0RrVPP/images-2025-06-26-T063609-884.jpg", price: 90 },
-      { title: "امانوس (الجزء الثالث - مملكةالبلاغه)", author: "د.حنان لاشين", img: "https://i.ibb.co/JRh1ndrv/images-66.jpg", price: 65 },
-      { title: "الجساسه(الجزء الثانى-سلسة ابابيل)", author: "أحمد آل حمدان", img: "https://i.ibb.co/ccG1hvd1/200x200.jpg", price: 90 },
-      { title: "ابابيل(الجزء الأول سلسة ابابيل)", author: "أحمد آل حمدان", img: "https://i.ibb.co/JjFJnG41/images-15.jpg", price: 80 }
+      { title: "غربة الياسمين", author: "د. خولة حمدي", img: "https://i.ibb.co/d48rJwRX/818-Th-Z6-AGL.jpg", price: 75, category: "رومانسي" },
+      { title: "ياسمين أبيض", author: "د. خولة حمدي", img: "https://i.ibb.co/20fNPPst/87557592.jpg", price: 70, category: "رومانسي" },
+      { title: "أن تبقى", author: "د. خولة حمدي", img: "https://i.ibb.co/xq13g5MF/30738859.jpg", price: 70, category: "رومانسي" },
+      { title: "إيكادولي", author: "حنان لاشين", img: "https://i.ibb.co/vxZWPn4q/9789776541252.jpg", price: 65, category: "أدبي" },
+      { title: "أرض زيكولا", author: "عمرو عبد الحميد", img: "https://i.ibb.co/pBXwBjc2/9753375.jpg", price: 60, category: "أدبي" },
+      { title: "أماريتا", author: "عمرو عبد الحميد", img: "https://i.ibb.co/wZ6WvNGK/IMG-20230913-123359.jpg", price: 65, category: "أدبي" },
+      { title: "حديث الصباح", author: "أدهم الشرقاوي", img: "https://i.ibb.co/39110Rtr/1bf0cbeee98f5b42f9e52b6aebc5a1e4-webp.webp", price: 60, category: "أدبي" },
+      { title: "ابادول (الجزء السابع -مملكة البلاغه)", author: "حنان لاشين", img: "https://i.ibb.co/7FNfB4N/images-69.jpg", price: 80, category: "أدبي" },
+      { title: "واحة اليعقوب", author: "عمرو عبد الحميد", img: "https://i.ibb.co/xK38PZHr/images-1.jpg", price: 80, category: "أدبي" },
+      { title: "الهلكوت", author: "أحمد خالد مصطفى", img: "https://i.ibb.co/2fd9bJd/images-75.jpg", price: 85, category: "رعب" },
+      { title: "قبل أن تبرد القهوة الجزء الرابع", author: "توشيكازو كاواغوتشي", img: "https://i.ibb.co/6JRFHKQt/images-2025-06-26-T065532-074.jpg", price: 70, category: "أدبي" },
+      { title: "نوح المذبوح", author: "حسن الجندي", img: "https://i.ibb.co/q3RtkcL4/images-50.jpg", price: 80, category: "رعب" },
+      { title: "نصف ميت", author: "حسن الجندي", img: "https://i.ibb.co/s9Vp0GM1/images-51.jpg", price: 90, category: "رعب" },
+      { title: "جلسات نفسية", author: "د. محمد إبراهيم", img: "https://i.ibb.co/prrrZBsw/58566586.jpg", price: 85, category: "نفسي" }, <!-- تعديل من تعليمي لنفسي -->
+      { title: "الهشاشة النفسية", author: "د. إسماعيل عرفة", img: "https://i.ibb.co/fzWWcQKt/172884507.jpg", price: 75, category: "نفسي" },
+      { title: "هاري بوتر - حجر الفيلسوف", author: "J.K. Rowling", img: "https://i.ibb.co/Cp1qmbLV/5ffa0ba27a6d9b4647df06a9c3facd3f-png.webp", price: 95, category: "أدبي" },
+      { title: "هاري بوتر - حجرة الأسرار", author: "J.K. Rowling", img: "https://i.ibb.co/3ynkkNhZ/image.jpg", price: 95, category: "أدبي" },
+      { title: "هاري بوتر - كأس النار", author: "J.K. Rowling", img: "https://i.ibb.co/Txk8tXdK/d5dca214e3d82e487edc1982dd4da7c6-jpg.jpg", price: 95, category: "أدبي" },
+      { title: "ممتلئ بالفراغ", author: "د. عماد رشاد عثمان", img: "https://i.ibb.co/twjPcVJb/78671406.jpg", price: 75, category: "نفسي" },
+      { title: "أبي الذي أكره", author: "د. عماد رشاد عثمان", img: "https://i.ibb.co/d00V5prF/artworks-nymv-Ob4m-V6ze-HOf-G-n-OGl6g-t1080x1080.jpg", price: 70, category: "نفسي" },
+      { title: "كريسماس في مكة", author: "أحمد خيري العمري", img: "https://i.ibb.co/1YHGYNVG/51710064.jpg", price: 85, category: "أدبي" },
+      { title: "عقدك النفسية سجنك الأبدي", author: "د. يوسف الحسني", img: "https://i.ibb.co/hFKXhpnC/images-10.jpg", price: 75, category: "نفسي" },
+      { title: "ابتسم فأنت ميت", author: "حسن الجندي", img: "https://i.ibb.co/4wMsdJd1/images-49.jpg", price: 65, category: "رعب" },
+      { title: "القربان", author: "مروى جوهر", img: "https://i.ibb.co/pv7Lc1Vq/images-45.jpg", price: 80, category: "أدبي" },
+      { title: "قواعد جارتين - الجزء الأول", author: "عمرو عبد الحميد", img: "https://i.ibb.co/Cp7V7KHw/images-38.jpg", price: 80, category: "أدبي" },
+      { title: "آزرُ", author: "أحمد آل حمدان", img: "https://i.ibb.co/PZgYRdrW/53810-250x375-webp-1.webp", price: 100, category: "أدبي" },
+      { title: "صديقي السيكوباتي", author: "ميرنا المهدي", img: "https://i.ibb.co/HTyHRHQS/images-40.jpg", price: 60, category: "رعب" },
+      { title: "قضية لوز مر - الجزء الثاني (تحقيقات نوح الألفي)", author: "ميرنا المهدي", img: "https://i.ibb.co/1YZJ2KFS/images-6.jpg", price: 65, category: "أدبي" },
+      { title: "قضية عنب الثعلب - الجزء الثالث (تحقيقات نوح الألفي)", author: "ميرنا المهدي", img: "https://i.ibb.co/B5b7T130/9789778727326.jpg", price: 65, category: "أدبي" },
+      { title: "فتاة الياقة الزرقاء", author: "عمرو عبد الحميد", img: "https://i.ibb.co/qMBp82Rm/images-37.jpg", price: 70, category: "أدبي" },
+      { title: "مدرسة ميلر", author: "رحمة نبيل", img: "https://i.ibb.co/LzbMtS2t/18541f47-89c4-4b51-8c7c-73f0821af3b2.jpg", price: 65, category: "أدبي" },
+      { title: "أحببت وغداً", author: "د. عماد رشاد عثمان", img: "https://i.ibb.co/3PnYX1F/images-7.jpg", price: 75, category: "نفسي" },
+      { title: "قوانين الصراع النفسي", author: "د. يوسف الحسني", img: "https://i.ibb.co/tpcKLRt9/images-8.jpg", price: 80, category: "نفسي" },
+      { title: "البسي واسع", author: "د. إبتسام القاضي", img: "https://i.ibb.co/gZvsmgZ1/images-9.jpg", price: 65, category: "نفسي" },
+      { title: "آن", author: "محمد صادق", img: "https://i.ibb.co/qMVXS6Bh/images-4.jpg", price: 75, category: "أدبي" },
+      { title: "كورس ذا أمريكان إنجلش - المستوى الأول", author: "إبراهيم عادل", img: "https://i.ibb.co/NnLzJw7f/images-2025-06-26-T065736-156.jpg", price: 100, category: "تعليمي" },
+      { title: "غصون البندق - الجزء الأول", author: "منى سلامة", img: "https://i.ibb.co/ymJKfXq8/images-2025-06-26-T065611-681.jpg", price: 55, category: "أدبي" },
+      { title: "قبل أن تبرد القهوة - الجزء الثالث", author: "توشيكازو كاواغوتشي", img: "https://i.ibb.co/HDZ8p5cN/images-2025-06-26-T065524-055.jpg", price: 85, category: "أدبي" },
+      { title: "قبل أن تبرد القهوة - الجزء الثاني", author: "توشيكازو كاواغوتشي", img: "https://i.ibb.co/kg13wsBt/images-2025-06-26-T065513-373.jpg", price: 85, category: "أدبي" },
+      { title: "قبل أن تبرد القهوة - الجزء الأول", author: "توشيكازو كاواغوتشي", img: "https://i.ibb.co/4wd8TQ9d/images-2025-06-26-T065458-443.jpg", price: 85, category: "أدبي" },
+      { title: "قرية الشيخ", author: "رحمة نبيل", img: "https://i.ibb.co/Z1SwKZdT/images-2.jpg", price: 80, category: "أدبي" },
+      { title: "ليطمئن قلبي", author: "أدهم الشرقاوي", img: "https://i.ibb.co/20NmDgnB/images-87.jpg", price: 75, category: "أدبي" },
+      { title: "رسائل من الصحابة", author: "أدهم الشرقاوي", img: "https://i.ibb.co/rf1RH8Yy/images-82.jpg", price: 65, category: "أدبي" },
+      { title: "إن ربي لطيف", author: "عبد الرحمن مسعد", img: "https://i.ibb.co/zYQk2sb/images-81.jpg", price: 65, category: "أدبي" },
+      { title: "رسائل من النبي", author: "أدهم الشرقاوي", img: "https://i.ibb.co/0ypQt2QW/images-80.jpg", price: 70, category: "أدبي" },
+      { title: "صاحب الظل الطويل", author: "جين ويبستر", img: "https://i.ibb.co/3mkGh3Nr/images-78.jpg", price: 65, category: "أدبي" },
+      { title: "نظرية الفستق - الجزء الأول", author: "فهد عامر الأحمدي", img: "https://i.ibb.co/dJgDRVj0/9f2c45ff22eb6c827113e74bba35b0e3-png-1.webp", price: 55, category: "أدبي" },
+      { title: "قواعد جارتين 2 - دقات الشامو", author: "عمرو عبد الحميد", img: "https://i.ibb.co/vxrPHjrH/images-73.jpg", price: 70, category: "أدبي" },
+      { title: "قواعد جارتين 3 - أمواج أكما", author: "عمرو عبد الحميد", img: "https://i.ibb.co/zVBmc27K/images-72.jpg", price: 70, category: "أدبي" },
+      { title: "ارض زيكولا 3 - وادى الذئاب المنسية", author: "عمرو عبد الحميد", img: "https://i.ibb.co/YFV63y4K/images-71.jpg", price: 75, category: "أدبي" },
+      { title: " كويكول (الجزء الرابع -مملكة البلاغة)", author: "د. حنان لاشين", img: "https://i.ibb.co/4gt75H8K/images-70.jpg", price: 70, category: "أدبي" },
+      { title: "سقطرى (الجزء الخامس - مملكة البلاغة)", author: "د. حنان لاشين", img: "https://i.ibb.co/5WF3pjNP/images-68.jpg", price: 75, category: "أدبي" },
+      { title: "سيروش (الجزء السادس - مملكة البلاغة)", author: "د. حنان لاشين", img: "https://i.ibb.co/d1X0QCQ/images-67.jpg", price: 75, category: "أدبي" },
+      { title: "السجيل (الجزء الرابع - سلسلة أبابيل)", author: "أحمد آل حمدان", img: "https://i.ibb.co/9976VJFN/images-63.jpg", price: 85, category: "أدبي" },
+      { title: "ارسس - الجزء الثاني", author: "أحمد آل حمدان", img: "https://i.ibb.co/0p9wS2xd/images-62.jpg", price: 65, category: "أدبي" },
+      { title: "ارسس - الجزء الأول", author: "أحمد آل حمدان", img: "https://i.ibb.co/Ps6PVVRf/images-61.jpg", price: 60, category: "أدبي" },
+      { title: "جومانا (الجزء الثالث - سلسلة أبابيل)", author: "أحمد آل حمدان", img: "https://i.ibb.co/S7sm09YK/images-60.jpg", price: 85, category: "أدبي" },
+      { title: "الهول", author: "أحمد خالد توفيق", img: "https://i.ibb.co/zVnJJ1rf/images-58.jpg", price: 75, category: "رعب" },
+      { title: "سفاح الأزقة", author: "عثمان عابد", img: "https://i.ibb.co/5g1m5Lk3/images-52.jpg", price: 65, category: "رعب" },
+      { title: "كورس مستر إبراهيم عادل The American English (المستوى الثانى)", author: "إبراهيم عادل", img: "https://i.ibb.co/q3mnVNPt/images-2025-06-26-T063700-060.jpg", price: 120, category: "تعليمي" },
+      { title: "رواية لعنة الفراعنة ١", author: "رحمة نبيل", img: "https://i.ibb.co/jP6rBcFb/images-2025-06-26-T065854-299.jpg", price: 75, category: "أدبي" },
+      { title: "عندما يقول الجسد لا", author: "جابور ماتيه", img: "https://i.ibb.co/TqDSxmKp/images-13.jpg", price: 85, category: "نفسي" },
+      { title: "كن الشخص الذي يجعلك سعيدًا", author: "إيناس سمير", img: "https://i.ibb.co/rfGWVSZr/images-12.jpg", price: 65, category: "نفسي" },
+      { title: "أسرار عقل المليونير", author: "ت. هارف إيكر", img: "https://i.ibb.co/h1LjDDtj/images-36.jpg", price: 80, category: "تعليمي" },
+      { title: "إنني اتعفن رعبًا", author: "مريم الحيسي", img: "https://i.ibb.co/DfZydSsH/images-43.jpg", price: 65, category: "رعب" },
+      { title: "الجريمة والعقاب", author: "دوستويفسكي", img: "https://i.ibb.co/C5rQbHCv/images-2025-06-26-T063247-605.jpg", price: 95, category: "أدبي" },
+      { title: "قضية ست الحسن (الجزء الاول تحقيقات نوح الالفى)", author: "ميرنا المهدى", img: "https://i.ibb.co/YB5mX8zn/images-5.jpg", price: 65, category: "أدبي" },
+      { title: "كورس مستر إبراهيم عادل The American English (المستوى الثالث)", author: "إبراهيم عادل", img: "https://i.ibb.co/Dh30GyK/images-2025-06-26-T063720-565.jpg", price: 130, category: "تعليمي" },
+      { title: "عصبة ذو الشعر الأحمر مترجمة", author: "آرثر كونان دويل", img: "https://i.ibb.co/vCQvtcCc/images-2025-06-26-T064307-738.jpg", price: 85, category: "أدبي" },
+      { title: "غصون البندق الجزء الثانى", author: "منى سلامة", img: "https://i.ibb.co/qFR4yV9R/images-2025-06-26-T065634-624.jpg", price: 70, category: "أدبي" },
+      { title: "طرقات مرتدة", author: "شمس محمد", img: "https://i.ibb.co/LzvzvbsY/images-79.jpg", price: 85, category: "أدبي" },
+      { title: "سأرحل", author: "ساندرا سراج", img: "https://i.ibb.co/bMbs576j/images-91.jpg", price: 70, category: "أدبي" },
+      { title: "مالا نبوح به", author: "ساندرا سراج", img: "https://i.ibb.co/4wRv5N7M/images-88.jpg", price: 65, category: "أدبي" },
+      { title: "مدينة الحب لا يسكنها العقلاء", author: "أحمد آل حمدان", img: "https://i.ibb.co/Pz3js044/images-86.jpg", price: 85, category: "أدبي" },
+      { title: "The Old Man And The Sea", author: "إرنست همنغواي", img: "https://i.ibb.co/Z0RrVPP/images-2025-06-26-T063609-884.jpg", price: 90, category: "أدبي" },
+      { title: "امانوس (الجزء الثالث - مملكةالبلاغه)", author: "د.حنان لاشين", img: "https://i.ibb.co/JRh1ndrv/images-66.jpg", price: 65, category: "أدبي" },
+      { title: "الجساسه(الجزء الثانى-سلسة ابابيل)", author: "أحمد آل حمدان", img: "https://i.ibb.co/ccG1hvd1/200x200.jpg", price: 90, category: "أدبي" },
+      { title: "ابابيل(الجزء الأول سلسة ابابيل)", author: "أحمد آل حمدان", img: "https://i.ibb.co/JjFJnG41/images-15.jpg", price: 80, category: "أدبي" }
     ];
 
     const booksGrid = document.getElementById('booksGrid');
@@ -145,6 +178,7 @@
     const prevPageBtn = document.getElementById('prevPage');
     const nextPageBtn = document.getElementById('nextPage');
     const pageInfo = document.getElementById('pageInfo');
+    const categoryFilter = document.getElementById('categoryFilter');
 
     const booksPerPage = 12;
     let currentPage = 1;
@@ -192,17 +226,44 @@
     searchInput.addEventListener('input', () => {
       currentPage = 1;
       const searchTerm = searchInput.value.trim().toLowerCase();
-      const filteredBooks = books.filter(book =>
+      const category = categoryFilter.value;
+      let filteredBooks = books.filter(book =>
         book.title.toLowerCase().includes(searchTerm) ||
         book.author.toLowerCase().includes(searchTerm)
       );
+      if (category !== "all") {
+        filteredBooks = filteredBooks.filter(book => book.category === category);
+      }
+      displayBooks(filteredBooks);
+    });
+
+    categoryFilter.addEventListener('change', () => {
+      currentPage = 1;
+      const searchTerm = searchInput.value.trim().toLowerCase();
+      const category = categoryFilter.value;
+      let filteredBooks = books.filter(book =>
+        book.title.toLowerCase().includes(searchTerm) ||
+        book.author.toLowerCase().includes(searchTerm)
+      );
+      if (category !== "all") {
+        filteredBooks = filteredBooks.filter(book => book.category === category);
+      }
       displayBooks(filteredBooks);
     });
 
     prevPageBtn.addEventListener('click', () => {
       if (currentPage > 1) {
         currentPage--;
-        displayBooks(books);
+        const searchTerm = searchInput.value.trim().toLowerCase();
+        const category = categoryFilter.value;
+        let filteredBooks = books.filter(book =>
+          book.title.toLowerCase().includes(searchTerm) ||
+          book.author.toLowerCase().includes(searchTerm)
+        );
+        if (category !== "all") {
+          filteredBooks = filteredBooks.filter(book => book.category === category);
+        }
+        displayBooks(filteredBooks);
         window.scrollTo(0, 0); // التمرير لأعلى الصفحة
       }
     });
@@ -211,12 +272,22 @@
       const totalPages = Math.ceil(books.length / booksPerPage);
       if (currentPage < totalPages) {
         currentPage++;
-        displayBooks(books);
+        const searchTerm = searchInput.value.trim().toLowerCase();
+        const category = categoryFilter.value;
+        let filteredBooks = books.filter(book =>
+          book.title.toLowerCase().includes(searchTerm) ||
+          book.author.toLowerCase().includes(searchTerm)
+        );
+        if (category !== "all") {
+          filteredBooks = filteredBooks.filter(book => book.category === category);
+        }
+        displayBooks(filteredBooks);
         window.scrollTo(0, 0); // التمرير لأعلى الصفحة
       }
     });
 
     displayBooks(books);
   </script>
+  <script src="script.js"></script> <!-- ربط ملف الـ JavaScript اللي فيه التحكم -->
 </body>
 </html>
