@@ -52,6 +52,7 @@
         <option value="تعليمي">تعليمي</option>
         <option value="رعب">رعب</option>
         <option value="رومانسي">رومانسي</option>
+       <option value="ديني">ديني</option>
         <option value="نفسي">نفسي</option>
         <option value="أدبي">أدبي</option>
       </select>
@@ -91,9 +92,9 @@
 
   <script>
     const books = [
-      { title: "غربة الياسمين", author: "د. خولة حمدي", img: "https://i.ibb.co/d48rJwRX/818-Th-Z6-AGL.jpg", price: 75, category: "رومانسي" },
-      { title: "ياسمين أبيض", author: "د. خولة حمدي", img: "https://i.ibb.co/20fNPPst/87557592.jpg", price: 70, category: "رومانسي" },
-      { title: "أن تبقى", author: "د. خولة حمدي", img: "https://i.ibb.co/xq13g5MF/30738859.jpg", price: 70, category: "رومانسي" },
+      { title: "غربة الياسمين", author: "د. خولة حمدي", img: "https://i.ibb.co/d48rJwRX/818-Th-Z6-AGL.jpg", price: 75, category: "أدبي" },
+      { title: "ياسمين أبيض", author: "د. خولة حمدي", img: "https://i.ibb.co/20fNPPst/87557592.jpg", price: 70, category: "أدبي" },
+      { title: "أن تبقى", author: "د. خولة حمدي", img: "https://i.ibb.co/xq13g5MF/30738859.jpg", price: 70, category: "أدبي" },
       { title: "إيكادولي", author: "حنان لاشين", img: "https://i.ibb.co/vxZWPn4q/9789776541252.jpg", price: 65, category: "أدبي" },
       { title: "أرض زيكولا", author: "عمرو عبد الحميد", img: "https://i.ibb.co/pBXwBjc2/9753375.jpg", price: 60, category: "أدبي" },
       { title: "أماريتا", author: "عمرو عبد الحميد", img: "https://i.ibb.co/wZ6WvNGK/IMG-20230913-123359.jpg", price: 65, category: "أدبي" },
@@ -114,7 +115,7 @@
       { title: "كريسماس في مكة", author: "أحمد خيري العمري", img: "https://i.ibb.co/1YHGYNVG/51710064.jpg", price: 85, category: "أدبي" },
       { title: "عقدك النفسية سجنك الأبدي", author: "د. يوسف الحسني", img: "https://i.ibb.co/hFKXhpnC/images-10.jpg", price: 75, category: "نفسي" },
       { title: "ابتسم فأنت ميت", author: "حسن الجندي", img: "https://i.ibb.co/4wMsdJd1/images-49.jpg", price: 65, category: "رعب" },
-      { title: "القربان", author: "مروى جوهر", img: "https://i.ibb.co/pv7Lc1Vq/images-45.jpg", price: 80, category: "أدبي" },
+      { title: "القربان", author: "مروى جوهر", img: "https://i.ibb.co/pv7Lc1Vq/images-45.jpg", price: 80, category: "نفسي" },
       { title: "قواعد جارتين - الجزء الأول", author: "عمرو عبد الحميد", img: "https://i.ibb.co/Cp7V7KHw/images-38.jpg", price: 80, category: "أدبي" },
       { title: "آزرُ", author: "أحمد آل حمدان", img: "https://i.ibb.co/PZgYRdrW/53810-250x375-webp-1.webp", price: 100, category: "أدبي" },
       { title: "صديقي السيكوباتي", author: "ميرنا المهدي", img: "https://i.ibb.co/HTyHRHQS/images-40.jpg", price: 60, category: "رعب" },
@@ -124,7 +125,7 @@
       { title: "مدرسة ميلر", author: "رحمة نبيل", img: "https://i.ibb.co/LzbMtS2t/18541f47-89c4-4b51-8c7c-73f0821af3b2.jpg", price: 65, category: "أدبي" },
       { title: "أحببت وغداً", author: "د. عماد رشاد عثمان", img: "https://i.ibb.co/3PnYX1F/images-7.jpg", price: 75, category: "نفسي" },
       { title: "قوانين الصراع النفسي", author: "د. يوسف الحسني", img: "https://i.ibb.co/tpcKLRt9/images-8.jpg", price: 80, category: "نفسي" },
-      { title: "البسي واسع", author: "د. إبتسام القاضي", img: "https://i.ibb.co/gZvsmgZ1/images-9.jpg", price: 65, category: "نفسي" },
+      { title: "البسي واسع", author: "د. إبتسام القاضي", img: "https://i.ibb.co/gZvsmgZ1/images-9.jpg", price: 65, category: "ديني" },
       { title: "آن", author: "محمد صادق", img: "https://i.ibb.co/qMVXS6Bh/images-4.jpg", price: 75, category: "أدبي" },
       { title: "كورس ذا أمريكان إنجلش - المستوى الأول", author: "إبراهيم عادل", img: "https://i.ibb.co/NnLzJw7f/images-2025-06-26-T065736-156.jpg", price: 100, category: "تعليمي" },
       { title: "غصون البندق - الجزء الأول", author: "منى سلامة", img: "https://i.ibb.co/ymJKfXq8/images-2025-06-26-T065611-681.jpg", price: 55, category: "أدبي" },
@@ -132,12 +133,12 @@
       { title: "قبل أن تبرد القهوة - الجزء الثاني", author: "توشيكازو كاواغوتشي", img: "https://i.ibb.co/kg13wsBt/images-2025-06-26-T065513-373.jpg", price: 85, category: "أدبي" },
       { title: "قبل أن تبرد القهوة - الجزء الأول", author: "توشيكازو كاواغوتشي", img: "https://i.ibb.co/4wd8TQ9d/images-2025-06-26-T065458-443.jpg", price: 85, category: "أدبي" },
       { title: "قرية الشيخ", author: "رحمة نبيل", img: "https://i.ibb.co/Z1SwKZdT/images-2.jpg", price: 80, category: "أدبي" },
-      { title: "ليطمئن قلبي", author: "أدهم الشرقاوي", img: "https://i.ibb.co/20NmDgnB/images-87.jpg", price: 75, category: "أدبي" },
-      { title: "رسائل من الصحابة", author: "أدهم الشرقاوي", img: "https://i.ibb.co/rf1RH8Yy/images-82.jpg", price: 65, category: "أدبي" },
-      { title: "إن ربي لطيف", author: "عبد الرحمن مسعد", img: "https://i.ibb.co/zYQk2sb/images-81.jpg", price: 65, category: "أدبي" },
-      { title: "رسائل من النبي", author: "أدهم الشرقاوي", img: "https://i.ibb.co/0ypQt2QW/images-80.jpg", price: 70, category: "أدبي" },
+      { title: "ليطمئن قلبي", author: "أدهم الشرقاوي", img: "https://i.ibb.co/20NmDgnB/images-87.jpg", price: 75, category: "رومانسي" },
+      { title: "رسائل من الصحابة", author: "أدهم الشرقاوي", img: "https://i.ibb.co/rf1RH8Yy/images-82.jpg", price: 65, category: "ديني" },
+      { title: "إن ربي لطيف", author: "عبد الرحمن مسعد", img: "https://i.ibb.co/zYQk2sb/images-81.jpg", price: 65, category: "ديني" },
+      { title: "رسائل من النبي", author: "أدهم الشرقاوي", img: "https://i.ibb.co/0ypQt2QW/images-80.jpg", price: 70, category: "ديني" },
       { title: "صاحب الظل الطويل", author: "جين ويبستر", img: "https://i.ibb.co/3mkGh3Nr/images-78.jpg", price: 65, category: "أدبي" },
-      { title: "نظرية الفستق - الجزء الأول", author: "فهد عامر الأحمدي", img: "https://i.ibb.co/dJgDRVj0/9f2c45ff22eb6c827113e74bba35b0e3-png-1.webp", price: 55, category: "أدبي" },
+      { title: "نظرية الفستق - الجزء الأول", author: "فهد عامر الأحمدي", img: "https://i.ibb.co/dJgDRVj0/9f2c45ff22eb6c827113e74bba35b0e3-png-1.webp", price: 55, category: "نفسي" },
       { title: "قواعد جارتين 2 - دقات الشامو", author: "عمرو عبد الحميد", img: "https://i.ibb.co/vxrPHjrH/images-73.jpg", price: 70, category: "أدبي" },
       { title: "قواعد جارتين 3 - أمواج أكما", author: "عمرو عبد الحميد", img: "https://i.ibb.co/zVBmc27K/images-72.jpg", price: 70, category: "أدبي" },
       { title: "ارض زيكولا 3 - وادى الذئاب المنسية", author: "عمرو عبد الحميد", img: "https://i.ibb.co/YFV63y4K/images-71.jpg", price: 75, category: "أدبي" },
@@ -154,16 +155,16 @@
       { title: "رواية لعنة الفراعنة ١", author: "رحمة نبيل", img: "https://i.ibb.co/jP6rBcFb/images-2025-06-26-T065854-299.jpg", price: 75, category: "أدبي" },
       { title: "عندما يقول الجسد لا", author: "جابور ماتيه", img: "https://i.ibb.co/TqDSxmKp/images-13.jpg", price: 85, category: "نفسي" },
       { title: "كن الشخص الذي يجعلك سعيدًا", author: "إيناس سمير", img: "https://i.ibb.co/rfGWVSZr/images-12.jpg", price: 65, category: "نفسي" },
-      { title: "أسرار عقل المليونير", author: "ت. هارف إيكر", img: "https://i.ibb.co/h1LjDDtj/images-36.jpg", price: 80, category: "تعليمي" },
+      { title: "أسرار عقل المليونير", author: "ت. هارف إيكر", img: "https://i.ibb.co/h1LjDDtj/images-36.jpg", price: 80, category: "نفسي" },
       { title: "إنني اتعفن رعبًا", author: "مريم الحيسي", img: "https://i.ibb.co/DfZydSsH/images-43.jpg", price: 65, category: "رعب" },
       { title: "الجريمة والعقاب", author: "دوستويفسكي", img: "https://i.ibb.co/C5rQbHCv/images-2025-06-26-T063247-605.jpg", price: 95, category: "أدبي" },
       { title: "قضية ست الحسن (الجزء الاول تحقيقات نوح الالفى)", author: "ميرنا المهدى", img: "https://i.ibb.co/YB5mX8zn/images-5.jpg", price: 65, category: "أدبي" },
       { title: "كورس مستر إبراهيم عادل The American English (المستوى الثالث)", author: "إبراهيم عادل", img: "https://i.ibb.co/Dh30GyK/images-2025-06-26-T063720-565.jpg", price: 130, category: "تعليمي" },
       { title: "عصبة ذو الشعر الأحمر مترجمة", author: "آرثر كونان دويل", img: "https://i.ibb.co/vCQvtcCc/images-2025-06-26-T064307-738.jpg", price: 85, category: "أدبي" },
       { title: "غصون البندق الجزء الثانى", author: "منى سلامة", img: "https://i.ibb.co/qFR4yV9R/images-2025-06-26-T065634-624.jpg", price: 70, category: "أدبي" },
-      { title: "طرقات مرتدة", author: "شمس محمد", img: "https://i.ibb.co/LzvzvbsY/images-79.jpg", price: 85, category: "أدبي" },
-      { title: "سأرحل", author: "ساندرا سراج", img: "https://i.ibb.co/bMbs576j/images-91.jpg", price: 70, category: "أدبي" },
-      { title: "مالا نبوح به", author: "ساندرا سراج", img: "https://i.ibb.co/4wRv5N7M/images-88.jpg", price: 65, category: "أدبي" },
+      { title: "طرقات مرتدة", author: "شمس محمد", img: "https://i.ibb.co/LzvzvbsY/images-79.jpg", price: 85, category: "رومانسي" },
+      { title: "سأرحل", author: "ساندرا سراج", img: "https://i.ibb.co/bMbs576j/images-91.jpg", price: 70, category: "رومانسي" },
+      { title: "مالا نبوح به", author: "ساندرا سراج", img: "https://i.ibb.co/4wRv5N7M/images-88.jpg", price: 65, category: "رومانسي" },
       { title: "مدينة الحب لا يسكنها العقلاء", author: "أحمد آل حمدان", img: "https://i.ibb.co/Pz3js044/images-86.jpg", price: 85, category: "أدبي" },
       { title: "The Old Man And The Sea", author: "إرنست همنغواي", img: "https://i.ibb.co/Z0RrVPP/images-2025-06-26-T063609-884.jpg", price: 90, category: "أدبي" },
       { title: "امانوس (الجزء الثالث - مملكةالبلاغه)", author: "د.حنان لاشين", img: "https://i.ibb.co/JRh1ndrv/images-66.jpg", price: 65, category: "أدبي" },
