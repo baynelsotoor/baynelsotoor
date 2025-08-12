@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار: هل أنت قارئ حقيقي؟ - بين السطور</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: #fff;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    header {
+      background-color: #d4b483;
+      padding: 15px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #fff;
+    }
+    .timer {
+      font-size: 1.2rem;
+      margin: 15px 0;
+      color: #b33a3a;
+      font-weight: bold;
+    }
+    .quiz-container {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      text-align: right;
+    }
+    .question {
+      background: #f8f4ec;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+    .answers label {
+      display: block;
+      padding: 5px;
+      cursor: pointer;
+    }
+    button {
+      background-color: #d4b483;
+      border: none;
+      padding: 12px 20px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    button:hover {
+      background-color: #b6936f;
+    }
+    .result {
+      background: #f0ead6;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      display: none;
+    }
+    .shop-btn {
+      display: inline-block;
+      background-color: #4caf50;
+      color: white;
+      padding: 10px 20px;
+      margin-top: 15px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .shop-btn:hover {
+      background-color: #3d8b40;
+    }
+  </style>
+</head>
+<body>
+
+<header>اختبار: هل أنت قارئ حقيقي؟ 📚</header>
+
+<div class="timer">الوقت المتبقي: <span id="time">60</span> ثانية</div>
+
+<div class="quiz-container" id="quiz">
+  <!-- الأسئلة -->
+</div>
+
+<button onclick="submitQuiz()">إظهار النتيجة</button>
+
+<div class="result" id="result"></div>
+
+<script>
+const questions = [
+  { q: "من مؤلف رواية أرض زيكولا؟", options: ["أحمد مراد", "عمرو عبد الحميد", "خولة حمدي"], answer: 1 },
+  { q: "أي من هذه تعتبر رواية عربية؟", options: ["الفيل الأزرق", "The Great Gatsby", "Harry Potter"], answer: 0 },
+  { q: "ما اسم سلسلة الكتب التي تحتوي على جزء بعنوان إيكادولي؟", options: ["مملكة البلاغة", "أرض السافلين", "قواعد العشق الأربعون"], answer: 0 },
+  { q: "رواية غربة الياسمين تدور أحداثها بين تونس و…؟", options: ["فرنسا", "تركيا", "مصر"], answer: 0 },
+  { q: "من مؤلف كتاب حديث الصباح؟", options: ["أدهم الشرقاوي", "مصطفى محمود", "أنيس منصور"], answer: 0 },
+  { q: "أي رواية لأحمد مراد تحولت لفيلم عام 2014؟", options: ["تراب الماس", "الفيل الأزرق", "1919"], answer: 1 },
+  { q: "رواية قواعد العشق الأربعون كتبتها…؟", options: ["أحلام مستغانمي", "إليف شافاق", "ج. ك. رولينج"], answer: 1 },
+  { q: "في أي عام صدرت رواية ياسمين أبيض لأول مرة؟", options: ["2021", "2019", "2023"], answer: 0 },
+  { q: "من الكاتب العربي الحاصل على نوبل 1988؟", options: ["نجيب محفوظ", "طه حسين", "جبران خليل جبران"], answer: 0 },
+  { q: "أي رواية كتبها عمرو عبد الحميد بعد أرض زيكولا؟", options: ["أماريتا", "دقات الشامو", "قواعد جارتين"], answer: 0 }
+];
+
+const quizContainer = document.getElementById("quiz");
+questions.forEach((q, i) => {
+  const questionHTML = `
+    <div class="question">${i+1}. ${q.q}</div>
+    <div class="answers">
+      ${q.options.map((opt, idx) => `
+        <label>
+          <input type="radio" name="q${i}" value="${idx}"> ${opt}
+        </label>
+      `).join('')}
+    </div>
+  `;
+  quizContainer.innerHTML += questionHTML;
+});
+
+// المؤقت
+let timeLeft = 60;
+const timer = setInterval(() => {
+  timeLeft--;
+  document.getElementById("time").textContent = timeLeft;
+  if (timeLeft <= 0) {
+    clearInterval(timer);
+    submitQuiz();
+  }
+}, 1000);
+
+function submitQuiz() {
+  clearInterval(timer);
+  let score = 0;
+  questions.forEach((q, i) => {
+    const answer = document.querySelector(`input[name="q${i}"]:checked`);
+    if (answer && parseInt(answer.value) === q.answer) {
+      score++;
+    }
+  });
+  let discount = score;
+  if (discount < 5) discount = 5; // أقل خصم 5%
+  const resultDiv = document.getElementById("result");
+  resultDiv.style.display = "block";
+  resultDiv.innerHTML = `
+    لقد أجبت بشكل صحيح على ${score} من ${questions.length} أسئلة.<br>
+    🎉 حصلت على خصم ${discount}% بكود: <b>READER${discount}</b><br>
+    <a class="shop-btn" href="store.html">تسوق الآن</a>
+  `;
+  document.querySelector("button").disabled = true;
+}
+</script>
+
+</body>
+</html>
