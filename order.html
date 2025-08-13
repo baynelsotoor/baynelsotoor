@@ -21,9 +21,6 @@
     <a href="store.html" class="inline-block bg-[#d2b48c] hover:bg-[#c2a87c] text-[#4b2e2e] px-4 py-2 rounded font-semibold">🔙 الرجوع إلى المتجر</a>
   </div>
 
-  <!-- عرض الخصم -->
-  <div id="discountMessage" class="max-w-xl mx-auto bg-green-100 border border-green-400 text-green-700 p-3 rounded mb-4 hidden"></div>
-
   <div class="max-w-2xl mx-auto bg-white p-4 rounded shadow mb-6">
     <h2 class="text-xl font-bold mb-4">📚 الكتب التي قمت بإضافتها:</h2>
     <table class="w-full text-center border">
@@ -48,6 +45,13 @@
     <div class="mb-4">
       <label class="block font-bold mb-1">رقم الهاتف</label>
       <input required type="tel" name="رقم الهاتف" id="phone" class="w-full border rounded p-2" />
+    </div>
+
+    <!-- كوبون الخصم -->
+    <div class="mb-4">
+      <label class="block font-bold mb-1">كود الخصم</label>
+      <input type="text" id="couponCode" placeholder="مثال: Reeder7" class="w-full border rounded p-2" />
+      <p id="couponMessage" class="text-sm mt-1"></p>
     </div>
 
     <!-- خيارات التوصيل -->
@@ -99,10 +103,9 @@
     <!-- حقل العنوان -->
     <div class="mb-4">
       <label class="block font-bold mb-1">العنوان بالتفصيل</label>
-      <textarea required name=" العنوان بالتفصيل" id="address" class="w-full border rounded p-2"></textarea>
+      <textarea required name="العنوان بالتفصيل" id="address" class="w-full border rounded p-2"></textarea>
     </div>
 
-    <!-- الدفع -->
     <div class="mb-4">
       <label class="block font-bold mb-2">اختر وسيلة الدفع</label>
       <select required name="وسيلة الدفع" id="paymentMethod" class="w-full border rounded p-2">
@@ -112,26 +115,26 @@
       </select>
     </div>
 
-    <!-- رقم المحفظة -->
+    <!-- محفظة إلكترونية -->
     <div id="walletNumberField" class="mb-4 hidden">
       <label class="block font-bold mb-1">رقم المحفظة</label>
-      <div class="flex gap-2 items-center">
+      <div class="flex gap-2">
         <input type="text" readonly value="01015826869" class="w-full border rounded p-2 bg-gray-100" />
         <button type="button" onclick="copyWalletNumber()" class="bg-blue-500 text-white px-3 py-1 rounded">📋 نسخ</button>
       </div>
-      <label class="block font-bold mt-3 mb-1">رفع صورة التحويل</label>
-      <input type="file" id="transferImage" name="صورة التحويل" accept="image/*" class="w-full border p-2 rounded" />
+      <label class="block font-bold mt-3">رفع صورة التحويل</label>
+      <input type="file" name="صورة التحويل" required class="w-full border rounded p-2" />
     </div>
 
-    <!-- الإجمالي -->
     <div class="text-lg font-bold mb-4">
-      الإجمالي بعد الخصم والشحن: <span id="totalPrice">0</span> ج.م
+      إجمالي السعر: <span id="totalPrice">0</span> ج.م
       <div id="deliveryNote" class="text-sm text-green-600"></div>
     </div>
 
     <input type="hidden" name="إجمالي السعر" id="totalPriceInput">
     <input type="hidden" name="قائمة الكتب" id="itemsInput">
     <input type="hidden" name="وسيلة التوصيل" id="shippingMethodInput">
+    <input type="hidden" name="الخصم" id="discountInput">
 
     <button id="submitBtn" type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded w-full">
       تأكيد الطلب
@@ -143,15 +146,6 @@
   </form>
 
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const score = parseInt(urlParams.get("score")) || 0;
-    const discountPercent = Math.min(score, 10);
-    const discountMessage = document.getElementById("discountMessage");
-    if (discountPercent > 0) {
-      discountMessage.textContent = `🎉 لديك خصم ${discountPercent}% بناءً على نتيجتك (${score} من 10)`;
-      discountMessage.classList.remove("hidden");
-    }
-
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
     const tableBody = document.getElementById("cartTableBody");
     const totalElement = document.getElementById("totalPrice");
@@ -167,6 +161,9 @@
     const homeDeliveryRadio = document.getElementById("home-delivery-radio");
     const homeDeliveryPrice = document.getElementById("home-delivery-price");
     const shippingMethodInput = document.getElementById("shippingMethodInput");
+    const couponInput = document.getElementById("couponCode");
+    const couponMessage = document.getElementById("couponMessage");
+    const discountInput = document.getElementById("discountInput");
 
     const governorates = {
       'cairo_giza': { price: 55, name: 'القاهرة/الجيزة' },
@@ -182,6 +179,8 @@
 
     let baseTotal = cart.reduce((sum, b) => sum + b.price, 0);
     let freeDelivery = cart.length > 5;
+    let discountPercent = 0;
+
     if (freeDelivery) deliveryNote.textContent = "📦 تم تفعيل التوصيل المجاني!";
 
     function updateHomeDeliveryPrice() {
@@ -196,36 +195,53 @@
       updateTotal();
     }
 
+    function copyWalletNumber() {
+      navigator.clipboard.writeText("01015826869");
+      alert("تم نسخ رقم المحفظة 📋");
+    }
+
     function updateTotal() {
       let total = baseTotal;
       let shippingCost = 0;
 
-      document.getElementsByName("shipping").forEach(option => {
+      const shippingOptions = document.getElementsByName("shipping");
+      for (let option of shippingOptions) {
         if (option.checked) {
           shippingCost = parseFloat(option.value);
           shippingMethodInput.value = option.nextSibling.textContent.trim();
         }
-      });
+      }
 
       if (!freeDelivery) {
         total += shippingCost;
       }
 
-      if (paymentSelect.value === "الدفع عند الاستلام" && !freeDelivery) {
+      if (paymentSelect.value === "الدفع عند الاستلام") {
         total += 10;
       }
 
-      if (paymentSelect.value === "محفظة إلكترونية") {
-        total += baseTotal * 0.01; // إضافة 1% لمحفظة
-      }
-
       if (discountPercent > 0) {
-        total -= (total * discountPercent) / 100;
+        total -= (total * discountPercent / 100);
       }
 
       totalElement.textContent = total.toFixed(2);
       totalPriceInput.value = total.toFixed(2);
+      discountInput.value = discountPercent + "%";
     }
+
+    couponInput.addEventListener("input", () => {
+      const match = couponInput.value.match(/^Reeder(\d{1,2})$/i);
+      if (match) {
+        discountPercent = parseInt(match[1]);
+        couponMessage.textContent = `✅ تم تطبيق خصم ${discountPercent}%`;
+        couponMessage.className = "text-green-600 text-sm mt-1";
+      } else {
+        discountPercent = 0;
+        couponMessage.textContent = couponInput.value ? "❌ كود غير صالح" : "";
+        couponMessage.className = "text-red-600 text-sm mt-1";
+      }
+      updateTotal();
+    });
 
     paymentSelect.addEventListener("change", () => {
       walletNumberField.classList.add("hidden");
@@ -236,17 +252,8 @@
     });
 
     form.addEventListener("submit", function (e) {
-      if (paymentSelect.value === "محفظة إلكترونية") {
-        const transferImage = document.getElementById("transferImage");
-        if (!transferImage.files.length) {
-          e.preventDefault();
-          alert("⚠️ يجب رفع صورة التحويل قبل إرسال الطلب");
-          return;
-        }
-      }
       e.preventDefault();
       itemsInput.value = cart.map(b => b.title).join(", ");
-      shippingMethodInput.value = document.querySelector('input[name="shipping"]:checked')?.nextSibling.textContent.trim() || '';
       localStorage.removeItem("cart");
       submitBtn.classList.add("hidden");
       thankYouMessage.classList.remove("hidden");
@@ -254,12 +261,6 @@
         form.submit();
       }, 1500);
     });
-
-    function copyWalletNumber() {
-      navigator.clipboard.writeText("01015826869").then(() => {
-        alert("📋 تم نسخ رقم المحفظة!");
-      });
-    }
 
     updateTotal();
     itemsInput.value = cart.map(b => b.title).join(", ");
