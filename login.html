@@ -12,7 +12,8 @@
 </head>
 <body class="flex items-center justify-center min-h-screen">
   <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-    <h2 class="text-2xl font-bold text-center mb-4">تسجيل الدخول</h2>
+    <h2 id="pageTitle" class="text-2xl font-bold text-center mb-4">تسجيل الدخول</h2>
+
     <form id="loginForm" class="space-y-4">
       <div>
         <label for="name" class="block text-sm font-medium">الاسم</label>
@@ -24,26 +25,39 @@
       </div>
       <div>
         <label for="password" class="block text-sm font-medium">كلمة السر</label>
-        <input type="password" id="password" class="w-full p-2 border rounded-lg" placeholder="ادخل كلمة السر" required>
+        <div class="relative">
+          <input type="password" id="password" class="w-full p-2 border rounded-lg pr-10" placeholder="ادخل كلمة السر" required>
+          <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">👁</button>
+        </div>
       </div>
       <button type="submit" class="w-full bg-[#8b5e3c] text-white py-2 rounded-lg hover:bg-[#a46d47]">تسجيل الدخول</button>
     </form>
 
-    <p class="text-center mt-4">أو</p>
-
-    <!-- زر تسجيل الدخول بجوجل -->
-    <div id="g_id_onload"
-         data-client_id="1039807635070-1pv1e7278ksnt0573imvfgs91l4rjrn3.apps.googleusercontent.com"
-         data-callback="handleCredentialResponse"
-         data-auto_prompt="false">
-    </div>
-    <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline" data-text="signin_with" data-size="large" data-logo_alignment="left"></div>
-
-    <p class="text-center mt-2 text-sm">ما عندك حساب؟ <a href="#" class="text-[#8b5e3c] hover:underline">سجل الآن</a></p>
+    <p class="text-center mt-2 text-sm">ما عندك حساب؟ 
+      <a href="register.html" class="text-[#8b5e3c] hover:underline">سجل الآن</a>
+    </p>
   </div>
 
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
+    // ✅ إظهار/إخفاء كلمة السر
+    document.getElementById("togglePassword").addEventListener("click", () => {
+      const passwordField = document.getElementById("password");
+      if (passwordField.type === "password") {
+        passwordField.type = "text";
+      } else {
+        passwordField.type = "password";
+      }
+    });
+
+    // ✅ التحقق إذا كان المستخدم مسجل قبل كده
+    window.addEventListener("DOMContentLoaded", () => {
+      const loggedIn = localStorage.getItem("loggedIn");
+      const userName = localStorage.getItem("userName");
+      if (loggedIn && userName) {
+        document.getElementById("pageTitle").textContent = `أهلاً ${userName}`;
+      }
+    });
+
     // ✅ تسجيل الدخول العادي
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
@@ -61,23 +75,12 @@
       localStorage.setItem('userName', name);
       localStorage.setItem('userEmail', email);
 
+      // تغيير العنوان
+      document.getElementById("pageTitle").textContent = `أهلاً ${name}`;
+
       // تحويل للصفحة الرئيسية
       window.location.href = 'index.html';
     });
-
-    // ✅ تسجيل الدخول بجوجل
-    function handleCredentialResponse(response) {
-      const profile = JSON.parse(atob(response.credential.split('.')[1]));
-      const name = profile.name;
-      const email = profile.email;
-
-      localStorage.setItem('loggedIn', 'true');
-      localStorage.setItem('userName', name);
-      localStorage.setItem('userEmail', email);
-
-      // تحويل للصفحة الرئيسية
-      window.location.href = 'index.html';
-    }
   </script>
 </body>
 </html>
