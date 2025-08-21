@@ -19,16 +19,6 @@
       padding: 0;
     }
   </style>
-
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z90VT439YR"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-Z90VT439YR');
-  </script>
 </head>
 <body class="bg-[#fdf6ef] text-[#4b2e2e]">
   <header class="bg-[#8b5e3c] text-white shadow-lg p-4 w-full fixed top-0 z-20">
@@ -38,7 +28,7 @@
         <span class="text-xl font-bold">📚 مكتبة بين السطور</span>
       </div>
       <div class="flex items-center gap-4">
-        <button id="authButton" class="bg-[#d2b48c] text-[#8b5e3c] py-1 px-4 rounded-lg hover:bg-[#a46d47] transition duration-200" onclick="handleAuth()">تسجيل الدخول</button>
+        <button id="authButton" class="bg-[#d2b48c] text-[#8b5e3c] py-1 px-4 rounded-lg hover:bg-[#a46d47] transition duration-200">تسجيل الدخول</button>
         <button class="hamburger text-2xl" onclick="toggleMenu()">☰</button>
       </div>
     </div>
@@ -53,7 +43,7 @@
         <li><a href="order.html" class="hover:text-[#d2b48c] py-2 block">📦 الطلب</a></li>
         <li><a href="reviews.html" class="hover:text-[#d2b48c] py-2 block">⭐ التقييمات</a></li>
         <li><a href="offers.html" class="hover:text-[#d2b48c] py-2 block">🔥 عروض الكتب</a></li>
-        <li><a href="tracking.html" class="hover:text-[#d2b48c] py-2 block">🚚 تتبع الشحن</a></li>
+        <li><a href="track.html" class="hover:text-[#d2b48c] py-2 block">🚚 تتبع الشحن</a></li>
         <li id="authMenuItem"><a id="authMenuLink" href="login.html" class="hover:text-[#d2b48c] py-2 block">تسجيل الدخول</a></li>
       </ul>
     </nav>
@@ -75,45 +65,28 @@
 
     <h2 class="text-2xl font-bold mb-4 text-center">📚 أبرز الكتب</h2>
     <div id="bookGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-6">
+      <!-- الكتب -->
       <div class="bg-white rounded-lg shadow-md p-4">
         <img src="https://i.ibb.co/Y4PwvL4s/images-1.jpg" alt="واحة آل يعقوب" class="w-full h-60 object-cover rounded-md mb-4">
         <h3 class="text-lg font-bold">واحة آل يعقوب</h3>
         <p class="text-sm text-gray-600 mb-2">عمرو عبد الحميد</p>
         <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="واحة آل يعقوب" data-price="85">🛒 أضف إلى السلة</button>
       </div>
+      <div class="bg-white rounded-lg shadow-md p-4">  
+    <img src="https://i.ibb.co/dwNJfctV/images-69.jpg" alt="أبادول" class="w-full h-60 object-cover rounded-md mb-4">  
+    <h3 class="text-lg font-bold">أبادول</h3>  
+    <p class="text-sm text-gray-600 mb-2">حنان لاشين</p>  
+    <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="أبادول" data-price="75">🛒 أضف إلى السلة</button>  
+  </div>  
 
-      <div class="bg-white rounded-lg shadow-md p-4">
-        <img src="https://i.ibb.co/dwNJfctV/images-69.jpg" alt="أبادول" class="w-full h-60 object-cover rounded-md mb-4">
-        <h3 class="text-lg font-bold">أبادول</h3>
-        <p class="text-sm text-gray-600 mb-2">حنان لاشين</p>
-        <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="أبادول" data-price="75">🛒 أضف إلى السلة</button>
-      </div>
+  <div class="bg-white rounded-lg shadow-md p-4">  
+    <img src="https://i.ibb.co/6RXNTQrF/images-75.jpg" alt="الهلكوت" class="w-full h-60 object-cover rounded-md mb-4">  
+    <h3 class="text-lg font-bold">الهلكوت</h3>  
+    <p class="text-sm text-gray-600 mb-2">أحمد خالد مصطفى</p>  
+    <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="الهلكوت" data-price="90">🛒 أضف إلى السلة</button>  
+  </div>  
+</div>  
 
-      <div class="bg-white rounded-lg shadow-md p-4">
-        <img src="https://i.ibb.co/6RXNTQrF/images-75.jpg" alt="الهلكوت" class="w-full h-60 object-cover rounded-md mb-4">
-        <h3 class="text-lg font-bold">الهلكوت</h3>
-        <p class="text-sm text-gray-600 mb-2">أحمد خالد مصطفى</p>
-        <button class="add-to-cart bg-[#8b5e3c] hover:bg-[#a46d47] text-white py-1 px-3 rounded-lg" data-title="الهلكوت" data-price="90">🛒 أضف إلى السلة</button>
-      </div>
-    </div>
-
-    <section class="mt-12 px-6">
-      <h2 class="text-xl font-bold mb-2">من نحن؟</h2>
-      <div class="bg-white p-4 rounded-lg shadow text-center">
-        <p class="mb-4">نحن مكتبة "بين السطور"، نوفر كتبًا وروايات عربية وأجنبية، ونهتم بالجودة والأسعار المناسبة. هدفنا نشر الثقافة ومساعدة محبي القراءة في كل مكان.</p>
-        <img src="https://i.ibb.co/mCXvfT5K/2.png" alt="لوجو بين السطور بالخلفية" class="mx-auto w-40 rounded-lg shadow-md border" />
-      </div>
-    </section>
-
-    <section class="mt-8 px-6">
-      <h2 class="text-xl font-bold mb-2">عن المؤسسة</h2>
-      <p class="bg-white p-4 rounded-lg shadow">منصة "بين السطور" تأسست على يد ريتاج أيمن عبد الناصر بهدف بناء مكتبة إلكترونية متكاملة توفر تجربة قراءة وتسوق مريحة، ومحتوى ثقافي متنوع يخدم القارئ العربي والعالمي.</p>
-    </section>
-
-    <section class="mt-8 px-6 mb-20">
-      <h2 class="text-xl font-bold mb-2">تواصل معنا</h2>
-      <p class="bg-white p-4 rounded-lg shadow">عبر واتساب: <strong>01559373066</strong><br>أو من خلال صفحاتنا على مواقع التواصل الاجتماعي.</p>
-    </section>
 
     <footer class="bg-[#8b5e3c] text-white text-center p-4">
       © 2025 مكتبة بين السطور - تصميم وإشراف: ريتاج
@@ -121,18 +94,6 @@
   </main>
 
   <script>
-    // إضافة منتجات للسلة
-    document.querySelectorAll('.add-to-cart').forEach(button => {
-      button.addEventListener('click', function () {
-        const title = this.getAttribute('data-title');
-        const price = parseInt(this.getAttribute('data-price'));
-        let cart = JSON.parse(localStorage.getItem("cart")) || [];
-        cart.push({ title, price });
-        localStorage.setItem("cart", JSON.stringify(cart));
-        alert("✅ تم إضافة الكتاب إلى السلة!");
-      });
-    });
-
     // البحث
     document.getElementById('searchInput').addEventListener('input', function () {
       const keyword = this.value.toLowerCase();
@@ -145,7 +106,6 @@
 
     // ---------------- نظام تسجيل الدخول ----------------
     const authButton = document.getElementById("authButton");
-    const authMenuItem = document.getElementById("authMenuItem");
     const authMenuLink = document.getElementById("authMenuLink");
 
     // إنشاء زر تسجيل الخروج في الفوتر
@@ -155,7 +115,6 @@
     logoutBtn.className = "mt-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 hidden";
     footer.appendChild(logoutBtn);
 
-    // التحقق من حالة تسجيل الدخول
     function checkAuth() {
       const loggedIn = localStorage.getItem("loggedIn") === "true";
       const userName = localStorage.getItem("userName");
@@ -175,7 +134,6 @@
       }
     }
 
-    // تسجيل الخروج
     logoutBtn.addEventListener("click", () => {
       localStorage.removeItem("loggedIn");
       localStorage.removeItem("userName");
@@ -183,9 +141,7 @@
       window.location.href = "login.html"; 
     });
 
-    // تشغيل عند تحميل الصفحة
     checkAuth();
   </script>
-  <script src="script.js"></script>
 </body>
-  </html>
+</html>
