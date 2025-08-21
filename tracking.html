@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>📦 تتبع شحنتك - مكتبة بين السطور</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Cairo', sans-serif; background: #fff7f0; padding: 20px; text-align: center; }
+    h2 { color: #ff6600; }
+    .order-box {
+      background: #fff3e6; margin: 15px auto; padding: 15px; border-radius: 10px;
+      border: 1px solid #ccc; width: 320px; box-shadow: 2px 2px 5px #ddd; text-align: right;
+    }
+    #logoutBtn {
+      position: absolute; left: 20px; top: 20px; background: #d9534f; color: #fff;
+      border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer;
+    }
+    #logoutBtn:hover { background: #c9302c; }
+    #invoiceContainer { display: none; margin-top: 20px; }
+    #invoiceTotal { font-weight: bold; color: green; margin-top: 10px; }
+    #userEmail { color: #333; margin-top: 10px; }
+    .muted { color: #666; font-size: 14px; }
+  </style>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+    // إعدادات Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyCgwSsXr3iuFofbbjojAVbz8wKfisntOlc",
+      authDomain: "baynelsotoor.firebaseapp.com",
+      projectId: "baynelsotoor",
+      storageBucket: "baynelsotoor.appspot.com",
+      messagingSenderId: "1039807635070",
+      appId: "1:1039807635070:web:5b02088c19edb30a68822f"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db  = getFirestore(app);
+    const shipmentsRef = collection(db, "shipments");
+    const paymentsRef  = collection(db, "payments"); // من صفحة الدفع
+
+    // تسجيل الخروج (محلي)
+    window.addEventListener("DOMContentLoaded", () => {
+      const logoutBtn = document.getElementById("logoutBtn");
+      logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("loggedIn");
+        localStorage.removeItem("userName");
+        localStorage.removeItem("userEmail");
+        alert("👋 تم تسجيل الخروج بنجاح.");
+        window.location.href = "login.html";
+      });
+    });
+
+    // الحماية + تحميل البيانات
+    window.addEventListener("DOMContentLoaded", async () => {
+      const loggedIn = localStorage.getItem("loggedIn") === "true";
+      const email = localStorage.getItem("userEmail");
+
+      if (!loggedIn || !email) {
+        // لو مش مسجل دخول
+        window.location.href = "login.html";
+        return;
+      }
+
+      document.getElementById("userEmail").textContent = `📧 حسابك: ${email}`;
+
+      // 1) جلب الشحنات الخاصة بالمستخدم
+      const sQuery = query(shipmentsRef, where("email", "==", email));
+      const sSnap  = await getDocs(sQuery);
+      const list   = document.getElementById("ordersList");
+      list.innerHTML = "";
+
+      if (sSnap.empty) {
+        list.innerHTML = "<p>📭 لا توجد شحنات مرتبطة بحسابك.</p>";
+        return; // ما نعرضش فاتورة
+      }
+
+      // حضّري خريطة أسعار من المدفوعات: trackingNumber -> amount
+      const pQuery = query(paymentsRef, where("email", "==", email));
+      const pSnap  = await getDocs(pQuery);
+      const priceMap = new Map();
+      pSnap.forEach(doc => {
+        const d = doc.data();
+        const tn = d.trackingNumber || d.orderId; // لو بتسميها orderId عدّلي هنا
+        const amount = Number(d.amount) || 0;
+        if (tn) priceMap.set(tn, (priceMap.get(tn) || 0) + amount);
+      });
+
+      let grandTotal = 0;
+
+      sSnap.forEach(doc => {
+        const d = doc.data();
+        const tn = d.trackingNumber || d.orderId || doc.id;
+        const status = d.status || "غير محدد";
+        const last = d.lastUpdate?.toDate?.() ? d.lastUpdate.toDate() : null;
+
+        // حساب التأخير (اختياري)
+        let delayNotice = "";
+        if (last) {
+          const diffDays = Math.floor((Date.now() - last.getTime()) / (1000 * 60 * 60 * 24));
+          if (status !== "تم التسليم" && diffDays >= 4) {
+            delayNotice = `<p style="color:red;">⚠️ الشحنة متأخرة ${diffDays} يوم</p>`;
+          }
+        }
+
+        const amount = Number(priceMap.get(tn) || 0);
+        grandTotal += amount;
+
+        const item = document.createElement("div");
+        item.className = "order-box";
+        item.innerHTML = `
+          <p><strong>رقم التتبع:</strong> ${tn}</p>
+          <p><strong>الحالة:</strong> ${status}</p>
+          ${delayNotice}
+          <p class="muted"><strong>سعر الشحنة:</strong> ${amount > 0 ? amount + " ج.م" : "—"}</p>
+        `;
+        list.appendChild(item);
+      });
+
+      // 3) عرض الفاتورة فقط لو فيه شحنات (وممكن يبقى الإجمالي صفر لو لسه ما اتدفعتش)
+      const invoiceContainer = document.getElementById("invoiceContainer");
+      const invoiceTotal     = document.getElementById("invoiceTotal");
+      invoiceContainer.style.display = "block";
+      invoiceTotal.textContent = `💰 الإجمالي: ${grandTotal} ج.م`;
+    });
+  </script>
+</head>
+<body>
+  <button id="logoutBtn">🔓 تسجيل الخروج</button>
+  <h2>📦 تتبع شحنتك</h2>
+  <p id="userEmail"></p>
+
+  <div id="ordersList">
+    <p>⏳ جاري تحميل شحناتك...</p>
+  </div>
+
+  <div id="invoiceContainer">
+    <hr style="max-width:360px; margin:20px auto;">
+    <div id="invoiceTotal"></div>
+    <p class="muted">💡 ملاحظة: أسعار الشحنات تُجلب من سجلات الدفع (payments).</p>
+  </div>
+</body>
+</html>
