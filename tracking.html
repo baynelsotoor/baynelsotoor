@@ -2,13 +2,14 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>تتبع شحنتك - مكتبة بين السطور</title>
+  <title>📦 تتبع شحنتك - مكتبة بين السطور</title>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-    import { getFirestore, collection, query, where, getDocs, Timestamp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+    import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
+    // إعدادات Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyCgwSsXr3iuFofbbjojAVbz8wKfisntOlc",
       authDomain: "baynelsotoor.firebaseapp.com",
@@ -23,19 +24,24 @@
     const db = getFirestore(app);
     const ordersRef = collection(db, "shipments");
 
-    document.getElementById("logoutBtn").addEventListener("click", async () => {
-      await signOut(auth);
-      alert("👋 تم تسجيل الخروج بنجاح.");
-      window.location.href = "login.html";
+    // زر تسجيل الخروج
+    document.addEventListener("DOMContentLoaded", () => {
+      const logoutBtn = document.getElementById("logoutBtn");
+      logoutBtn.addEventListener("click", async () => {
+        await signOut(auth);
+        alert("👋 تم تسجيل الخروج بنجاح.");
+        window.location.href = "login.html";
+      });
     });
 
+    // عند تسجيل الدخول
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
         window.location.href = "login.html";
         return;
       }
 
-      document.getElementById("userEmail").textContent = user.email;
+      document.getElementById("userEmail").textContent = `📧 حسابك: ${user.email}`;
 
       const q = query(ordersRef, where("email", "==", user.email));
       const snapshot = await getDocs(q);
@@ -50,11 +56,12 @@
       let total = 0;
       snapshot.forEach((doc) => {
         const data = doc.data();
-        total += 50; // كل شحنة 50 جنيه مثلاً
+        total += 50; // افتراض: كل شحنة = 50 جنيه
 
-        const orderDate = data.lastUpdate?.toDate?.() || new Date(); // احتياط لو التاريخ مش موجود
+        const orderDate = data.lastUpdate?.toDate?.() || new Date();
         const now = new Date();
         const diffDays = Math.floor((now - orderDate) / (1000 * 60 * 60 * 24));
+
         const delayNotice = (data.status !== "تم التسليم" && diffDays >= 4)
           ? `<p style="color:red;">⚠️ الشحنة متأخرة ${diffDays} يوم</p>` : "";
 
@@ -92,6 +99,7 @@
       border: 1px solid #ccc;
       width: 300px;
       box-shadow: 2px 2px 5px #ddd;
+      text-align: right;
     }
 
     #logoutBtn {
