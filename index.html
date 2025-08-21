@@ -121,6 +121,7 @@
   </main>
 
   <script>
+    // إضافة منتجات للسلة
     document.querySelectorAll('.add-to-cart').forEach(button => {
       button.addEventListener('click', function () {
         const title = this.getAttribute('data-title');
@@ -132,6 +133,7 @@
       });
     });
 
+    // البحث
     document.getElementById('searchInput').addEventListener('input', function () {
       const keyword = this.value.toLowerCase();
       const books = document.querySelectorAll('#bookGrid > div');
@@ -140,6 +142,49 @@
         book.style.display = title.includes(keyword) ? "block" : "none";
       });
     });
+
+    // ---------------- نظام تسجيل الدخول ----------------
+    const authButton = document.getElementById("authButton");
+    const authMenuItem = document.getElementById("authMenuItem");
+    const authMenuLink = document.getElementById("authMenuLink");
+
+    // إنشاء زر تسجيل الخروج في الفوتر
+    const footer = document.querySelector("footer");
+    const logoutBtn = document.createElement("button");
+    logoutBtn.innerText = "تسجيل الخروج";
+    logoutBtn.className = "mt-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 hidden";
+    footer.appendChild(logoutBtn);
+
+    // التحقق من حالة تسجيل الدخول
+    function checkAuth() {
+      const loggedIn = localStorage.getItem("loggedIn") === "true";
+      const userName = localStorage.getItem("userName");
+
+      if (loggedIn && userName) {
+        authButton.innerText = "أهلاً، " + userName;
+        authButton.onclick = null;
+        authMenuLink.innerText = "أهلاً، " + userName;
+        authMenuLink.href = "#";
+        logoutBtn.classList.remove("hidden");
+      } else {
+        authButton.innerText = "تسجيل الدخول";
+        authButton.onclick = () => { window.location.href = "login.html"; }
+        authMenuLink.innerText = "تسجيل الدخول";
+        authMenuLink.href = "login.html";
+        logoutBtn.classList.add("hidden");
+      }
+    }
+
+    // تسجيل الخروج
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("loggedIn");
+      localStorage.removeItem("userName");
+      alert("🚪 تم تسجيل الخروج بنجاح");
+      window.location.href = "login.html"; 
+    });
+
+    // تشغيل عند تحميل الصفحة
+    checkAuth();
   </script>
   <script src="script.js"></script>
 </body>
