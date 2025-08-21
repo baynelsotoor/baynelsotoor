@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>لوحة التحكم - مكتبة بين السطور</title>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+    import {
+      getFirestore, collection, addDoc, updateDoc, doc,
+      getDocs, query, where, serverTimestamp, orderBy
+    } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+    // إعدادات Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyCgwSsXr3iuFofbbjojAVbz8wKfisntOlc",
+      authDomain: "baynelsotoor.firebaseapp.com",
+      projectId: "baynelsotoor",
+      storageBucket: "baynelsotoor.appspot.com",
+      messagingSenderId: "1039807635070",
+      appId: "1:1039807635070:web:5b02088c19edb30a68822f"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const shipmentsRef = collection(db, "shipments");
+
+    // الإيميل المسموح له كأدمن
+    const adminEmail = "ritajayman77@gmail.com";
+
+    // مراجع DOM
+    const state = {
+      allShipments: [] // هنخزن فيها كل الشحنات للفلترة السريعة
+    };
+
+    // عند تحميل الـ DOM: أربط الأحداث السريعة
+    document.addEventListener("DOMContentLoaded", () => {
+      // تسجيل خروج
+      document.getElementById("logoutBtn").addEventListener("click", async () => {
+        await signOut(auth);
+        alert("👋 تم تسجيل الخروج بنجاح.");
+        window.location.href = "login.html";
+      });
+
+      // حفظ/تحديث شحنة
+      document.getElementById("shipmentForm").addEventListener("submit", handleUpsert);
+
+      // فلترة فورية
+      document.getElementById("filterTracking").addEventListener("input", renderFiltered);
+      document.getElementById("filterEmail").addEventListener("input", renderFiltered);
+
+      // إعادة تحميل من السحابة
+      document.getElementById("reloadBtn").addEventListener("click", loadShipments);
+    });
+
+    // التحقق من المستخدم
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+      if (user.email !== adminEmail) {
+        alert("❌ غير مسموح لك بالدخول إلى لوحة التحكم.");
+        window.location.href = "index.html";
+        return;
+      }
+      document.getElementById("userEmail").textContent = user.email;
+      loadShipments();
+    });
+
+    // تحميل كل الشحنات من Firestore
+    async function loadShipments() {
+      setLoading(true);
+      try {
+        // ترتيب بآخر تحديث لو موجود
+        const snap = await getDocs(shipmentsRef);
+        const items = [];
+        snap.forEach((docSnap) => {
+          const data = docSnap.data();
+          items.push({
+            id: docSnap.id,
+            trackingNumber: data.trackingNumber || "",
+            email: data.email || "",
+            status: data.status || "",
+            location: data.location || "",
+            lastUpdate: data.lastUpdate?.toDate?.() || null
+          });
+        });
+        // خزّن البيانات كاملة للفلتر
+        state.allShipments = items.sort((a, b) => (b.lastUpdate?.getTime?.() || 0) - (a.lastUpdate?.getTime?.() || 0));
+        renderFiltered(); // اعرض حسب الفلاتر الحالية
+      } catch (e) {
+        alert("حدث خطأ أثناء تحميل الشحنات.");
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    // إضافة / تحديث شحنة
+    async function handleUpsert(e) {
+      e.preventDefault();
+      const trackingNumber = document.getElementById("trackingNumber").value.trim();
+      const email = document.getElementById("email").value.trim().toLowerCase();
+      const status = document.getElementById("status").value.trim();
+      const location = document.getElementById("location").value.trim();
+
+      if (!trackingNumber || !email || !status) {
+        alert("من فضلك املئي البيانات المطلوبة.");
+        return;
+      }
+
+      setSubmitting(true);
+      try {
+        // هل الشحنة موجودة؟
+        const qTrack = query(shipmentsRef, where("trackingNumber", "==", trackingNumber));
+        const snap = await getDocs(qTrack);
+
+        if (snap.empty) {
+          // إضافة جديدة
+          await addDoc(shipmentsRef, {
+            trackingNumber,
+            email,
+            status,
+            location,
+            lastUpdate: serverTimestamp()
+          });
+          alert("✅ تم إضافة الشحنة بنجاح!");
+        } else {
+          // تحديث الموجود (ممكن يكون أكثر من واحدة بنفس الرقم – هنحدّث الكل)
+          const promises = [];
+          snap.forEach((docSnap) => {
+            promises.push(
+              updateDoc(doc(db, "shipments", docSnap.id), {
+                // نسمح بتحديث الإيميل كمان لو عايزة تنقليها لمستخدم تاني
+                email,
+                status,
+                location,
+                lastUpdate: serverTimestamp()
+              })
+            );
+          });
+          await Promise.all(promises);
+          alert("✏️ تم تحديث الشحنة!");
+        }
+
+        // صفّي المدخلات وحمّلي البيانات من جديد
+        document.getElementById("shipmentForm").reset();
+        await loadShipments();
+      } catch (e) {
+        alert("حصل خطأ أثناء الحفظ/التحديث.");
+        console.error(e);
+      } finally {
+        setSubmitting(false);
+      }
+    }
+
+    // عرض القائمة حسب الفلاتر
+    function renderFiltered() {
+      const tFilter = document.getElementById("filterTracking").value.trim().toLowerCase();
+      const eFilter = document.getElementById("filterEmail").value.trim().toLowerCase();
+
+      const list = document.getElementById("shipmentsList");
+      list.innerHTML = "";
+
+      const filtered = state.allShipments.filter((s) => {
+        const byT = tFilter ? s.trackingNumber.toLowerCase().includes(tFilter) : true;
+        const byE = eFilter ? s.email.toLowerCase().includes(eFilter) : true;
+        return byT && byE;
+      });
+
+      if (!filtered.length) {
+        list.innerHTML = `<p>📭 لا توجد نتائج مطابقة للبحث.</p>`;
+        return;
+      }
+
+      filtered.forEach((s) => {
+        const div = document.createElement("div");
+        div.className = "shipment";
+        const dateTxt = s.lastUpdate
+          ? s.lastUpdate.toLocaleString("ar-EG", { dateStyle: "medium", timeStyle: "short" })
+          : "غير محدد";
+
+        div.innerHTML = `
+          <p><strong>📦 رقم التتبع:</strong> ${s.trackingNumber}</p>
+          <p><strong>👤 الإيميل:</strong> ${s.email}</p>
+          <p><strong>📍 الحالة:</strong> ${s.status}</p>
+          <p><strong>🗺️ الموقع الحالي:</strong> ${s.location || "—"}</p>
+          <p><strong>⏰ آخر تحديث:</strong> ${dateTxt}</p>
+          <hr>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    // مؤشرات التحميل/الإرسال
+    function setLoading(flag) {
+      const el = document.getElementById("loadingHint");
+      el.style.display = flag ? "block" : "none";
+    }
+    function setSubmitting(flag) {
+      const btn = document.getElementById("saveBtn");
+      btn.disabled = flag;
+      btn.textContent = flag ? "جارٍ الحفظ..." : "حفظ";
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: #fff7f0;
+      padding: 20px;
+    }
+    h2 { color: #ff6600; text-align:center; margin-bottom: 10px; }
+    #logoutBtn {
+      background:#d9534f; color:#fff; border:none; padding:8px 15px; border-radius:6px; cursor:pointer;
+      position: absolute; left: 20px; top: 20px;
+    }
+    #logoutBtn:hover { background:#c9302c; }
+    .wrap { max-width: 980px; margin: 0 auto; }
+    .bar {
+      display:flex; gap:10px; align-items:center; justify-content:space-between; margin: 12px 0 18px;
+      background:#fff3e6; padding:10px; border-radius:10px; box-shadow:2px 2px 6px #ccc;
+      flex-wrap: wrap;
+    }
+    .bar .left, .bar .right { display:flex; gap:10px; align-items:center; flex-wrap: wrap; }
+    .bar input {
+      padding:8px 10px; border:1px solid #ccc; border-radius:6px; min-width: 220px;
+    }
+    .bar button {
+      background:#17a2b8; color:#fff; border:none; padding:8px 14px; border-radius:6px; cursor:pointer;
+    }
+    .bar button:hover { background:#13899c; }
+    .form-box {
+      background:#fff3e6; padding:15px; border-radius:10px; margin:10px auto 20px; width:360px; max-width:100%;
+      box-shadow:2px 2px 6px #ccc;
+    }
+    .form-box input, .form-box select {
+      width:100%; padding:8px; margin:6px 0; border:1px solid #ccc; border-radius:6px;
+    }
+    .form-box button {
+      background:#28a745; color:#fff; padding:10px; border:none; border-radius:6px; cursor:pointer;
+      width:100%; margin-top:10px;
+    }
+    .form-box button[disabled] { opacity: .6; cursor: not-allowed; }
+    .form-box button:hover:not([disabled]) { background:#218838; }
+    .shipment {
+      background:#fafafa; margin:10px 0; padding:10px; border:1px solid #ddd; border-radius:6px;
+    }
+    #shipmentsList { margin-top: 10px; }
+    #loadingHint { display:none; margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <button id="logoutBtn">🔓 تسجيل الخروج</button>
+  <div class="wrap">
+    <h2>⚙️ لوحة التحكم</h2>
+    <p>مرحباً <span id="userEmail"></span></p>
+
+    <!-- شريط أدوات: فلاتر + إعادة تحميل -->
+    <div class="bar">
+      <div class="left">
+        <input type="text" id="filterTracking" placeholder="🔎 ابحث برقم التتبع">
+        <input type="email" id="filterEmail" placeholder="🔎 ابحث بالإيميل">
+      </div>
+      <div class="right">
+        <button id="reloadBtn">↻ إعادة تحميل من Firestore</button>
+      </div>
+    </div>
+
+    <!-- نموذج إضافة/تحديث -->
+    <div class="form-box">
+      <h3>➕ إضافة / ✏️ تحديث شحنة</h3>
+      <form id="shipmentForm">
+        <input type="text" id="trackingNumber" placeholder="رقم التتبع" required />
+        <input type="email" id="email" placeholder="إيميل المستخدم" required />
+        <select id="status" required>
+          <option value="جاري التجهيز">📦 جاري التجهيز</option>
+          <option value="في الطريق">🚚 في الطريق</option>
+          <option value="تم التسليم">✅ تم التسليم</option>
+        </select>
+        <input type="text" id="location" placeholder="الموقع الحالي (اختياري)">
+        <button id="saveBtn" type="submit">حفظ</button>
+      </form>
+    </div>
+
+    <div id="loadingHint">⏳ جاري تحميل الشحنات...</div>
+
+    <h3>📋 كل الشحنات</h3>
+    <div id="shipmentsList">
+      <p>— لا توجد بيانات بعد —</p>
+    </div>
+  </div>
+</body>
+  </html>
