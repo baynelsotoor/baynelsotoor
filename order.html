@@ -13,6 +13,13 @@
 </head>
 <body class="bg-[#fdf6ef] text-[#4b2e2e] p-6">
 
+  <!-- التحقق من تسجيل الدخول -->
+  <script>
+    if (!localStorage.getItem("isLoggedIn")) {
+      window.location.href = "login.html"; // صفحة تسجيل الدخول
+    }
+  </script>
+
   <header class="bg-[#8b5e3c] text-white text-center text-2xl font-bold p-4 mb-6">
     💳 صفحة الدفع
   </header>
@@ -21,6 +28,7 @@
     <a href="store.html" class="inline-block bg-[#d2b48c] hover:bg-[#c2a87c] text-[#4b2e2e] px-4 py-2 rounded font-semibold">🔙 الرجوع إلى المتجر</a>
   </div>
 
+  <!-- عرض عربة التسوق -->
   <div class="max-w-2xl mx-auto bg-white p-4 rounded shadow mb-6">
     <h2 class="text-xl font-bold mb-4">📚 الكتب التي قمت بإضافتها:</h2>
     <table class="w-full text-center border">
@@ -34,9 +42,14 @@
     </table>
   </div>
 
-  <form id="orderForm" action="https://formsubmit.co/ritajayman77@gmail.com" method="POST" enctype="multipart/form-data" class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md">
-    <input type="hidden" name="_captcha" value="false">
-    
+  <!-- نموذج الطلب -->
+  <form id="orderForm" method="POST" class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    <!-- نربط النموذج بالـ Google Sheets -->
+    <input type="hidden" name="إجمالي السعر" id="totalPriceInput">
+    <input type="hidden" name="قائمة الكتب" id="itemsInput">
+    <input type="hidden" name="وسيلة التوصيل" id="shippingMethodInput">
+    <input type="hidden" name="الخصم" id="discountInput">
+
     <div class="mb-4">
       <label class="block font-bold mb-1">الاسم الكامل</label>
       <input required type="text" name="الاسم" id="name" class="w-full border rounded p-2" />
@@ -131,11 +144,6 @@
       <div id="deliveryNote" class="text-sm text-green-600"></div>
     </div>
 
-    <input type="hidden" name="إجمالي السعر" id="totalPriceInput">
-    <input type="hidden" name="قائمة الكتب" id="itemsInput">
-    <input type="hidden" name="وسيلة التوصيل" id="shippingMethodInput">
-    <input type="hidden" name="الخصم" id="discountInput">
-
     <button id="submitBtn" type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded w-full">
       تأكيد الطلب
     </button>
@@ -146,6 +154,8 @@
   </form>
 
   <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbzm7inCHRPVubHp3yHo5gUx-XIWP1USSOlLxs4V31zQ3DaRF_XfbKG5muKv1jNUHqCZ-g/exec";
+
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
     const tableBody = document.getElementById("cartTableBody");
     const totalElement = document.getElementById("totalPrice");
@@ -251,19 +261,23 @@
       updateTotal();
     });
 
-    form.addEventListener("submit", function (e) {
+    form.addEventListener("submit", e => {
       e.preventDefault();
       itemsInput.value = cart.map(b => b.title).join(", ");
       localStorage.removeItem("cart");
       submitBtn.classList.add("hidden");
       thankYouMessage.classList.remove("hidden");
-      setTimeout(() => {
-        form.submit();
-      }, 1500);
+
+      fetch(scriptURL, {
+        method: "POST",
+        body: new FormData(form)
+      }).then(() => {
+        console.log("تم الحفظ في Google Sheets ✅");
+      }).catch(err => console.error("خطأ:", err));
     });
 
     updateTotal();
     itemsInput.value = cart.map(b => b.title).join(", ");
   </script>
 </body>
-  </html>
+</html>
