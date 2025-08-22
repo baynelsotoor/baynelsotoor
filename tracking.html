@@ -24,9 +24,9 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-    import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+    import { getFirestore, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
-    // إعدادات Firebase
+    // إعدادات Firebase (من مشروعك)
     const firebaseConfig = {
       apiKey: "AIzaSyCgwSsXr3iuFofbbjojAVbz8wKfisntOlc",
       authDomain: "baynelsotoor.firebaseapp.com",
@@ -38,92 +38,73 @@
 
     const app = initializeApp(firebaseConfig);
     const db  = getFirestore(app);
-    const shipmentsRef = collection(db, "shipments");
-    const paymentsRef  = collection(db, "payments"); // من صفحة الدفع
 
-    // تسجيل الخروج (محلي)
+    // مرجع المجموعات
+    const shipmentsRef = collection(db, "shipments");
+    const paymentsRef  = collection(db, "payments");
+
+    // زر تسجيل الخروج
     window.addEventListener("DOMContentLoaded", () => {
-      const logoutBtn = document.getElementById("logoutBtn");
-      logoutBtn.addEventListener("click", () => {
-        localStorage.removeItem("loggedIn");
-        localStorage.removeItem("userName");
-        localStorage.removeItem("userEmail");
+      document.getElementById("logoutBtn").addEventListener("click", () => {
+        localStorage.clear();
         alert("👋 تم تسجيل الخروج بنجاح.");
         window.location.href = "login.html";
       });
     });
 
-    // الحماية + تحميل البيانات
-    window.addEventListener("DOMContentLoaded", async () => {
-      const loggedIn = localStorage.getItem("loggedIn") === "true";
+    // تحميل البيانات للمستخدم الحالي
+    window.addEventListener("DOMContentLoaded", () => {
       const email = localStorage.getItem("userEmail");
+      const loggedIn = localStorage.getItem("loggedIn") === "true";
 
       if (!loggedIn || !email) {
-        // لو مش مسجل دخول
         window.location.href = "login.html";
         return;
       }
 
       document.getElementById("userEmail").textContent = `📧 حسابك: ${email}`;
 
-      // 1) جلب الشحنات الخاصة بالمستخدم
+      // متابعة التحديثات في الوقت الحقيقي للشحنات
       const sQuery = query(shipmentsRef, where("email", "==", email));
-      const sSnap  = await getDocs(sQuery);
-      const list   = document.getElementById("ordersList");
-      list.innerHTML = "";
+      onSnapshot(sQuery, (sSnap) => {
+        const list = document.getElementById("ordersList");
+        list.innerHTML = "";
 
-      if (sSnap.empty) {
-        list.innerHTML = "<p>📭 لا توجد شحنات مرتبطة بحسابك.</p>";
-        return; // ما نعرضش فاتورة
-      }
-
-      // حضّري خريطة أسعار من المدفوعات: trackingNumber -> amount
-      const pQuery = query(paymentsRef, where("email", "==", email));
-      const pSnap  = await getDocs(pQuery);
-      const priceMap = new Map();
-      pSnap.forEach(doc => {
-        const d = doc.data();
-        const tn = d.trackingNumber || d.orderId; // لو بتسميها orderId عدّلي هنا
-        const amount = Number(d.amount) || 0;
-        if (tn) priceMap.set(tn, (priceMap.get(tn) || 0) + amount);
-      });
-
-      let grandTotal = 0;
-
-      sSnap.forEach(doc => {
-        const d = doc.data();
-        const tn = d.trackingNumber || d.orderId || doc.id;
-        const status = d.status || "غير محدد";
-        const last = d.lastUpdate?.toDate?.() ? d.lastUpdate.toDate() : null;
-
-        // حساب التأخير (اختياري)
-        let delayNotice = "";
-        if (last) {
-          const diffDays = Math.floor((Date.now() - last.getTime()) / (1000 * 60 * 60 * 24));
-          if (status !== "تم التسليم" && diffDays >= 4) {
-            delayNotice = `<p style="color:red;">⚠️ الشحنة متأخرة ${diffDays} يوم</p>`;
-          }
+        if (sSnap.empty) {
+          list.innerHTML = "<p>📭 لا توجد شحنات مرتبطة بحسابك.</p>";
+          document.getElementById("invoiceContainer").style.display = "none";
+          return;
         }
 
-        const amount = Number(priceMap.get(tn) || 0);
-        grandTotal += amount;
+        let grandTotal = 0;
 
-        const item = document.createElement("div");
-        item.className = "order-box";
-        item.innerHTML = `
-          <p><strong>رقم التتبع:</strong> ${tn}</p>
-          <p><strong>الحالة:</strong> ${status}</p>
-          ${delayNotice}
-          <p class="muted"><strong>سعر الشحنة:</strong> ${amount > 0 ? amount + " ج.م" : "—"}</p>
-        `;
-        list.appendChild(item);
+        sSnap.forEach(doc => {
+          const d = doc.data();
+
+          // لو مفيش trackingNumber، نولده أوتوماتيك
+          const tn = d.trackingNumber || ("ORD-" + doc.id.slice(-6));
+          const status = d.status || "قيد المعالجة";
+
+          // اجمالي السعر (نجمع من payments)
+          let amount = Number(d.amount) || 0;
+          grandTotal += amount;
+
+          const item = document.createElement("div");
+          item.className = "order-box";
+          item.innerHTML = `
+            <p><strong>رقم التتبع:</strong> ${tn}</p>
+            <p><strong>الحالة:</strong> ${status}</p>
+            <p class="muted"><strong>سعر الشحنة:</strong> ${amount > 0 ? amount + " ج.م" : "—"}</p>
+          `;
+          list.appendChild(item);
+        });
+
+        // عرض الفاتورة
+        const invoiceContainer = document.getElementById("invoiceContainer");
+        const invoiceTotal     = document.getElementById("invoiceTotal");
+        invoiceContainer.style.display = "block";
+        invoiceTotal.textContent = `💰 الإجمالي: ${grandTotal} ج.م`;
       });
-
-      // 3) عرض الفاتورة فقط لو فيه شحنات (وممكن يبقى الإجمالي صفر لو لسه ما اتدفعتش)
-      const invoiceContainer = document.getElementById("invoiceContainer");
-      const invoiceTotal     = document.getElementById("invoiceTotal");
-      invoiceContainer.style.display = "block";
-      invoiceTotal.textContent = `💰 الإجمالي: ${grandTotal} ج.م`;
     });
   </script>
 </head>
@@ -139,7 +120,7 @@
   <div id="invoiceContainer">
     <hr style="max-width:360px; margin:20px auto;">
     <div id="invoiceTotal"></div>
-    <p class="muted">💡 ملاحظة: أسعار الشحنات تُجلب من سجلات الدفع (payments).</p>
+    <p class="muted">💡 ملاحظة: أسعار الشحنات تُحسب من قاعدة البيانات مباشرة.</p>
   </div>
 </body>
 </html>
