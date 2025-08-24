@@ -13,13 +13,6 @@
 </head>
 <body class="bg-[#fdf6ef] text-[#4b2e2e] p-6">
 
-  <!-- التحقق من تسجيل الدخول -->
-  <script>
-    if (!localStorage.getItem("isLoggedIn")) {
-      window.location.href = "login.html"; // صفحة تسجيل الدخول
-    }
-  </script>
-
   <header class="bg-[#8b5e3c] text-white text-center text-2xl font-bold p-4 mb-6">
     💳 صفحة الدفع
   </header>
@@ -28,7 +21,6 @@
     <a href="store.html" class="inline-block bg-[#d2b48c] hover:bg-[#c2a87c] text-[#4b2e2e] px-4 py-2 rounded font-semibold">🔙 الرجوع إلى المتجر</a>
   </div>
 
-  <!-- عرض عربة التسوق -->
   <div class="max-w-2xl mx-auto bg-white p-4 rounded shadow mb-6">
     <h2 class="text-xl font-bold mb-4">📚 الكتب التي قمت بإضافتها:</h2>
     <table class="w-full text-center border">
@@ -42,32 +34,26 @@
     </table>
   </div>
 
-  <!-- نموذج الطلب -->
-  <form id="orderForm" method="POST" class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md">
-    <!-- نربط النموذج بالـ Google Sheets -->
-    <input type="hidden" name="إجمالي السعر" id="totalPriceInput">
-    <input type="hidden" name="قائمة الكتب" id="itemsInput">
-    <input type="hidden" name="وسيلة التوصيل" id="shippingMethodInput">
-    <input type="hidden" name="الخصم" id="discountInput">
-
+  <!-- الفورم -->
+  <form id="orderForm" class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md">
     <div class="mb-4">
       <label class="block font-bold mb-1">الاسم الكامل</label>
-      <input required type="text" name="الاسم" id="name" class="w-full border rounded p-2" />
+      <input required type="text" name="name" id="name" class="w-full border rounded p-2" />
     </div>
 
     <div class="mb-4">
       <label class="block font-bold mb-1">رقم الهاتف</label>
-      <input required type="tel" name="رقم الهاتف" id="phone" class="w-full border rounded p-2" />
+      <input required type="tel" name="phone" id="phone" class="w-full border rounded p-2" />
     </div>
 
-    <!-- كوبون الخصم -->
+    <!-- كوبون -->
     <div class="mb-4">
       <label class="block font-bold mb-1">كود الخصم</label>
       <input type="text" id="couponCode" placeholder="مثال: Reeder7" class="w-full border rounded p-2" />
       <p id="couponMessage" class="text-sm mt-1"></p>
     </div>
 
-    <!-- خيارات التوصيل -->
+    <!-- التوصيل -->
     <div class="mb-4">
       <label class="block font-bold mb-2">اختر وسيلة التوصيل</label>
       <div>
@@ -78,57 +64,38 @@
       </div>
     </div>
 
-    <!-- قائمة المحافظات -->
+    <!-- المحافظات -->
     <div class="mb-4">
       <label class="block font-bold mb-1">اختر المحافظة</label>
-      <select required name="المحافظة" id="governorate" onchange="updateHomeDeliveryPrice()" class="w-full border rounded p-2">
+      <select required id="governorate" onchange="updateHomeDeliveryPrice()" class="w-full border rounded p-2">
         <option value="" disabled selected>اختر المحافظة</option>
         <option value="cairo_giza">القاهرة</option>
         <option value="cairo_giza">الجيزة</option>
         <option value="delta">الإسكندرية</option>
         <option value="delta">الدقهلية</option>
         <option value="delta">الشرقية</option>
-        <option value="delta">الغربية</option>
-        <option value="delta">المنوفية</option>
-        <option value="delta">البحيرة</option>
-        <option value="delta">كفر الشيخ</option>
-        <option value="delta">القليوبية</option>
-        <option value="delta">دمياط</option>
-        <option value="delta">الإسماعيلية</option>
-        <option value="delta">بورسعيد</option>
-        <option value="delta">السويس</option>
         <option value="upper_egypt">أسوان</option>
         <option value="upper_egypt">الأقصر</option>
-        <option value="upper_egypt">قنا</option>
-        <option value="upper_egypt">سوهاج</option>
-        <option value="upper_egypt">أسيوط</option>
-        <option value="upper_egypt">المنيا</option>
-        <option value="upper_egypt">بني سويف</option>
-        <option value="upper_egypt">الفيوم</option>
-        <option value="upper_egypt">الوادي الجديد</option>
-        <option value="delta">شمال سيناء</option>
-        <option value="delta">جنوب سيناء</option>
-        <option value="delta">مطروح</option>
-        <option value="upper_egypt">البحر الأحمر</option>
       </select>
     </div>
 
-    <!-- حقل العنوان -->
+    <!-- العنوان -->
     <div class="mb-4">
       <label class="block font-bold mb-1">العنوان بالتفصيل</label>
-      <textarea required name="العنوان بالتفصيل" id="address" class="w-full border rounded p-2"></textarea>
+      <textarea required id="address" class="w-full border rounded p-2"></textarea>
     </div>
 
+    <!-- وسيلة الدفع -->
     <div class="mb-4">
       <label class="block font-bold mb-2">اختر وسيلة الدفع</label>
-      <select required name="وسيلة الدفع" id="paymentMethod" class="w-full border rounded p-2">
+      <select required id="paymentMethod" class="w-full border rounded p-2">
         <option disabled selected value="">اختر وسيلة الدفع</option>
         <option value="محفظة إلكترونية">محفظة إلكترونية</option>
         <option value="الدفع عند الاستلام">الدفع عند الاستلام (يُضاف 10 جنيه)</option>
       </select>
     </div>
 
-    <!-- محفظة إلكترونية -->
+    <!-- محفظة -->
     <div id="walletNumberField" class="mb-4 hidden">
       <label class="block font-bold mb-1">رقم المحفظة</label>
       <div class="flex gap-2">
@@ -136,7 +103,7 @@
         <button type="button" onclick="copyWalletNumber()" class="bg-blue-500 text-white px-3 py-1 rounded">📋 نسخ</button>
       </div>
       <label class="block font-bold mt-3">رفع صورة التحويل</label>
-      <input type="file" name="صورة التحويل" required class="w-full border rounded p-2" />
+      <input type="file" id="transferImage" class="w-full border rounded p-2" />
     </div>
 
     <div class="text-lg font-bold mb-4">
@@ -148,19 +115,13 @@
       تأكيد الطلب
     </button>
 
-    <p id="thankYouMessage" class="hidden text-center text-green-700 font-bold mt-6 text-lg">
-      ✅ تم إرسال طلبك بنجاح! <br> يسعدنا خدمتك دائمًا 💌
-    </p>
+    <p id="thankYouMessage" class="hidden text-center text-green-700 font-bold mt-6 text-lg"></p>
   </form>
 
   <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbzm7inCHRPVubHp3yHo5gUx-XIWP1USSOlLxs4V31zQ3DaRF_XfbKG5muKv1jNUHqCZ-g/exec";
-
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
     const tableBody = document.getElementById("cartTableBody");
     const totalElement = document.getElementById("totalPrice");
-    const totalPriceInput = document.getElementById("totalPriceInput");
-    const itemsInput = document.getElementById("itemsInput");
     const paymentSelect = document.getElementById("paymentMethod");
     const walletNumberField = document.getElementById("walletNumberField");
     const deliveryNote = document.getElementById("deliveryNote");
@@ -170,10 +131,8 @@
     const governorateSelect = document.getElementById("governorate");
     const homeDeliveryRadio = document.getElementById("home-delivery-radio");
     const homeDeliveryPrice = document.getElementById("home-delivery-price");
-    const shippingMethodInput = document.getElementById("shippingMethodInput");
     const couponInput = document.getElementById("couponCode");
     const couponMessage = document.getElementById("couponMessage");
-    const discountInput = document.getElementById("discountInput");
 
     const governorates = {
       'cairo_giza': { price: 55, name: 'القاهرة/الجيزة' },
@@ -188,10 +147,7 @@
     });
 
     let baseTotal = cart.reduce((sum, b) => sum + b.price, 0);
-    let freeDelivery = cart.length > 5;
     let discountPercent = 0;
-
-    if (freeDelivery) deliveryNote.textContent = "📦 تم تفعيل التوصيل المجاني!";
 
     function updateHomeDeliveryPrice() {
       const governorate = governorateSelect.value;
@@ -218,13 +174,10 @@
       for (let option of shippingOptions) {
         if (option.checked) {
           shippingCost = parseFloat(option.value);
-          shippingMethodInput.value = option.nextSibling.textContent.trim();
         }
       }
 
-      if (!freeDelivery) {
-        total += shippingCost;
-      }
+      total += shippingCost;
 
       if (paymentSelect.value === "الدفع عند الاستلام") {
         total += 10;
@@ -235,8 +188,6 @@
       }
 
       totalElement.textContent = total.toFixed(2);
-      totalPriceInput.value = total.toFixed(2);
-      discountInput.value = discountPercent + "%";
     }
 
     couponInput.addEventListener("input", () => {
@@ -261,23 +212,35 @@
       updateTotal();
     });
 
-    form.addEventListener("submit", e => {
+    form.addEventListener("submit", function (e) {
       e.preventDefault();
-      itemsInput.value = cart.map(b => b.title).join(", ");
-      localStorage.removeItem("cart");
-      submitBtn.classList.add("hidden");
-      thankYouMessage.classList.remove("hidden");
 
-      fetch(scriptURL, {
+      const orderData = {
+        name: document.getElementById("name").value,
+        phone: document.getElementById("phone").value,
+        governorate: governorateSelect.value,
+        address: document.getElementById("address").value,
+        paymentMethod: paymentSelect.value,
+        items: cart.map(b => b.title).join(", "),
+        totalPrice: totalElement.textContent,
+        trackingNumber: "TRK" + Math.floor(100000 + Math.random() * 900000) // رقم تتبع
+      };
+
+      fetch("https://script.google.com/macros/s/AKfycbw2mzLgWWNcC_lWnY85K5ugcaAipiXzeGy25wDFPRPgQrpdKvaQZ-9KbiMSFFfYTz8XEA/exec", {
         method: "POST",
-        body: new FormData(form)
-      }).then(() => {
-        console.log("تم الحفظ في Google Sheets ✅");
-      }).catch(err => console.error("خطأ:", err));
+        body: JSON.stringify(orderData)
+      })
+      .then(res => res.text())
+      .then(() => {
+        localStorage.removeItem("cart");
+        submitBtn.classList.add("hidden");
+        thankYouMessage.innerHTML = `✅ تم إرسال طلبك بنجاح!<br> رقم التتبع الخاص بك: <b>${orderData.trackingNumber}</b>`;
+        thankYouMessage.classList.remove("hidden");
+      })
+      .catch(err => alert("حدث خطأ: " + err));
     });
 
     updateTotal();
-    itemsInput.value = cart.map(b => b.title).join(", ");
   </script>
 </body>
 </html>
